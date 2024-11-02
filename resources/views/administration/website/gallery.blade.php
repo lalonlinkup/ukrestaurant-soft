@@ -51,13 +51,13 @@
                                     <input type="text" class="form-control" name="title" autocomplete="off" v-model="gallery.title">
                                 </div>
                             </div>
-                            <div class="form-group clearfix">
+                            {{-- <div class="form-group clearfix">
                                 <label class="control-label col-md-4">Image Type:</label>
                                 <div class="col-md-7">
                                     <label for="small"><input id="small" type="radio" name="type" autocomplete="off" v-model="gallery.type" value="small"> Small</label> 
                                     &nbsp; <label for="big"><input id="big" type="radio" name="type" autocomplete="off" v-model="gallery.type" value="big"> Big</label> 
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group clearfix">
                                 <label class="col-md-4"></label>
                                 <div class="col-md-7 text-right">
@@ -76,7 +76,7 @@
                     <legend class="scheduler-border">Image Upload</legend>
                     <div class="control-group">
                         <div class="form-group ImageBackground clearfix">
-                            <span class="text-danger">@{{ gallery.type == 'small' ? '(370 X 215)' : '(370 X 460)' }}PX</span>
+                            <span class="text-danger">(800 X 930)PX</span>
                             <img :src="imageSrc" class="imageShow" />
                             <label for="image">Upload Image</label>
                             <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
@@ -157,7 +157,7 @@
                 gallery: {
                     id: "",
                     title: "",
-                    type: "small",
+                    // type: "small",
                     image: "",
                 },
                 gallerys: [],
@@ -261,15 +261,15 @@
             },
 
             imageUrl(event) {
-                var WIDTH = '';
-                var HEIGHT = '';
-                if(this.gallery.type == 'small') {
-                    WIDTH = 370;
-                    HEIGHT = 215;
-                } else {
-                    WIDTH = 370;
-                    HEIGHT = 460;
-                }
+                var WIDTH = '800';
+                var HEIGHT = '930';
+                // if(this.gallery.type == 'small') {
+                //     WIDTH = 370;
+                //     HEIGHT = 215;
+                // } else {
+                //     WIDTH = 370;
+                //     HEIGHT = 460;
+                // }
                 if (event.target.files[0]) {
                     let reader = new FileReader();
                     reader.readAsDataURL(event.target.files[0]);
