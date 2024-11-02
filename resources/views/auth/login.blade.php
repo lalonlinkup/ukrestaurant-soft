@@ -53,17 +53,17 @@
         <div class="container login-card-container">
             <div class="row">
                 <div class="col-md-10 offset-md-1 text-center">
-                    <h2 class="heading"><span id="typed"></span></h2>
+                    {{-- <h2 class="heading"><span id="typed"></span></h2> --}}
                 </div>
-                <div class="col-md-10 col-lg-8 mx-auto">
+                <div class="col-md-6 col-lg-4 mx-auto">
                     <div class="card login-card" style="height: 300px;">
                         <div class="row no-gutters">
-                            <div class="col-md-6 p-1 d-none d-md-block">
+                            {{-- <div class="col-md-6 p-1 d-none d-md-block">
                                 <img src="{{ asset('auth/images/login.gif') }}" alt="login" class="login-card-img" />
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <div class="brand-wrapper d-flex justify-content-center">
+                            </div> --}}
+                            <div class="col-md-12 m-auto">
+                                <div class="card-body text-center">
+                                    <div class="brand-wrapper d-flex justify-content-center mb-2">
                                         <img src="{{asset('auth/images/logo.png')}}" alt="logo" class="logo" />
                                     </div>
                                     <form onsubmit="AdminLogin(event)">
@@ -80,7 +80,7 @@
                                             </div>
                                             <p class="error-password m-0" style="font-style: italic;"></p>
                                         </div>
-                                        <input type="submit" name="login" id="login" class="btn btn-block login-btn mb-4 shadow-none" value="Login" />
+                                        <button type="submit" name="login" id="login" class="btn btn-block login-btn mb-4 shadow-none">Login</button>
                                     </form>
                                 </div>
                             </div>
