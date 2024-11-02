@@ -3,6 +3,11 @@
 @section('breadcrumb_title', 'Specialtie Entry')
 @push('style')
 <style>
+    .charCount {
+        font-size: 12px;
+        color: #555;
+        float: right;
+    }
     .v-select .selected-tag {
         margin: 8px 2px !important;
     }
@@ -33,65 +38,95 @@
         box-sizing: border-box;
         margin-bottom: 5px;
     }
+    .ImageBackground .bannerImageShow {
+        display: block;
+        height: 75px;
+        width: 100%;
+        border: 1px solid #cccccc;
+        box-sizing: border-box;
+        margin-bottom: 5px;
+    }
 </style>
 @endpush
 @section('content')
 <div id="specialtie">
-    <form @submit.prevent="saveSpecialtie">
+    
         <div class="row" style="margin:0;">
-            <div class="col-md-10 slider">
-                <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
-                    <legend class="scheduler-border">Specialtie Entry Form</legend>
-                    <div class="control-group">
-                        <div class="col-md-6" style="padding: 0;margin-top: 20px;">
-                            <div class="form-group clearfix">
-                                <label class="control-label col-md-3">Title</label>
-                                <div class="col-md-9">
-                                    <input name="title" class="form-control" id="title" v-model="specialtie.title">
+            <form @submit.prevent="saveSpecialtie">
+                <div class="col-md-9 slider">
+                    <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
+                        <legend class="scheduler-border">Specialtie Entry Form</legend>
+                        <div class="control-group">
+                            <div class="col-md-2 sliderImage">
+                                <div class="form-group ImageBackground clearfix">
+                                    <span class="text-danger">(275 X 280) PX</span>
+                                    <img :src="imageSrc" class="imageShow" />
+                                    <label for="image">Upload Image</label>
+                                    <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
                                 </div>
                             </div>
-                            <div class="form-group clearfix">
-                                <label class="control-label col-md-3">Price</label>
-                                <div class="col-md-9">
-                                    <input name="price" class="form-control" id="price" v-model="specialtie.price">
+                            <div class="col-md-4" style="padding: 0;margin-top: 20px;">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-3">Title</label>
+                                    <div class="col-md-9">
+                                        <input name="title" class="form-control" id="title" v-model="specialtie.title">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-3">Price</label>
+                                    <div class="col-md-9">
+                                        <input name="price" class="form-control" id="price" v-model="specialtie.price">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6" style="padding: 0;margin-top: 20px;">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-3">Description</label>
+                                    <div class="col-md-9">
+                                        <textarea name="description" class="form-control" @input=" " id="description" cols="2" rows="2" v-model="specialtie.description"></textarea>
+                                        <p class="charCount">@{{ charsRemaining }} characters remaining</p>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-4"></label>
+                                    <div class="col-md-8 text-right">
+                                        @if(userAction('e'))
+                                        <input type="button" class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
+                                        <button :disabled="onProgress" type="submit" class="btn btn-primary btn-padding" v-html="btnText"></button>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                            
+                    </fieldset>
+                </div>
+            </form>
+
+            <form @submit.prevent="updateSpecialtieBanner">
+                <div class="col-md-3 sliderImage">
+                    <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
+                        <legend class="scheduler-border">Banner Image Upload</legend>
+                        <div class="control-group">
+                            <div class="form-group ImageBackground clearfix">
+                                <span class="text-danger">(1600 X 670) PX</span>
+                                <img :src="bannerImageSrc" class="bannerImageShow" />
+                                <div style="display:flex; justify-content: space-between
+                                ; width:100%;">
+                                    <div class="image-upload-btn">
+                                        <label style="display: inline-block" for="bannerimage">Upload Image</label>
+                                        <input type="file" id="bannerimage"  class="form-control shadow-none" @change="bannerImageUrl" />
+                                    </div>
+                                    <div class="image-submit-button">
+                                        <button :disabled="onProgress" style="display: inline-block" type="submit" class="btn btn-primary btn-padding">Update</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6" style="padding: 0;margin-top: 20px;">
-                            <div class="form-group clearfix">
-                                <label class="control-label col-md-3">Description</label>
-                                <div class="col-md-9">
-                                    <textarea name="description" class="form-control" id="description" cols="2" rows="2" v-model="specialtie.description"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group clearfix">
-                                <label class="col-md-4"></label>
-                                <div class="col-md-8 text-right">
-                                    @if(userAction('e'))
-                                    <input type="button" class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
-                                    <button :disabled="onProgress" type="submit" class="btn btn-primary btn-padding" v-html="btnText"></button>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                </fieldset>
-            </div>
-            <div class="col-md-2 sliderImage">
-                <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
-                    <legend class="scheduler-border">Image Upload</legend>
-                    <div class="control-group">
-                        <div class="form-group ImageBackground clearfix">
-                            <span class="text-danger">(1600 X 590) PX</span>
-                            <img :src="imageSrc" class="imageShow" />
-                            <label for="image">Upload Image</label>
-                            <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
+                    </fieldset>
+                </div>
+            </form>
         </div>
-    </form>
+   
 
     <div class="row">
         <div class="col-sm-12 form-inline">
@@ -182,24 +217,72 @@
                 specialties: [],
 
                 imageSrc: "/noImage.gif",
+                bannerImageSrc: "/noImage.gif",
                 onProgress: false,
                 btnText: "Save",
+                maxChars: 120, 
+
+                specialtieBanner : {
+                    image: "",
+                }
             }
         },
+
 
         created() {
             this.getSpecialtie();
         },
 
+        computed: {
+            charsRemaining() {
+                return this.maxChars - this.specialtie.description.length;
+            },
+        },
+
         methods: {
             getSpecialtie() {
-                axios.get("/get-specialtie")
+                axios.get("/get-specialties")
                     .then(res => {
-                        let r = res.data;
+                        let r = res.data.specialtie;
+                        let b = res.data.banner;
                         this.specialties = r.map((item, index) => {
                             item.sl = index + 1
                             return item;
                         });
+                        this.bannerImageSrc = b.image != null ? "/" + b.image : "/noImage.gif";
+                    })
+            },
+
+            updateSpecialtieBanner(event) {
+                let formdata = new FormData(event.target);
+                formdata.append('image', this.specialtieBanner.image);
+
+                var url = '/update-banner-specialties';
+
+                this.onProgress = true
+                axios.post(url, formdata)
+                    .then(res => {
+                        toastr.success(res.data);
+                        this.clearForm();
+                        this.getSpecialtie();
+                        this.btnText = "Save";
+                        this.onProgress = false
+                    })
+                    .catch(err => {
+                        this.onProgress = false
+                        var r = JSON.parse(err.request.response);
+                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                            $.each(r.errors, (index, value) => {
+                                $.each(value, (ind, val) => {
+                                    toastr.error(val)
+                                })
+                            })
+                        } else {
+                            if (r.errors != undefined) {
+                                console.log(r.errors);
+                            }
+                            toastr.error(r.message);
+                        }
                     })
             },
 
@@ -211,7 +294,7 @@
                 if (this.specialtie.id == '') {
                     url = '/store-specialties';
                 } else {
-                    url = '/update-specialtie';
+                    url = '/update-specialties';
                 }
                 this.onProgress = true
                 axios.post(url, formdata)
@@ -254,7 +337,7 @@
                     id: rowId
                 }
                 if (confirm("Are you sure !!")) {
-                    axios.post("/delete-specialtie", formdata)
+                    axios.post("/delete-specialties", formdata)
                         .then(res => {
                             toastr.success(res.data)
                             this.getSpecialtie();
@@ -281,8 +364,8 @@
             },
 
             imageUrl(event) {
-                const WIDTH = 1600;
-                const HEIGHT = 590;
+                const WIDTH = 275;
+                const HEIGHT = 280;
                 const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
 
                 if (event.target.files[0]) {
@@ -316,7 +399,51 @@
                 } else {
                     event.target.value = '';
                 }
-            }
+            },
+
+            bannerImageUrl(event) {
+                const WIDTH = 1600;
+                const HEIGHT = 670;
+                const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+                if (event.target.files[0]) {
+                    const file = event.target.files[0];
+                    
+                    if (!allowedMimes.includes(file.type)) {
+                        toastr.error('Invalid file type. Please select an image with one of the following types: jpeg, png, jpg, gif, svg.');
+                        event.target.value = '';
+                        return;
+                    }
+
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = (ev) => {
+                        let img = new Image();
+                        img.src = ev.target.result;
+                        img.onload = async e => {
+                            let canvas = document.createElement('canvas');
+                            canvas.width = WIDTH;
+                            canvas.height = HEIGHT;
+                            const context = canvas.getContext("2d");
+                            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            let new_img_url = context.canvas.toDataURL(file.type);
+                            this.bannerImageSrc = new_img_url;
+                            const resizedImage = await new Promise(rs => canvas.toBlob(rs, 'image/jpeg', 1));
+                            this.specialtieBanner.image = new File([resizedImage], file.name, {
+                                type: resizedImage.type
+                            });
+                        }
+                    }
+                } else {
+                    event.target.value = '';
+                }
+            },
+
+            characterCheck() {
+                if (this.specialtie.description.length > this.maxChars) {
+                    this.specialtie.description = this.specialtie.description.substring(0, this.maxChars);
+                }
+            },
 
         },
     })

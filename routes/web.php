@@ -488,6 +488,7 @@ Route::get('specialties', [SpecialtiesController::class, 'create'])->name('speci
 Route::get('get-specialties', [SpecialtiesController::class, 'index'])->name('specialties.index');
 Route::post('store-specialties', [SpecialtiesController::class, 'store'])->name('specialties.store');
 Route::post('update-specialties', [SpecialtiesController::class, 'update'])->name('specialties.update');
+Route::post('update-banner-specialties', [SpecialtiesController::class, 'updateBanner'])->name('specialties.updateBanner');
 Route::post('delete-specialties', [SpecialtiesController::class, 'destroy'])->name('specialties.destroy');
 //offer route
 Route::get('offer', [OfferController::class, 'create'])->name('offer.create')->middleware('useractivity');

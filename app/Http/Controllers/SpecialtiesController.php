@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Specialtie;
+use App\Models\SpecialtieBanner;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class SpecialtiesController extends Controller
 {
@@ -19,7 +21,12 @@ class SpecialtiesController extends Controller
     public function index()
     {
         $specialtie = Specialtie::where('status', 'a')->latest()->get();
-        return response()->json($specialtie);
+        $banner = SpecialtieBanner::first();
+        return response()->json([
+            'specialtie' => $specialtie,
+            'banner' => $banner,
+        ]);
+
     }
 
     public function create()
@@ -33,44 +40,70 @@ class SpecialtiesController extends Controller
 
     public function store(Request $request)
     {
-        
-        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'price' => 'required|numeric',
+            'description' => 'required',
+            'image' => 'required|image',
+            
+        ], [
+            'title.required' => 'The title is required.',
+            'price.required' => 'The price is required.',
+            'price.numeric' => 'The price must be number.',
+            'description.required' => 'The description is required.',
+            'image.required' => 'The image is required.',
+            
+        ]);        
+
+        if ($validator->fails()) {
+            return send_error($validator->errors()->first());
+        }
+        $data = $request->except('image', 'id');
+
         try {
-            $data         = new Specialtie();
-            $specialtieKeys = $request->except('image', 'id');
-            foreach (array_keys($specialtieKeys) as $key) {
-                $data->$key = $request->$key;
-            }
             if ($request->hasFile('image')) {
-                $data->image = imageUpload($request, 'image', 'uploads/specialtie', trim($data->title));
+                $data['image'] = imageUpload($request, 'image', 'uploads/specialtie', trim($data['title']));
             }
-            $data->added_by = Auth::user()->id;
-            $data->last_update_ip = request()->ip();
-            $data->save();
+            $data['added_by'] = Auth::user()->id;
+            $data['last_update_ip'] = request()->ip();
+            Specialtie::create($data);
             return response()->json("Specialtie insert successfully");
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
     }
+
     public function update(Request $request)
     {
-        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'price' => 'required|numeric',
+            'description' => 'required',
+            
+        ], [
+            'title.required' => 'The title is required.',
+            'price.required' => 'The price is required.',
+            'price.numeric' => 'The price must be number.',
+            'description.required' => 'The description is required.',
+        ]);        
+
+        if ($validator->fails()) {
+            return send_error($validator->errors()->first());
+        }
+        $oldData = Specialtie::find($request->id);
+        $data = $request->except('image', 'id');
         try {
-            $data         = Specialtie::find($request->id);
-            $specialtieKeys = $request->except('image', 'id');
-            foreach (array_keys($specialtieKeys) as $key) {
-                $data->$key = $request->$key;
-            }
+            $data['image'] = $oldData->image;
             if ($request->hasFile('image')) {
-                if (File::exists($data->image)) {
-                    File::delete($data->image);
+                if (File::exists($oldData->image)) {
+                    File::delete($oldData->image);
                 }
-                $data->image = imageUpload($request, 'image', 'uploads/specialtie', trim($data->title));
+                $data['image'] = imageUpload($request, 'image', 'uploads/specialtie', trim($data['title']));
             }
-            $data->updated_by = Auth::user()->id;
-            $data->updated_at = Carbon::now();
-            $data->last_update_ip = request()->ip();
-            $data->update();
+            $data['updated_by'] = Auth::user()->id;
+            $data['updated_at'] = Carbon::now();
+            $data['last_update_ip'] = request()->ip();
+            $oldData->update($data);
 
             return response()->json("Specialtie update successfully");
         } catch (\Throwable $th) {
@@ -93,6 +126,42 @@ class SpecialtiesController extends Controller
 
             $data->delete();
             return response()->json("Specialtie delete successfully");
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function updateBanner(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image',
+            
+        ], [
+            'image.required' => 'The image is required.',
+            'image.image' => 'The image must be a image.',
+        ]);        
+
+        if ($validator->fails()) {
+            return send_error($validator->errors()->first());
+        }
+
+
+        $oldData = SpecialtieBanner::first();
+        $data = $request->except('image', 'id');
+        try {
+            $data['image'] = $oldData->image;
+            if ($request->hasFile('image')) {
+                if (File::exists($oldData->image)) {
+                    File::delete($oldData->image);
+                }
+                $data['image'] = imageUpload($request, 'image', 'uploads/specialtie', 'banner');
+            }
+            $data['updated_by'] = Auth::user()->id;
+            $data['updated_at'] = Carbon::now();
+            $data['last_update_ip'] = request()->ip();
+            $oldData->update($data);
+
+            return response()->json("Specialtie Banner update successfully");
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
