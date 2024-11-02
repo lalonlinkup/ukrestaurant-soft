@@ -41,12 +41,16 @@ class MenuCategoryController extends Controller
         $categoryname = MenuCategory::where('name', $request->name)->first();
         if (!empty($categoryname)) return send_error("This name have been already exists", null, 422);
         try {
-            $check = DB::table('menu_categories')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();;
+            $check = DB::table('menu_categories')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();
+            if ($request->hasFile('image')) {
+                $image = imageUpload($request, 'image', 'uploads/category', trim($request->name));
+            }
             if (!empty($check)) {
                 DB::select("UPDATE menu_categories SET deleted_by = NULL, deleted_at = NULL , status = 'a' WHERE id = ?", [$check->id]);
             } else {
                 $data = new MenuCategory();
                 $data->name = $request->name;
+                $data->image = $image;
                 $data->slug = make_slug($request->name);
                 $data->status = 'a';
                 $data->added_by = Auth::user()->id;
@@ -68,10 +72,19 @@ class MenuCategoryController extends Controller
         if ($validator->fails()) return send_error("Validation Error", $validator->errors(), 422);
         $categoryname = MenuCategory::where('id', '!=', $request->id)->where('name', $request->name)->first();
         if (!empty($categoryname)) return send_error("This name have been already exists", null, 422);
+
+        $data = MenuCategory::find($request->id);
+
+        if ($request->hasFile('image')) {
+            $image = imageUpload($request, 'image', 'uploads/category', trim($request->name));
+        }
+        else{
+            $image = $data->image; 
+        }
         try {
-            $data = MenuCategory::find($request->id);
             $data->name = $request->name;
             $data->slug = make_slug($request->name);
+            $data->image = $image;
             $data->updated_by = Auth::user()->id;
             $data->updated_at = Carbon::now();
             $data->last_update_ip = request()->ip();

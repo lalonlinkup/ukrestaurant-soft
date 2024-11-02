@@ -7,37 +7,75 @@
         padding: 0;
     }
 </style>
+<style>
+    .v-select .selected-tag {
+        margin: 8px 2px !important;
+    }
+
+    .slider {
+        padding-left: 0;
+    }
+
+    .sliderImage {
+        padding-right: 0;
+    }
+
+    @media (min-width: 320px) and (max-width: 620px) {
+        .slider {
+            padding: 0;
+        }
+
+        .sliderImage {
+            padding: 0;
+        }
+    }
+
+    .ImageBackground .imageShow {
+        display: block;
+        height: 75px;
+        width: 85px;
+        border: 1px solid #cccccc;
+        box-sizing: border-box;
+        margin-bottom: 5px;
+    }
+</style>
 @endpush
 @section('content')
 <div id="Category">
-    <div class="row" style="margin: 0;">
-        <div class="col-md-12 category">
-            <form @submit.prevent="saveCategory">
+    <form @submit.prevent="saveCategory">
+        <div class="row" style="margin: 0;">
+            <div class="col-md-10 category">
                 <fieldset class="scheduler-border bg-of-skyblue">
                     <legend class="scheduler-border">Menu Category Entry Form</legend>
-                    <div class="control-group">
-                        <div class="col-xs-12 col-md-6 col-md-offset-3">
-                            <div class="form-group clearfix">
-                                <label class="control-label col-md-4">Menu Category:</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="name" v-model="category.name" autocomplete="off"/>
-                                </div>
-                            </div>
-                            <div class="form-group clearfix">
-                                <label class="col-md-4"></label>
-                                <div class="col-md-8 text-right">
-                                    @if(userAction('e'))
-                                    <input type="button" class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
-                                    <button :disabled="onProgress" type="submit" class="btn btn-primary btn-padding" v-html="btnText"></button>
-                                    @endif
-                                </div>
-                            </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-2">Menu Category:</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="name" v-model="category.name" autocomplete="off"/>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            @if(userAction('e'))
+                            <input type="button" class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
+                            <button :disabled="onProgress" type="submit" class="btn btn-primary btn-padding" v-html="btnText"></button>
+                            @endif
                         </div>
                     </div>
                 </fieldset>
-            </form>
+            </div>
+            <div class="col-md-2 sliderImage">
+                <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
+                    <legend class="scheduler-border">Image Upload</legend>
+                    <div class="control-group">
+                        <div class="form-group ImageBackground clearfix">
+                            <span class="text-danger">(24 X 24) PX</span>
+                            <img :src="imageSrc" class="imageShow" />
+                            <label for="image">Upload Image</label>
+                            <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-    </div>
+    </form>
 
     <div class="row">
         <div class="col-sm-12 form-inline">
@@ -52,6 +90,9 @@
                     <template scope="{ row }">
                         <tr>
                             <td>@{{ row.sl }}</td>
+                            <td>
+                                <img :src="`/${row.image ? row.image : 'noImage.gif'}`" style="width: 24px; border: 1px solid gray; border-radius: 4px; padding: 1px;">
+                            </td>
                             <td>@{{ row.name }}</td>
                             <td>
                                 @if(userAction('u'))
@@ -84,6 +125,11 @@
                         filterable: false
                     },
                     {
+                        label: 'Category Image',
+                        field: 'image',
+                        align: 'center'
+                    },
+                    {
                         label: 'Category Name',
                         field: 'name',
                         align: 'center'
@@ -101,8 +147,11 @@
                 category: {
                     id: "",
                     name: "",
+                    image: "",
                 },
                 categories: [],
+
+                imageSrc: "/noImage.gif",
 
                 onProgress: false,
                 btnText: "Save"
@@ -127,6 +176,7 @@
             saveCategory(event) {
                 let formdata = new FormData(event.target)
                 formdata.append('id', this.category.id);
+                formdata.append('image', this.category.image);
 
                 var url;
                 if (this.category.id == '') {
@@ -167,6 +217,7 @@
                 keys.forEach(key => {
                     this.category[key] = row[key];
                 });
+                this.imageSrc = row.image != null ? "/" + row.image : "/noImage.gif";
             },
 
             async deleteData(rowId) {
@@ -203,8 +254,48 @@
                 this.category = {
                     id: "",
                     name: "",
-                }
+                    image: "",
+                },
+                this.imageSrc = "/noImage.gif"
             },
+
+            imageUrl(event) {
+                const WIDTH = 24;
+                const HEIGHT = 24;
+                const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+                if (event.target.files[0]) {
+                    const file = event.target.files[0];
+
+                    // Check if file type is allowed
+                    if (!allowedMimes.includes(file.type)) {
+                        toastr.error('Invalid file type. Please select an image with one of the following types: jpeg, png, jpg, gif, svg.');
+                        event.target.value = '';
+                        return;
+                    }
+
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = (ev) => {
+                        let img = new Image();
+                        img.src = ev.target.result;
+                        img.onload = () => {
+                            // Check if the image dimensions are exactly 24x24
+                            if (img.width === WIDTH && img.height === HEIGHT) {
+                                // If dimensions are correct, proceed with the original image
+                                this.category.image = file;
+                                this.imageSrc = ev.target.result;  // Optionally set image preview
+                            } else {
+                                toastr.error(`Image dimensions must be ${WIDTH}x${HEIGHT} pixels.`);
+                                event.target.value = '';
+                            }
+                        }
+                    }
+                } else {
+                    event.target.value = '';
+                }
+            }
+
         },
     })
 </script>

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\CompanyProfile;
+use App\Models\SpecialtieBanner;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -67,5 +68,7 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now(),
             'last_update_ip' => request()->ip(),
         ]);
+
+        SpecialtieBanner::create();
     }
 }
