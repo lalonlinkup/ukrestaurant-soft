@@ -16,7 +16,7 @@ body {
   border-radius: 15px;
   box-shadow: 0 10px 30px 0 rgba(172, 168, 168, 0.30);
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
 }
 .login-card-img {
   border-radius: 0;

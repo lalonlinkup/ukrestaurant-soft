@@ -18,7 +18,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group ImageBackground clearfix">
-                                <span class="text-danger">(150 X 150)PX</span>
+                                <span class="text-danger">(64 X 64)PX</span>
                                 <img :src="logoSrc" class="imageShow" />
                                 <label for="logo">Upload Logo</label>
                                 <input type="file" name="logo" id="logo" class="form-control shadow-none"
@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group ImageBackground clearfix"
                                 style="border-top: 2px solid gray;margin: 3px 0;">
-                                <span class="text-danger">(100 X 100)PX</span>
+                                <span class="text-danger">(64 X 64)PX</span>
                                 <img :src="faviconSrc" class="imageShow" />
                                 <label for="favicon">Upload Fav</label>
                                 <input type="file" name="favicon" id="favicon" class="form-control shadow-none"
@@ -149,8 +149,8 @@
                 },
 
                 logoUrl(event) {
-                    const WIDTH = 150;
-                    const HEIGHT = 150;
+                    const WIDTH = 64;
+                    const HEIGHT = 64;
                     if (event.target.files[0]) {
                         let reader = new FileReader();
                         reader.readAsDataURL(event.target.files[0]);
@@ -178,8 +178,8 @@
                     }
                 },
                 faviconUrl(event) {
-                    const WIDTH = 150;
-                    const HEIGHT = 150;
+                    const WIDTH = 64;
+                    const HEIGHT = 64;
                     if (event.target.files[0]) {
                         let reader = new FileReader();
                         reader.readAsDataURL(event.target.files[0]);

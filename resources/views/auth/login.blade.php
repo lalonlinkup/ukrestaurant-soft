@@ -64,7 +64,7 @@
                             <div class="col-md-12 m-auto">
                                 <div class="card-body text-center">
                                     <div class="brand-wrapper d-flex justify-content-center mb-2">
-                                        <img src="{{asset('auth/images/logo.png')}}" alt="logo" class="logo" />
+                                        <img src="{{asset($company->logo)}}" alt="logo" class="logo" />
                                     </div>
                                     <form onsubmit="AdminLogin(event)">
                                         <div class="form-group">
