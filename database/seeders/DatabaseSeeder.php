@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         CompanyProfile::create([
-            'name'     => 'TSC - Jessore University',
-            'title'    => 'TSC - Jessore University',
+            'name'     => 'Uk Restaurent',
+            'title'    => 'Uk Restaurent',
             'phone'    => '019########',
-            'email'    => 'company@gmail.com',
+            'email'    => 'Uk_Restaurent@gmail.com',
             'last_update_ip' => request()->ip(),
         ]);
 
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         AboutPage::create([
-            'title' => 'Welcome To TSC',
+            'title' => 'Welcome To Uk Restaurent',
             'short_description' => 'test description here',
             'description' => '<p>test description here</p>',
             'status' => 'a',
