@@ -332,42 +332,6 @@ checkAccess('gallery'))
             <span>Website Module</span>
         </a>
     </li>
-    @if (checkAccess('slider'))
-    <li class="{{ Request::is('slider') ? 'active' : '' }}">
-        <a href="/slider">
-            <i class="menu-icon fa fa-image"></i>
-            <span class="menu-text"> Slider Entry </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-    @endif
-    @if (checkAccess('management'))
-    <li class="{{ Request::is('management') ? 'active' : '' }}">
-        <a href="/management">
-            <i class="menu-icon bi bi-people"></i>
-            <span class="menu-text"> Management Entry </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-    @endif
-    @if (checkAccess('gallery'))
-    <li class="{{ Request::is('gallery') ? 'active' : '' }}">
-        <a href="/gallery">
-            <i class="menu-icon bi bi-images"></i>
-            <span class="menu-text"> Gallery Entry </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-    @endif
-    @if (checkAccess('offer'))
-    <li class="{{ Request::is('offer') ? 'active' : '' }}">
-        <a href="/offer">
-            <i class="menu-icon bi bi-clipboard"></i>
-            <span class="menu-text"> Offer Entry </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-    @endif
     @if (checkAccess('about'))
     <li class="{{ Request::is('about') ? 'active' : '' }}">
         <a href="/about">
@@ -377,6 +341,49 @@ checkAccess('gallery'))
         <b class="arrow"></b>
     </li>
     @endif
+    @if (checkAccess('slider'))
+    <li class="{{ Request::is('slider') ? 'active' : '' }}">
+        <a href="/slider">
+            <i class="menu-icon fa fa-image"></i>
+            <span class="menu-text"> Slider Entry </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif
+    <li class="{{ Request::is('specialties.create') ? 'active' : '' }}">
+        <a href="{{ route('specialties.create') }}">
+            <i class="menu-icon fa fa-star"></i>
+            <span class="menu-text"> Specialties Entry</span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    {{-- @if (checkAccess('management'))
+    <li class="{{ Request::is('management') ? 'active' : '' }}">
+        <a href="/management">
+            <i class="menu-icon bi bi-people"></i>
+            <span class="menu-text"> Management Entry </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif --}}
+    @if (checkAccess('gallery'))
+    <li class="{{ Request::is('gallery') ? 'active' : '' }}">
+        <a href="/gallery">
+            <i class="menu-icon bi bi-images"></i>
+            <span class="menu-text"> Gallery Entry </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif
+    {{-- @if (checkAccess('offer'))
+    <li class="{{ Request::is('offer') ? 'active' : '' }}">
+        <a href="/offer">
+            <i class="menu-icon bi bi-clipboard"></i>
+            <span class="menu-text"> Offer Entry </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif --}}
 </ul>
 @endif
 @elseif($module == 'BookingModule')

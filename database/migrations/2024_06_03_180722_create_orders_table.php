@@ -24,6 +24,7 @@ class CreateOrdersTable extends Migration
             $table->string('customer_phone', 20)->nullable();
             $table->text('customer_address')->nullable();
             $table->decimal('sub_total', 18, 2)->default(0.00);
+            $table->decimal('charge', 18, 2)->default(0.00);
             $table->decimal('discount', 18, 2)->default(0.00);
             $table->decimal('vat', 18, 2)->default(0.00);
             $table->decimal('total', 18, 2)->default(0.00);

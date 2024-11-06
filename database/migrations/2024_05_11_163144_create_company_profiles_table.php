@@ -29,6 +29,13 @@ class CreateCompanyProfilesTable extends Migration
             $table->integer('print_type')->default(1);
             $table->string('logo')->nullable();
             $table->string('favicon')->nullable();
+            $table->string('saturday')->nullable();
+            $table->string('sunday')->nullable();
+            $table->string('monday')->nullable();
+            $table->string('tuesday')->nullable();
+            $table->string('wednesday')->nullable();
+            $table->string('thursday')->nullable();
+            $table->string('friday')->nullable();
             $table->ipAddress('last_update_ip');
             $table->timestamps();
         });

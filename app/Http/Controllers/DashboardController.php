@@ -43,29 +43,22 @@ class DashboardController extends Controller
     {
         try {
             $company = CompanyProfile::first();
-            $company->name = $request->name;
-            $company->title = $request->title;
-            $company->phone = $request->phone;
-            $company->email = $request->email;
-            $company->address = $request->address;
-            $company->map_link = $request->map_link;
-            $company->facebook = $request->facebook;
-            $company->instagram = $request->instagram;
-            $company->twitter = $request->twitter;
-            $company->youtube = $request->youtube;
+            $data = $request->all();
+            $data['logo'] = $company->logo;
+            $data['favicon'] = $company->favicon;
             if ($request->hasFile('logo')) {
                 if (File::exists($company->logo)) {
                     File::delete($company->logo);
                 }
-                $company->logo = imageUpload($request, 'logo', 'uploads/logo', '');
+                $data['logo'] = imageUpload($request, 'logo', 'uploads/logo', '');
             }
             if ($request->hasFile('favicon')) {
                 if (File::exists($company->favicon)) {
                     File::delete($company->favicon);
                 }
-                $company->favicon = imageUpload($request, 'favicon', 'uploads/favicon', '');
+                $data['favicon'] = imageUpload($request, 'favicon', 'uploads/favicon', '');
             }
-            $company->update();
+            $company->update($data);
             return response()->json(['status' => true, 'message' => 'Company profile update successfully']);
         } catch (\Throwable $th) {
             return send_error('Something went wrong', $th->getMessage());
