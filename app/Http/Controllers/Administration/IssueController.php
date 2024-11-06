@@ -153,8 +153,8 @@ class IssueController extends Controller
             if (!empty($request->invoice)) {
                 array_push($whereCluase, ['invoice', 'LIKE', $request->invoice . '%']);
             }
-            if (!empty($request->roomId)) {
-                array_push($whereCluase, ['room_id', '=', $request->roomId]);
+            if (!empty($request->tableId)) {
+                array_push($whereCluase, ['table_id', '=', $request->tableId]);
             }
             if (!empty($request->userId)) {
                 array_push($whereCluase, ['added_by', '=', $request->userId]);
@@ -170,9 +170,9 @@ class IssueController extends Controller
             }
 
             if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
-                $issue = Issue::with('issueDetails', 'room', 'user')->where($whereCluase)->latest('id');
+                $issue = Issue::with('issueDetails', 'table', 'user')->where($whereCluase)->latest('id');
             } else {
-                $issue = Issue::with('room', 'user')->where($whereCluase)->latest('id');
+                $issue = Issue::with('table', 'user')->where($whereCluase)->latest('id');
             }
 
             if (!empty($request->forSearch)) {
@@ -182,10 +182,10 @@ class IssueController extends Controller
             }
 
             foreach ($issue as $key => $item) {
-                if ($item->room_id != null || $item->room_id != '') {
-                    $item->room = DB::select("select * from rooms where id = ?", [$item->room_id])[0];
+                if ($item->table_id != null || $item->table_id != '') {
+                    $item->table = DB::select("select * from tables where id = ?", [$item->table_id])[0];
                 } else {
-                    $item->room = null;
+                    $item->table = null;
                 }
             }
             return response()->json($issue);
@@ -198,8 +198,8 @@ class IssueController extends Controller
     {
         try {
             $whereCluase = "";
-            if (!empty($request->roomId)) {
-                $whereCluase .= " AND r.id = '$request->roomId'";
+            if (!empty($request->tableId)) {
+                $whereCluase .= " AND r.id = '$request->tableId'";
             }
 
             if (!empty($request->assetId)) {
@@ -219,12 +219,12 @@ class IssueController extends Controller
                             a.name,
                             p.invoice,
                             p.date,
-                            r.code as room_code,
-                            r.name as room_name
+                            r.code as table_code,
+                            r.name as table_name
                         FROM issue_details id
                         LEFT JOIN assets a ON a.id = id.asset_id
                         LEFT JOIN issues p ON p.id = id.issue_id
-                        LEFT JOIN rooms r ON r.id = r.room_id
+                        LEFT JOIN tables r ON r.id = r.table_id
                         WHERE id.status != 'd' 
                         $whereCluase");
 

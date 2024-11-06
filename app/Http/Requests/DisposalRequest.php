@@ -24,7 +24,7 @@ class DisposalRequest extends FormRequest
     public function rules()
     {
         return [
-            'disposal.room_id' => 'required',
+            'disposal.table_id' => 'required',
             'disposal.date' => 'required',
             'disposal.invoice' => 'required',
             'disposal.total' => 'required',
@@ -36,7 +36,7 @@ class DisposalRequest extends FormRequest
     public function messages()
     {
         return [
-            'disposal.room_id.required' => 'Room name required',
+            'disposal.table_id.required' => 'Table name required',
             'disposal.date.required' => 'Purchase date required',
             'disposal.invoice.required' => 'Purchase invoice required',
             'disposal.total.required' => 'Purchase total required',

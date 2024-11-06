@@ -1,26 +1,26 @@
 @extends('master')
-@section('title', 'Room Type Entry')
-@section('breadcrumb_title', 'Room Type Entry')
+@section('title', 'Table Type Entry')
+@section('breadcrumb_title', 'Table Type Entry')
 @push('style')
 <style>
-    .roomtype{
+    .tabletype {
         padding: 0;
     }
 </style>
 @endpush
 @section('content')
-<div id="roomtype">
+<div id="tabletype">
     <div class="row" style="margin: 0;">
-        <div class="col-md-12 roomtype">
-            <form @submit.prevent="saveRoomType">
+        <div class="col-md-12 tabletype">
+            <form @submit.prevent="saveTableType">
                 <fieldset class="scheduler-border bg-of-skyblue">
-                    <legend class="scheduler-border">Room Type Entry Form</legend>
+                    <legend class="scheduler-border">Table Type Entry Form</legend>
                     <div class="control-group">
                         <div class="col-xs-12 col-md-6 col-md-offset-3">
                             <div class="form-group clearfix">
-                                <label class="control-label col-md-4">Room Type:</label>
+                                <label class="control-label col-md-4">Table Type:</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" name="name" v-model="roomtype.name" autocomplete="off"/>
+                                    <input type="text" class="form-control" name="name" v-model="tabletype.name" autocomplete="off" />
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -48,7 +48,7 @@
         </div>
         <div class="col-md-12">
             <div class="table-responsive">
-                <datatable :columns="columns" :data="roomtypes" :filter-by="filter" style="margin-bottom: 5px;">
+                <datatable :columns="columns" :data="tabletypes" :filter-by="filter" style="margin-bottom: 5px;">
                     <template scope="{ row }">
                         <tr>
                             <td>@{{ row.sl }}</td>
@@ -74,7 +74,7 @@
 @push('script')
 <script>
     new Vue({
-        el: '#roomtype',
+        el: '#tabletype',
         data() {
             return {
                 columns: [{
@@ -84,7 +84,7 @@
                         filterable: false
                     },
                     {
-                        label: 'Room Type Name',
+                        label: 'Table Type Name',
                         field: 'name',
                         align: 'center'
                     },
@@ -98,11 +98,11 @@
                 per_page: 20,
                 filter: '',
 
-                roomtype: {
+                tabletype: {
                     id: "",
                     name: "",
                 },
-                roomtypes: [],
+                tabletypes: [],
 
                 onProgress: false,
                 btnText: "Save"
@@ -110,97 +110,91 @@
         },
 
         created() {
-            this.getRoomType();
+            this.getTableType();
         },
 
         methods: {
-            getRoomType() {
-                axios.get("/get-roomtype")
-                    .then(res => {
-                        this.roomtypes = res.data.map((item, index) => {
-                            item.sl = index + 1
-                            return item;
-                        });
-                    })
+            getTableType() {
+                axios.get("/get-tabletype").then(res => {
+                    this.tabletypes = res.data.map((item, index) => {
+                        item.sl = index + 1
+                        return item;
+                    });
+                })
             },
 
-            saveRoomType(event) {
+            saveTableType(event) {
                 let formdata = new FormData(event.target)
-                formdata.append('id', this.roomtype.id);
+                formdata.append('id', this.tabletype.id);
 
                 var url;
-                if (this.roomtype.id == '') {
-                    url = '/roomtype';
+                if (this.tabletype.id == '') {
+                    url = '/tabletype';
                 } else {
-                    url = '/update-roomtype';
+                    url = '/update-tabletype';
                 }
                 this.onProgress = true
-                axios.post(url, formdata)
-                    .then(res => {
-                        toastr.success(res.data.message);
-                        this.getRoomType();
-                        this.clearForm();
-                        this.btnText = "Save";
-                        this.onProgress = false
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post(url, formdata).then(res => {
+                    toastr.success(res.data.message);
+                    this.getTableType();
+                    this.clearForm();
+                    this.btnText = "Save";
+                    this.onProgress = false
+                }).catch(err => {
+                    this.onProgress = false
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             editData(row) {
                 this.btnText = "Update";
-                let keys = Object.keys(this.roomtype);
+                let keys = Object.keys(this.tabletype);
                 keys.forEach(key => {
-                    this.roomtype[key] = row[key];
+                    this.tabletype[key] = row[key];
                 });
             },
 
             async deleteData(rowId) {
-                let roomCheck = await axios.post("/get-room", {
-                        roomtypeId: rowId
-                    })
-                    .then(res => {
-                        return res.data;
-                    })
-                if (roomCheck.length > 0) {
-                    toastr.error("Room found on this type, You can not delete");
+                let tableCheck = await axios.post("/get-table", {
+                    tabletypeId: rowId
+                }).then(res => {
+                    return res.data;
+                })
+                if (tableCheck.length > 0) {
+                    toastr.error("Table found on this type, You can not delete");
                     return
                 }
                 let formdata = {
                     id: rowId
                 }
                 if (confirm("Are you sure !!")) {
-                    axios.post("/delete-roomtype", formdata)
-                        .then(res => {
-                            toastr.success(res.data.message)
-                            this.getRoomType();
-                        })
-                        .catch(err => {
-                            var r = JSON.parse(err.request.response);
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
-                        })
+                    axios.post("/delete-tabletype", formdata).then(res => {
+                        toastr.success(res.data.message)
+                        this.getTableType();
+                    }).catch(err => {
+                        var r = JSON.parse(err.request.response);
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
+                        }
+                        toastr.error(r.message);
+                    })
                 }
             },
 
             clearForm() {
-                this.roomtype = {
+                this.tabletype = {
                     id: "",
                     name: "",
                 }

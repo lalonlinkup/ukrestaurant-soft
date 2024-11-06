@@ -170,14 +170,14 @@
             },
 
             async deleteData(rowId) {
-                let productCheck = await axios.post("/get-room", {
+                let productCheck = await axios.post("/get-table", {
                         floorId: rowId
                     })
                     .then(res => {
                         return res.data.products
                     })
                 if (productCheck.length > 0) {
-                    toastr.error("Room found on this type, You can not delete");
+                    toastr.error("Table found on this type, You can not delete");
                     return
                 }
                 let formdata = {

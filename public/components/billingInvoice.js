@@ -62,7 +62,7 @@ const billingInvoice = Vue.component("billing-invoice", {
                             <tbody>
                                 <tr>
                                     <td colspan="4">
-                                        <h5 class="title-table">Room Bills</h5>
+                                        <h5 class="title-table">Table Bills</h5>
                                     </td>
                                     <td style="border-left: 1px solid gray;"></td>
                                     <td style="border-left: 1px solid gray;"></td>
@@ -70,7 +70,7 @@ const billingInvoice = Vue.component("billing-invoice", {
                                 <tr v-for="(item, sl) in carts">
                                     <td style="text-align: center;">{{ sl + 1 }}</td>
                                     <td style="text-align:left;">
-                                        {{ item.room_name }} - {{ item.room_code }}
+                                        {{ item.table_name }} - {{ item.table_code }}
                                     </td>
                                     <td style="text-align: center;">{{ item.days }} days</td>
                                     <td style="text-align: right;">{{ parseFloat(item.unit_price).toFixed(2) }}</td>
@@ -108,7 +108,7 @@ const billingInvoice = Vue.component("billing-invoice", {
                                 <tr v-for="(item, sl) in restaurantCarts">
                                     <td style="text-align: center;">{{ sl + 1 }}</td>
                                     <td style="text-align:left;">
-                                        {{ item.room?.name }} - {{item.room?.code}}
+                                        {{ item.table?.name }} - {{item.table?.code}}
                                     </td>
                                     <td style="text-align: center;">--</td>
                                     <td style="text-align: right;">{{ parseFloat(item.total).toFixed(2) }}</td>

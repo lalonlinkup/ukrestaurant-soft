@@ -62,6 +62,7 @@
                                     <label for="restaurant"><strong>Restaurant</strong></label>
                                     <ul class="restaurant">
                                         <li><input type="checkbox" onclick="singleCheck(event)" class="restaurant" value="order, Order Entry" id="order"><label for="order"> Order Entry </label></li>
+                                        <li><input type="checkbox" onclick="singleCheck(event)" class="restaurant" value="payFirst, Pay First" id="payFirst"><label for="payFirst"> Pay First </label></li>
                                         <li><input type="checkbox" onclick="singleCheck(event)" class="restaurant" value="pendingOrder, Pending Order" id="pendingOrder"><label for="pendingOrder"> Pending Order </label></li>
                                         <li><input type="checkbox" onclick="singleCheck(event)" class="restaurant" value="orderList, Order List" id="orderList"><label for="orderList"> Order List </label></li>
                                         <li><input type="checkbox" onclick="singleCheck(event)" class="restaurant" value="menu, Menu Entry" id="menu"><label for="menu"> Menu Entry </label></li>

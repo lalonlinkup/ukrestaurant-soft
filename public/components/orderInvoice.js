@@ -71,8 +71,9 @@ const orderInvoice = Vue.component("order-invoice", {
                                     <td align="right">{{ parseFloat(item.total).toFixed(2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5">Total</td>
+                                    <td colspan="2">Total</td>
                                     <td><strong>{{cart.reduce((prev, curr) => {return prev + parseFloat(curr.quantity)}, 0)}}</strong></td>
+                                    <td colspan="3"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -172,7 +173,7 @@ const orderInvoice = Vue.component("order-invoice", {
                     border-bottom: 1px dotted #454545;
                 }
                 div[_d9283dsc]{
-                    padding-bottom:25px;
+                    padding-bottom:15px;
                     border-bottom: 1px solid #ccc;
                     margin-bottom: 15px;
                 }
@@ -315,7 +316,9 @@ const orderInvoice = Vue.component("order-invoice", {
                     <body>
                         <div class="container">
                             <div class="row">
-                                <div class="col-xs-2"><img src="${ this.company.logo ? this.company.logo : '/noImage.gif' }" alt="Logo" style="height:80px;border: 1px solid gray; border-radius: 5px;" /></div>
+                                <div class="col-xs-2">
+                                    <img src="${ this.company.logo ? this.company.logo : '/noImage.gif' }" alt="Logo" style="height:80px;border: 1px solid gray; border-radius: 5px;" />
+                                </div>
                                 <div class="col-xs-10" style="padding-top:5px;">
                                     <strong style="font-size:18px;">${ this.company.title }</strong><br>
                                     <p style="white-space: pre-line;">${ this.company.address}</p>

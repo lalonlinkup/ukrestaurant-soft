@@ -16,8 +16,8 @@ class Issue extends Model
         return $this->hasMany(IssueDetails::class)->with('asset');
     }
 
-    public function room() {
-        return $this->belongsTo(Room::class)->select('id', 'name', 'code', 'price');
+    public function table() {
+        return $this->belongsTo(Table::class)->select('id', 'name', 'code', 'price');
     }
 
     public function user() {

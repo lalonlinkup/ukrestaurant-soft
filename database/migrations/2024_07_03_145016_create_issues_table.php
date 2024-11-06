@@ -18,7 +18,7 @@ class CreateIssuesTable extends Migration
             $table->date('date')->index();
             $table->string('invoice', 20)->index();
             $table->string('issue_to', 60);
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('table_id');
             $table->decimal('subtotal', 18,2)->default(0.00);
             $table->float('vat')->default(0);
             $table->decimal('vatAmount', 18,2)->default(0.00);
@@ -34,7 +34,7 @@ class CreateIssuesTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

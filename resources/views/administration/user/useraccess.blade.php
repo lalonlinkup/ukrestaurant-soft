@@ -174,6 +174,7 @@
                             <input type="checkbox" id="orders" class="group-head" @click="onClickGroupHeads"> <label for="orders"><strong>Order</strong></label>
                             <ul class="orders">
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="order" id="order"><label for="order"> Order Entry</label></li>
+                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="payFirst" id="payFirst"><label for="payFirst"> Pay First</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="orderList" id="orderList"><label for="orderList"> Order List</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="pendingOrder" id="pendingOrder"><label for="pendingOrder"> Pending Order</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="orderInvoice" id="orderInvoice"><label for="orderInvoice"> Order Invoice</label></li>

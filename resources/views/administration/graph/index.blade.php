@@ -104,8 +104,8 @@
                     </div>
 
                     <div class="widget-content">
-                        <div class="widget-text">Total Room</div>
-                        <div class="widget-value">@{{ totalRoom }}</div>
+                        <div class="widget-text">Total Table</div>
+                        <div class="widget-value">@{{ totalTable }}</div>
                     </div>
                 </div>
             </div>
@@ -348,7 +348,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <h3 class="text-center" style="margin: 0;">Top Room</h3>
+                <h3 class="text-center" style="margin: 0;">Top Table</h3>
                 <top-product-chart type="PieChart" :data="topProducts" :options="topProductsOptions" />
             </div>
             <div class="col-md-4 col-md-offset-2">
@@ -431,7 +431,7 @@
                     }
                 },
                 topCustomers: [],
-                totalRoom: 0,
+                totalTable: 0,
                 checkIn: 0,
                 vacant: 0,
                 checkout: 0,
@@ -468,7 +468,7 @@
             getOverallData() {
                 this.showData = false;
                 axios.get('/get-overall-data').then(res => {
-                    this.totalRoom         = res.data.total_room;
+                    this.totalTable         = res.data.total_table;
                     this.checkIn           = res.data.checkIn;
                     this.vacant            = res.data.vacant;
                     this.checkout          = res.data.checkout;
@@ -522,10 +522,10 @@
                     this.topCustomers = res.data.top_customers;
 
                     this.topProducts = [
-                        ['Room', 'Total Booked']
+                        ['Table', 'Total Booked']
                     ]
                     res.data.top_products.forEach(p => {
-                        this.topProducts.push([p.room_name, parseFloat(p.totalroom)]);
+                        this.topProducts.push([p.table_name, parseFloat(p.totaltable)]);
                     })
 
                     this.topData = true;

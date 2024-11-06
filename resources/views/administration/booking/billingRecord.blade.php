@@ -95,7 +95,7 @@
                             <th>Invoice No.</th>
                             <th>Date</th>
                             <th>Guest Name</th>
-                            <th>Room Name</th>
+                            <th>Table Name</th>
                             <th>Price</th>
                             <th>Days</th>
                             <th style="text-align: right;">Total</th>
@@ -109,7 +109,7 @@
                                 <td>@{{ booking.invoice }}</td>
                                 <td>@{{ booking.date | dateFormat("DD-MM-YYYY") }}</td>
                                 <td>@{{ booking.customer_name }}</td>
-                                <td>@{{ booking.booking_details[0].room_name }}</td>
+                                <td>@{{ booking.booking_details[0].table_name }}</td>
                                 <td style="text-align:center;">@{{ booking.booking_details[0].unit_price | decimal }}</td>
                                 <td style="text-align:center;">@{{ booking.booking_details[0].days }}</td>
                                 <td style="text-align:right;">@{{ booking.booking_details[0].total | decimal }}</td>
@@ -125,7 +125,7 @@
                             </tr>
                             <tr v-for="(product, sl) in booking.booking_details.slice(1)">
                                 <td colspan="4" :rowspan="booking.booking_details.length - 1" v-if="sl == 0"></td>
-                                <td>@{{ product.room_name }}</td>
+                                <td>@{{ product.table_name }}</td>
                                 <td style="text-align:center;">@{{ product.unit_price | decimal }}</td>
                                 <td style="text-align:center;">@{{ product.days | decimal }}</td>
                                 <td style="text-align:right;">@{{ product.total | decimal }}</td>
@@ -383,7 +383,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">bookings Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">bookings Record</h4>
                             </div>
                         </div>
                         <div class="row">

@@ -402,7 +402,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Productions Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">Productions Record</h4>
                             </div>
                         </div>
                         <div class="row">

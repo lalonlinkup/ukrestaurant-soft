@@ -10,6 +10,7 @@
     .v-select .dropdown-menu {
         width: 400px !important;
     }
+
     .v-select .selected-tag {
         margin: 8px 2px !important;
         white-space: nowrap;
@@ -35,13 +36,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-3 control-label" style="padding-left: 0;"> Room </label>
+                            <label class="col-xs-3 control-label" style="padding-left: 0;"> Table </label>
                             <div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:4px;">
                                 <div style="width: 91%;">
-                                    <v-select v-bind:options="rooms" style="margin: 0;" v-model="selectedRoom" @search="onSearchRoom" @input="onChangeRoom" label="name"></v-select>
+                                    <v-select v-bind:options="tables" style="margin: 0;" v-model="selectedTable" @search="onSearchTable" @input="onChangeTable" label="name"></v-select>
                                 </div>
                                 <div style="width: 9%;margin-left:2px;">
-                                    <a href="/room" title="Add New Room" class="btn btn-xs btn-danger" style="width: 100%;height: 23px;border: 0px;border-radius: 3px;" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                    <a href="/table" title="Add New Table" class="btn btn-xs btn-danger" style="width: 100%;height: 23px;border: 0px;border-radius: 3px;" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +117,7 @@
                                         <td>@{{ asset.name }}</td>
                                         <td>@{{ asset.brandName }}</td>
                                         <td>
-                                           @{{ asset.price }}
+                                            @{{ asset.price }}
                                         </td>
                                         <td>
                                             <input type="number" style="margin: 0;" step="0.01" min="0" :disabled="disposal.id != 0" @input="editQtyPrice(asset)" class="form-control" v-model="asset.quantity">
@@ -127,7 +128,7 @@
                                             <a href="" @click.prevent="removeCart(asset)"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
-        
+
                                     <tr>
                                         <td colspan="8"></td>
                                     </tr>
@@ -139,7 +140,7 @@
                                         <td colspan="4"><textarea style="width: 100%;font-size:13px;" placeholder="Description" v-model="disposal.note"></textarea></td>
                                         <td colspan="4" style="padding-top: 15px;font-size:18px;">@{{ disposal.total }}</td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -169,13 +170,13 @@
                     id: "{{$id}}",
                     invoice: "{{$invoice}}",
                     date: moment().format("YYYY-MM-DD"),
-                    room_id: null,
+                    table_id: null,
                     total: 0,
                     note: '',
                 },
                 carts: [],
-                rooms: [],
-                selectedRoom: null,
+                tables: [],
+                selectedTable: null,
 
                 assets: [],
                 selectedAsset: {
@@ -200,55 +201,52 @@
         },
 
         created() {
-            this.getRooms();
+            this.getTables();
             if (this.disposal.id != 0) {
                 this.getDisposal();
             }
         },
 
         methods: {
-            getRooms() {
-                axios.get("/get-room")
-                    .then(res => {
-                        let r = res.data;
-                        this.rooms = r.map((item, index) => {
-                            item.display_name = `${item.code} - ${item.name} `
-                            return item;
-                        });
-                    })
+            getTables() {
+                axios.get("/get-table").then(res => {
+                    let r = res.data;
+                    this.tables = r.map((item, index) => {
+                        item.display_name = `${item.code} - ${item.name} `
+                        return item;
+                    });
+                })
             },
 
-            onChangeRoom() {
-                if(this.selectedRoom == null) {
+            onChangeTable() {
+                if (this.selectedTable == null) {
                     return;
                 }
-                
+
                 this.getAsset();
             },
-            
+
             getAsset() {
                 axios.post("/get-issue-asset", {
-                        roomId: this.selectedRoom.id
-                    })
-                    .then(res => {
-                        this.assets = res.data;
-                    })
+                    tableId: this.selectedTable.id
+                }).then(res => {
+                    this.assets = res.data;
+                })
             },
-         
+
             async onSearchAsset(val, loading) {
                 if (val.length > 2) {
                     loading(true);
                     await axios.post("/get-issue-asset", {
-                            name: val,
-                        })
-                        .then(res => {
-                            let r = res.data;
-                            this.assets = r.filter(item => item.is_active == true).map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                        name: val,
+                    }).then(res => {
+                        let r = res.data;
+                        this.assets = r.filter(item => item.is_active == true).map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
                     await this.getAsset();
@@ -362,7 +360,7 @@
             },
 
             async saveDisposal() {
-                this.disposal.room_id = this.selectedRoom != null ? this.selectedRoom.id : "";
+                this.disposal.table_id = this.selectedTable != null ? this.selectedTable.id : "";
                 if (this.disposal.id == 0) {
                     var url = '/add-disposal';
                 } else {
@@ -403,67 +401,65 @@
                     id: "{{$id}}",
                     invoice: "{{$invoice}}",
                     date: moment().format("YYYY-MM-DD"),
-                    room_id: null,
+                    table_id: null,
                     total: 0,
                     note: '',
                 }
 
                 this.carts = [];
-                this.selectedRoom = null;
+                this.selectedTable = null;
             },
 
             //search method here
-            async onSearchRoom(val, loading) {
+            async onSearchTable(val, loading) {
                 if (val.length > 2) {
                     loading(true)
-                    await axios.post("/get-room", {
-                            name: val
-                        })
-                        .then(res => {
-                            this.rooms = res.data;
-                            loading(false)
-                        })
+                    await axios.post("/get-table", {
+                        name: val
+                    }).then(res => {
+                        this.tables = res.data;
+                        loading(false)
+                    })
                 } else {
                     loading(false)
-                    await this.getRooms();
+                    await this.getTables();
                 }
             },
 
 
             getDisposal() {
                 axios.post("/get-disposal", {
-                        id: this.disposal.id
-                    })
-                    .then(res => {
-                        let disposal = res.data[0];
-                        let keys = Object.keys(this.disposal);
-                        keys.forEach(key => {
-                            this.disposal[key] = disposal[key];
-                        });
+                    id: this.disposal.id
+                }).then(res => {
+                    let disposal = res.data[0];
+                    let keys = Object.keys(this.disposal);
+                    keys.forEach(key => {
+                        this.disposal[key] = disposal[key];
+                    });
 
-                        this.selectedRoom = {
-                            id: disposal.room_id,
-                            name: disposal.room ? disposal.room.name : 'n/a'
+                    this.selectedTable = {
+                        id: disposal.table_id,
+                        name: disposal.table ? disposal.table.name : 'n/a'
+                    }
+
+                    this.getAsset();
+
+                    disposal.disposal_details.forEach(async detail => {
+                        let asset = {
+                            asset_id: detail.asset_id,
+                            code: detail.asset ? detail.asset.code : 'n/a',
+                            name: detail.asset ? detail.asset.name : 'n/a',
+                            brandName: detail.asset.brand.name,
+                            quantity: detail.quantity,
+                            price: parseFloat(detail.price).toFixed(this.fixed),
+                            total: detail.total,
+                            disposal_status: detail.disposal_status,
                         }
-
-                        this.getAsset();
-                        
-                        disposal.disposal_details.forEach(async detail => {
-                            let asset = {
-                                asset_id: detail.asset_id,
-                                code: detail.asset ? detail.asset.code : 'n/a',
-                                name: detail.asset ? detail.asset.name : 'n/a',
-                                brandName: detail.asset.brand.name,
-                                quantity: detail.quantity,
-                                price: parseFloat(detail.price).toFixed(this.fixed),
-                                total: detail.total,
-                                disposal_status: detail.disposal_status,
-                            }
-                            this.carts.push(asset);
-                        })
-
-                        this.calculateTotal();
+                        this.carts.push(asset);
                     })
+
+                    this.calculateTotal();
+                })
             },
         },
     })

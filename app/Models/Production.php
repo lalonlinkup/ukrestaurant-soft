@@ -17,7 +17,7 @@ class Production extends Model
     }
 
     public function order() {
-        return $this->belongsTo(Order::class)->select('id', 'date', 'invoice', 'customer_id', 'customer_name', 'room_id')->with('customer');
+        return $this->belongsTo(Order::class)->select('id', 'date', 'invoice', 'customer_id', 'customer_name', 'table_id')->with('customer');
     }
 
     public function user()

@@ -26,8 +26,8 @@ class ServiceController extends Controller
         if (!empty($request->bookingId)) {
             $clauses .= " AND s.booking_id = '$request->bookingId'";
         }
-        if (!empty($request->roomId)) {
-            $clauses .= " AND s.room_id = '$request->roomId'";
+        if (!empty($request->tableId)) {
+            $clauses .= " AND s.table_id = '$request->tableId'";
         }
         if (!empty($request->customerId)) {
             $clauses .= " AND s.customer_id = '$request->customerId'";
@@ -40,7 +40,7 @@ class ServiceController extends Controller
         }
 
         $services = DB::select("SELECT s.*,
-                            r.name AS room_name,
+                            r.name AS table_name,
                             c.code AS customer_code,
                             c.name AS customer_name,
                             c.phone AS customer_phone,
@@ -48,7 +48,7 @@ class ServiceController extends Controller
                             sh.code AS head_code,
                             sh.name AS head_name
                             FROM services s
-                            LEFT JOIN rooms r ON r.id = s.room_id
+                            LEFT JOIN tables r ON r.id = s.table_id
                             LEFT JOIN customers c ON c.id = s.customer_id
                             LEFT JOIN service_heads sh ON sh.id = s.service_head_id
                             WHERE s.status != 'd' AND s.deleted_at IS NULL 
@@ -136,7 +136,7 @@ class ServiceController extends Controller
 
     public function getCheckinCustomer(Request $request)
     {
-        $detail = BookingDetail::where('room_id', $request->roomId)->where('checkin_date', '<=', $request->date . ' 12:00:00')->where('checkout_date', '>=', $request->date . ' 11:59:00')->where('booking_status', 'checkin')->orderBy('id', 'DESC')->first();
+        $detail = BookingDetail::where('table_id', $request->tableId)->where('checkin_date', '<=', $request->date . ' 12:00:00')->where('checkout_date', '>=', $request->date . ' 11:59:00')->where('booking_status', 'checkin')->orderBy('id', 'DESC')->first();
         if ($detail) {
             $booking = BookingMaster::where('id', $detail->booking_id)->first();
             $customer = Customer::where('id', $booking->customer_id)->select('id', 'code', 'name', 'phone', 'address')->first();

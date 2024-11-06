@@ -10,7 +10,7 @@ class Purchase extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $gurded = ['id'];
+    protected $guarded = ['id'];
 
     public function purchaseDetails() {
         return $this->hasMany(PurchaseDetails::class)->with('asset');

@@ -6,19 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Room extends Model
+class Table extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
-    public function roomtype()
+    public function tabletype()
     {
-        return $this->belongsTo(RoomType::class, 'room_type_id', 'id')->select('id', 'name');
+        return $this->belongsTo(TableType::class, 'table_type_id', 'id')->select('id', 'name');
     }
 
     public function floor()
     {
         return $this->belongsTo(Floor::class, 'floor_id', 'id')->select('id', 'name');
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'incharge_id', 'id')->select('id', 'name');
     }
 }

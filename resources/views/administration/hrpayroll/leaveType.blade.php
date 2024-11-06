@@ -183,13 +183,13 @@
             },
 
             async deleteData(rowId) {
-                let roomCheck = await axios.post("/get-leaves", {
+                let tableCheck = await axios.post("/get-leaves", {
                         typeId: rowId
                     })
                     .then(res => {
                         return res.data
                     })
-                if (roomCheck.length > 0) {
+                if (tableCheck.length > 0) {
                     toastr.error("Leave found on this Leave Type, You can not delete");
                     return
                 }

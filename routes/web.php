@@ -6,7 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Administration\LoanController;
 use App\Http\Controllers\Administration\MenuController;
-use App\Http\Controllers\Administration\RoomController;
+use App\Http\Controllers\Administration\TableController;
 use App\Http\Controllers\Administration\UnitController;
 use App\Http\Controllers\Administration\AssetController;
 use App\Http\Controllers\Administration\BrandController;
@@ -28,7 +28,7 @@ use App\Http\Controllers\Administration\DistrictController;
 use App\Http\Controllers\Administration\EmployeeController;
 use App\Http\Controllers\Administration\MaterialController;
 use App\Http\Controllers\Administration\PurchaseController;
-use App\Http\Controllers\Administration\RoomTypeController;
+use App\Http\Controllers\Administration\TableTypeController;
 use App\Http\Controllers\Administration\SupplierController;
 use App\Http\Controllers\Administration\LeaveTypeController;
 use App\Http\Controllers\Administration\ReferenceController;
@@ -112,27 +112,27 @@ Route::post('floor', [FloorController::class, 'store'])->name('floor.store');
 Route::post('update-floor', [FloorController::class, 'update'])->name('floor.update');
 Route::post('delete-floor', [FloorController::class, 'destroy'])->name('floor.destroy');
 
-// roomtype route
-Route::get('roomtype', [RoomTypeController::class, 'create'])->name('roomtype.create')->middleware('useractivity');
-Route::get('get-roomtype', [RoomTypeController::class, 'index'])->name('roomtype.index');
-Route::post('roomtype', [RoomTypeController::class, 'store'])->name('roomtype.store');
-Route::post('update-roomtype', [RoomTypeController::class, 'update'])->name('roomtype.update');
-Route::post('delete-roomtype', [RoomTypeController::class, 'destroy'])->name('roomtype.destroy');
+// tabletype route
+Route::get('tabletype', [TableTypeController::class, 'create'])->name('tabletype.create')->middleware('useractivity');
+Route::get('get-tabletype', [TableTypeController::class, 'index'])->name('tabletype.index');
+Route::post('tabletype', [TableTypeController::class, 'store'])->name('tabletype.store');
+Route::post('update-tabletype', [TableTypeController::class, 'update'])->name('tabletype.update');
+Route::post('delete-tabletype', [TableTypeController::class, 'destroy'])->name('tabletype.destroy');
 
-// room category route
+// table category route
 Route::get('category', [CategoryController::class, 'create'])->name('category.create')->middleware('useractivity');
 Route::get('get-category', [CategoryController::class, 'index'])->name('category.index');
 Route::post('category', [CategoryController::class, 'store'])->name('category.store');
 Route::post('update-category', [CategoryController::class, 'update'])->name('category.update');
 Route::post('delete-category', [CategoryController::class, 'destroy'])->name('category.destroy');
 
-// room route
-Route::get('room', [RoomController::class, 'create'])->name('room.create')->middleware('useractivity');
-Route::match(['get', 'post'], 'get-room', [RoomController::class, 'index'])->name('room.index');
-Route::post('room', [RoomController::class, 'store'])->name('room.store');
-Route::post('update-room', [RoomController::class, 'update'])->name('room.update');
-Route::post('delete-room', [RoomController::class, 'destroy'])->name('room.destroy');
-Route::get('roomlist', [RoomController::class, 'roomList'])->name('room.roomList');
+// table route
+Route::get('table', [TableController::class, 'create'])->name('table.create')->middleware('useractivity');
+Route::match(['get', 'post'], 'get-table', [TableController::class, 'index'])->name('table.index');
+Route::post('table', [TableController::class, 'store'])->name('table.store');
+Route::post('update-table', [TableController::class, 'update'])->name('table.update');
+Route::post('delete-table', [TableController::class, 'destroy'])->name('table.destroy');
+Route::get('tablelist', [TableController::class, 'tableList'])->name('table.tableList');
 
 // Reference route
 Route::get('reference', [ReferenceController::class, 'create'])->name('reference.create')->middleware('useractivity');
@@ -302,9 +302,9 @@ Route::match(['get', 'post'], 'get-booking', [BookingController::class, 'index']
 Route::post('save-booking', [BookingController::class, 'store'])->name('save.booking');
 Route::post('update-booking', [BookingController::class, 'update'])->name('update.booking');
 Route::post('delete-booking', [BookingController::class, 'destroy'])->name('delete.booking');
-Route::match(['get', 'post'], 'get-room-list', [BookingController::class, 'getroomList'])->name('get.getroomList');
-Route::match(['get', 'post'], 'get-available-room', [BookingController::class, 'singleAvailableRoom'])->name('get.availableroom');
-Route::match(['get', 'post'], 'get-roomcalendar', [BookingController::class, 'roomBookingCalendar'])->name('get.roomcalendar');
+Route::match(['get', 'post'], 'get-table-list', [BookingController::class, 'getTableList'])->name('get.getTableList');
+Route::match(['get', 'post'], 'get-available-table', [BookingController::class, 'singleAvailableTable'])->name('get.availabletable');
+Route::match(['get', 'post'], 'get-tablecalendar', [BookingController::class, 'tableBookingCalendar'])->name('get.tablecalendar');
 Route::get('booking-record', [BookingController::class, 'bookingRecord'])->name('booking.bookingRecord')->middleware('useractivity');
 Route::get('checkin-record', [BookingController::class, 'checkinRecord'])->name('checkin.checkinRecord')->middleware('useractivity');
 Route::get('billing-record', [BookingController::class, 'billingRecord'])->name('billing.billingRecord')->middleware('useractivity');
@@ -353,6 +353,12 @@ Route::post('update-order', [OrderController::class, 'update'])->name('order.upd
 Route::post('delete-order', [OrderController::class, 'destroy'])->name('order.delete');
 Route::post('approve-order', [OrderController::class, 'approve'])->name('order.approve');
 Route::get('order-invoice-print/{id}', [OrderController::class, 'orderInvoicePrint'])->name('order.invoice')->middleware('useractivity');
+
+//Pay First Order Route
+Route::get('payFirst/{id?}', [OrderController::class, 'payFirst'])->name('order.payFirst')->middleware('useractivity');
+Route::post('add-payFirst-order', [OrderController::class, 'storePayFirst'])->name('order.storePayFirst');
+Route::post('update-payFirst-order', [OrderController::class, 'updatePayFirst'])->name('order.updatePayFirst');
+Route::post('delete-payFirst-order', [OrderController::class, 'destroyPayFirst'])->name('order.destroyPayFirst');
 
 // Material route
 Route::get('material', [MaterialController::class, 'create'])->name('material.create')->middleware('useractivity');

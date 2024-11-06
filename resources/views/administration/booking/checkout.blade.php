@@ -112,7 +112,7 @@
                                 <th>Date</th>
                                 <th>Guest Name</th>
                                 <th></th>
-                                <th>Room Name</th>
+                                <th>Table Name</th>
                                 <th>Price</th>
                                 <th>Days</th>
                                 <th>Checkout Date</th>
@@ -134,7 +134,7 @@
                                         <input type="checkbox" @change="singleCheck(index)"
                                             v-model="booking.booking_details[0].checkStatus" />
                                     </td>
-                                    <td>@{{ booking.booking_details[0].room_name }}</td>
+                                    <td>@{{ booking.booking_details[0].table_name }}</td>
                                     <td style="text-align:center;">@{{ booking.booking_details[0].unit_price | decimal }}</td>
                                     <td style="text-align:center;">@{{ booking.booking_details[0].days }}</td>
                                     <td style="text-align:center;">@{{ booking.booking_details[0].checkout_date | dateFormat("DD-MM-YYYY") }}</td>
@@ -145,7 +145,7 @@
                                     <td>
                                         <input type="checkbox" @change="singleCheck(index)" v-model="product.checkStatus" />
                                     </td>
-                                    <td>@{{ product.room_name }}</td>
+                                    <td>@{{ product.table_name }}</td>
                                     <td style="text-align:center;">@{{ product.unit_price | decimal }}</td>
                                     <td style="text-align:center;">@{{ product.days }}</td>
                                     <td style="text-align:center;">@{{ product.checkout_date | dateFormat("DD-MM-YYYY") }}</td>
@@ -231,8 +231,8 @@
                                     <tr v-for="dtl in detail">
                                         <td style="text-align: left;">
                                             <div class="form-group">
-                                                <label for="">Room</label>
-                                                <input type="text" style="height: 22px;" v-model="dtl.room_name" class="form-control" readonly>
+                                                <label for="">Table</label>
+                                                <input type="text" style="height: 22px;" v-model="dtl.table_name" class="form-control" readonly>
                                             </div>
                                         </td>
                                         <td style="text-align: left;">
@@ -249,7 +249,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th colspan="2" style="text-align: left;">Room Bill:</th>
+                                        <th colspan="2" style="text-align: left;">Table Bill:</th>
                                         <th style="text-align: right;">@{{ payment.billTotal }}</th>
                                     </tr>
                                     <tr>
@@ -578,7 +578,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">bookings Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">bookings Record</h4>
                             </div>
                         </div>
                         <div class="row">

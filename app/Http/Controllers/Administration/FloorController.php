@@ -33,7 +33,7 @@ class FloorController extends Controller
             return view('error.unauthorize');
         }
 
-        return view('administration.room.floor');
+        return view('administration.table.floor');
     }
 
     public function store(Request $request)
@@ -45,9 +45,9 @@ class FloorController extends Controller
         $floorname = Floor::where('name', $request->name)->first();
         if (!empty($floorname)) return send_error("This name have been already exists", null, 422);
         try {
-            $check = DB::table('room_types')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();;
+            $check = DB::table('table_types')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();;
             if (!empty($check)) {
-                DB::select("UPDATE room_types SET deleted_by = NULL, deleted_at = NULL , status = 'a' WHERE id = ?", [$check->id]);
+                DB::select("UPDATE table_types SET deleted_by = NULL, deleted_at = NULL , status = 'a' WHERE id = ?", [$check->id]);
             } else {
                 $data = new Floor();
                 $data->name = $request->name;

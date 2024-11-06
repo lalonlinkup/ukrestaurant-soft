@@ -10,7 +10,7 @@ class MaterialPurchaseDetails extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $gurded = ['id'];
+    protected $guarded = ['id'];
     
     public function materialPurchase() {
         return $this->belongsTo(MaterialPurchase::class);

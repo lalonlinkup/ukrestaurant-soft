@@ -34,29 +34,29 @@ class GraphController extends Controller
             $month = date('m');
             $today = date('Y-m-d');
 
-            // total room
-            $totalRoom = DB::select("
-                    select count(*) as total_room
-                    from rooms rm
+            // total table
+            $totalTable = DB::select("
+                    select count(*) as total_table
+                    from tables rm
                     where rm.status = 'a'
-                ")[0]->total_room;
+                ")[0]->total_table;
 
             // checkin list
             $checkin_date = date('Y-m-d') . ' 12:00:00';
-            $rooms = DB::select("select r.*,
-                                rt.name as roomtype_name
-                                from rooms r
-                                left join room_types rt on rt.id = r.room_type_id
+            $tables = DB::select("select r.*,
+                                rt.name as tabletype_name
+                                from tables r
+                                left join table_types rt on rt.id = r.table_type_id
                                 where r.status != 'd' and r.deleted_at is null
                                 ");
 
-            foreach ($rooms as $key => $item) {
-                $roomavailable = DB::select("select * from rooms rm where rm.id not in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                $item->available = count($roomavailable) > 0 ? 'true' : 'false';
-                $roombooked = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'booked' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                $item->booked = count($roombooked) > 0 ? 'true' : 'false';
-                $roomcheckin = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'checkin' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                $item->checkin = count($roomcheckin) > 0 ? 'true' : 'false';
+            foreach ($tables as $key => $item) {
+                $tableavailable = DB::select("select * from tables rm where rm.id not in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+                $item->available = count($tableavailable) > 0 ? 'true' : 'false';
+                $tablebooked = DB::select("select * from tables rm where rm.id in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'booked' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+                $item->booked = count($tablebooked) > 0 ? 'true' : 'false';
+                $tablecheckin = DB::select("select * from tables rm where rm.id in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'checkin' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+                $item->checkin = count($tablecheckin) > 0 ? 'true' : 'false';
 
                 if ($item->available == 'true') {
                     $item->color = "#aee2ff";
@@ -67,11 +67,11 @@ class GraphController extends Controller
                 }
             }
 
-            $checkIn = count(array_values(array_filter($rooms, function ($item) {
+            $checkIn = count(array_values(array_filter($tables, function ($item) {
                 return $item->checkin == 'true';
             })));
 
-            $vacant = count(array_values(array_filter($rooms, function ($item) {
+            $vacant = count(array_values(array_filter($tables, function ($item) {
                 return $item->available == 'true';
             })));
 
@@ -161,7 +161,7 @@ class GraphController extends Controller
             // Cash Balance
             $cashBalance =  Account::cashTransactionSummary()[0]->cash_balance;
             $responseData = [
-                'total_room'         => $totalRoom,
+                'total_table'         => $totalTable,
                 'checkIn'            => $checkIn,
                 'vacant'             => $vacant,
                 'checkout'           => $checkout,
@@ -317,15 +317,15 @@ class GraphController extends Controller
             // Top Products
             $topProducts = DB::select("
                         select 
-                            r.name as room_name,
-                            ifnull(count(bkd.id), 0) as totalroom
+                            r.name as table_name,
+                            ifnull(count(bkd.id), 0) as totaltable
                         from booking_details bkd
                         left join booking_masters bkm on bkm.id = bkd.booking_id
-                        join rooms r on r.id = bkd.room_id
+                        join tables r on r.id = bkd.table_id
                         where bkd.status = 'a'
                         $productClauses
-                        group by bkd.room_id
-                        order by totalroom desc
+                        group by bkd.table_id
+                        order by totaltable desc
                         limit 5
                     ");
 

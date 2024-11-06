@@ -127,7 +127,7 @@
                         <div class="col-md-3" style="padding: 4px 0;background-color: #3e2e6b;color:white; margin-bottom: -1px;">
                             <span style="font-size: 12px;">
                                 Developed by
-                                <!-- <span class="blue bolder"><a href="http://bigtech.com.bd/" target="_blank" style="color: white;text-decoration: underline;font-weight: normal;">Big Technology</a></span> -->
+                                <span class="blue bolder"><a href="http://bigtech.com.bd/" target="_blank" style="color: white;text-decoration: underline;font-weight: normal;">Big Technology Ltd.</a></span>
                             </span>
                         </div>
                     </div>
@@ -142,7 +142,6 @@
     </div>
 
     @include("layouts.shortcutModal")
-
 
     @include("layouts.script")
     <script>

@@ -16,7 +16,7 @@ class CreateIssueReturnsTable extends Migration
         Schema::create('issue_returns', function (Blueprint $table) {
             $table->id();
             $table->date('date')->index();
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('table_id');
             $table->decimal('total', 18,2)->default('0.00');
             $table->text('description', 300)->nullable();
             $table->char('status', 1)->default('a')->index();
@@ -27,7 +27,7 @@ class CreateIssueReturnsTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

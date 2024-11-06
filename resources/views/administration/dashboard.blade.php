@@ -17,33 +17,9 @@ $module = session('module');
     <div class="col-md-12 col-xs-12">
         <!-- Header Logo -->
         <div class="col-md-12 header headerForDash" style="height: 130px;">
-            <img style="height: 100px; margin-top:10px; background: #224079; width: 430px; border-radius: 7px;" src="{{ asset('auth/images/logo.png') }}" class="img img-responsive center-block">
+            <img style="height: 100px;margin-top:10px;width: 465px;border-radius: 15px;border: 2px solid #3e2e6b !important;" src="{{ asset('auth/images/logo.png') }}" class="img img-responsive center-block">
         </div>
         <div class="col-md-10 col-md-offset-1">
-            <div class="col-md-3 col-xs-6 section4">
-                <div class="col-md-12 section122" style="background-color:#e1e1ff;" onmouseover="this.style.background = '#d2d2ff'" onmouseout="this.style.background = '#e1e1ff'">
-                    <a href="/module/BookingModule">
-                        <div class="logo">
-                            <i class="bi bi-bookmark-plus"></i>
-                        </div>
-                        <div class="textModule">
-                            Booking Module
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-3 col-xs-6 section4">
-                <div class="col-md-12 section122" style="background-color:#c6e2ff;" onmouseover="this.style.background = '#91c8ff'" onmouseout="this.style.background = '#c6e2ff'">
-                    <a href="/module/ServiceModule">
-                        <div class="logo">
-                            <i class="bi bi-person-workspace"></i>
-                        </div>
-                        <div class="textModule">
-                            Service Module
-                        </div>
-                    </a>
-                </div>
-            </div>
             <!-- Restaurant Module -->
             <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#d8ebeb;" onmouseover="this.style.background = '#bddddd'" onmouseout="this.style.background = '#d8ebeb'">
@@ -57,6 +33,33 @@ $module = session('module');
                     </a>
                 </div>
             </div>
+            <!-- Booking Module -->
+            <div class="col-md-3 col-xs-6 section4">
+                <div class="col-md-12 section122" style="background-color:#e1e1ff;" onmouseover="this.style.background = '#d2d2ff'" onmouseout="this.style.background = '#e1e1ff'">
+                    <a href="/module/BookingModule">
+                        <div class="logo">
+                            <i class="bi bi-bookmark-plus"></i>
+                        </div>
+                        <div class="textModule">
+                            Booking Module
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Service Module -->
+            <div class="col-md-3 col-xs-6 section4">
+                <div class="col-md-12 section122" style="background-color:#c6e2ff;" onmouseover="this.style.background = '#91c8ff'" onmouseout="this.style.background = '#c6e2ff'">
+                    <a href="/module/ServiceModule">
+                        <div class="logo">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+                        <div class="textModule">
+                            Service Module
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Inventory Module -->
             <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#dcf5ea;" onmouseover="this.style.background = '#bdecd7'" onmouseout="this.style.background = '#dcf5ea'">
                     <a href="/module/InventoryModule">
@@ -69,7 +72,7 @@ $module = session('module');
                     </a>
                 </div>
             </div>
-            <!-- module/AccountsModule -->
+            <!-- Accounts Module -->
             <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#A7ECFB;" onmouseover="this.style.background = '#85e6fa'" onmouseout="this.style.background = '#A7ECFB'">
                     <a href="/module/AccountsModule">
@@ -82,8 +85,7 @@ $module = session('module');
                     </a>
                 </div>
             </div>
-
-            <!-- module/HRPayroll -->
+            <!-- HR & Payroll Module -->
             <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#ecffd9;" onmouseover="this.style.background = '#cfff9f'" onmouseout="this.style.background = '#ecffd9'">
                     <a href="/module/HRPayroll">
@@ -96,8 +98,7 @@ $module = session('module');
                     </a>
                 </div>
             </div>
-
-            <!-- module/ReportsModule -->
+            <!-- Reports Module -->
             <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#c6e2ff;" onmouseover="this.style.background = '#91c8ff'" onmouseout="this.style.background = '#c6e2ff'">
                     <a href="/module/ReportsModule">
@@ -110,7 +111,6 @@ $module = session('module');
                     </a>
                 </div>
             </div>
-
             <!-- module/Administration -->
             {{-- <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#e6e6ff;" onmouseover="this.style.background = '#b9b9ff'" onmouseout="this.style.background = '#e6e6ff'">
@@ -164,43 +164,43 @@ $module = session('module');
             <div class="col-md-12 header">
                 <h3> Administration Module </h3>
             </div>
-            @if(checkAccess('room'))
+            @if(checkAccess('table'))
             <div class="col-md-2 col-xs-6 ">
                 <div class="col-md-12 section20">
-                    <a href="/room">
+                    <a href="/table">
                         <div class="logo">
-                            <i class="menu-icon bi bi-shop"></i>
+                            <i class="menu-icon bi bi-table"></i>
                         </div>
                         <div class="textModule">
-                            Room Entry
+                            Table Entry
                         </div>
                     </a>
                 </div>
             </div>
             @endif
-            @if(checkAccess('roomList'))
+            @if(checkAccess('tableList'))
             <div class="col-md-2 col-xs-6 ">
                 <div class="col-md-12 section20">
-                    <a href="/roomlist">
+                    <a href="/tablelist">
                         <div class="logo">
                             <i class="menu-icon bi bi-list-ol"></i>
                         </div>
                         <div class="textModule">
-                            Room List
+                            Table List
                         </div>
                     </a>
                 </div>
             </div>
             @endif
-            @if(checkAccess('roomType'))
+            @if(checkAccess('tableType'))
             <div class="col-md-2 col-xs-6 ">
                 <div class="col-md-12 section20">
-                    <a href="/roomtype">
+                    <a href="/tabletype">
                         <div class="logo">
-                            <i class="menu-icon bi bi-house-add-fill"></i>
+                            <i class="menu-icon bi bi-view-stacked"></i>
                         </div>
                         <div class="textModule">
-                            Room Type
+                            Table Type
                         </div>
                     </a>
                 </div>
@@ -414,7 +414,7 @@ $module = session('module');
                 </div>
             </div>
             @endif --}}
-            
+
         </div>
     </div>
 </div>
@@ -1343,6 +1343,20 @@ $module = session('module');
                         </div>
                         <div class="textModule" style="line-height: 13px;">
                             Order Entry
+                        </div>
+                    </a>
+                </div>
+            </div>
+            @endif
+            @if(checkAccess('payFirst'))
+            <div class="col-md-2 col-xs-6">
+                <div class="col-md-12 section20">
+                    <a href="/payFirst">
+                        <div class="logo">
+                            <i class="menu-icon bi bi-cash-stack"></i>
+                        </div>
+                        <div class="textModule" style="line-height: 13px;">
+                            Pay First
                         </div>
                     </a>
                 </div>

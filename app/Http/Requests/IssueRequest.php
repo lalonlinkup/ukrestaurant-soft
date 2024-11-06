@@ -29,7 +29,7 @@ class IssueRequest extends FormRequest
             'issue.issue_to' => 'required',
             'issue.subtotal' => 'required',
             'issue.total' => 'required',
-            'issue.room_id' => 'required',
+            'issue.table_id' => 'required',
             'carts' => 'required',
         ];
 
@@ -38,7 +38,7 @@ class IssueRequest extends FormRequest
     public function messages()
     {
         return [
-            'issue.room_id.required' => 'Room name required',
+            'issue.table_id.required' => 'Table name required',
             'issue.date.required' => 'Issue date required',
             'issue.invoice.required' => 'Issue invoice required',
             'issue.issue_to.required' => 'Issue To required',

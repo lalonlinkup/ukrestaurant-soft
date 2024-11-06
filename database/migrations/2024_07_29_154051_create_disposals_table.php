@@ -17,7 +17,7 @@ class CreateDisposalsTable extends Migration
             $table->id();
             $table->string('invoice', 20);
             $table->date('date');
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('table_id');
             $table->decimal('total', 18,2)->default(0.00);
             $table->text('note')->nullable();
             $table->char('status', 1)->default('a')->index();
@@ -28,7 +28,7 @@ class CreateDisposalsTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
             
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

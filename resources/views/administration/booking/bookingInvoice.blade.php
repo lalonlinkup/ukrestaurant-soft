@@ -71,7 +71,7 @@
                             <tr v-for="(item, sl) in carts">
                                 <td>@{{ sl + 1 }}</td>
                                 <td style="text-align:left;">
-                                    @{{ item.room_name }} - @{{ item.room_code }}
+                                    @{{ item.table_name }} - @{{ item.table_code }}
                                 </td>
                                 <td>@{{ item.days }} days</td>
                                 <td>@{{ item.checkin_date | dateFormat("DD-MM-YYYY") }}</td>

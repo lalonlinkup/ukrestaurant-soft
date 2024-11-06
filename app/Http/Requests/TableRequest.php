@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoomRequest extends FormRequest
+class TableRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,11 @@ class RoomRequest extends FormRequest
     public function rules()
     {
         $rules = array(
-            'name'         => 'required',
-            'room_type_id' => 'required',
-            'floor_id'     => 'required',
-            'category_id'  => 'required',
-            'bed'          => 'required',
-            'bath'         => 'required',
-            'price'        => 'required'
+            'name'          => 'required',
+            'table_type_id' => 'required',
+            'floor_id'      => 'required',
+            'incharge_id'   => 'required',
+            'capacity'      => 'required'
         );
 
         return $rules;

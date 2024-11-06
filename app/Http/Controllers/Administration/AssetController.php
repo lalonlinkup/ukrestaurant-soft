@@ -163,8 +163,8 @@ class AssetController extends Controller
     {
         $clauses = "";
         
-        if (!empty($request->roomId)) {
-            $clauses .= " and i.room_id = '$request->roomId'";
+        if (!empty($request->tableId)) {
+            $clauses .= " and i.table_id = '$request->tableId'";
         }
 
         $assets = DB::select("select 

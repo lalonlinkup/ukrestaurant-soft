@@ -31,13 +31,13 @@
                                 </div>
 
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-xs-4 col-md-4">Select Room <sup class="text-danger">*</sup></label>
+                                    <label class="control-label col-xs-4 col-md-4">Select Table <sup class="text-danger">*</sup></label>
                                     <div class="col-xs-8 col-md-7" style="display: flex;align-items:center;margin-bottom:5px;">
                                         <div style="width: 88%;">
-                                            <v-select :options="rooms" style="margin: 0;" v-model="selectedRoom" label="name" @input="getCustomer"></v-select>
+                                            <v-select :options="tables" style="margin: 0;" v-model="selectedTable" label="name" @input="getCustomer"></v-select>
                                         </div>
                                         <div style="width: 11%;">
-                                            <a href="/room" target="_blank" class="btn btn-xs btn-danger" style="width: 100%;height: 24px;border: 0px;margin-left: 1px;border-radius: 3px;"><i class="fa fa-plus"></i></a>
+                                            <a href="/table" target="_blank" class="btn btn-xs btn-danger" style="width: 100%;height: 24px;border: 0px;margin-left: 1px;border-radius: 3px;"><i class="fa fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                                 <td>@{{ row.sl }}</td>
                                 <td>@{{ row.invoice }}</td>
                                 <td>@{{ row.date }}</td>
-                                <td>@{{ row.room_name }}</td>
+                                <td>@{{ row.table_name }}</td>
                                 <td>@{{ row.head_name }}</td>
                                 <td>@{{ row.amount }}</td>
                                 <td>
@@ -155,8 +155,8 @@
                             align: 'center'
                         },
                         {
-                            label: 'Room',
-                            field: 'room_name',
+                            label: 'Table',
+                            field: 'table_name',
                             align: 'center'
                         },
                         {
@@ -183,15 +183,15 @@
                         id: "",
                         invoice: "{{ invoiceGenerate('Service', 'S') }}",
                         date: moment().format("YYYY-MM-DD"),
-                        room_id: null,
+                        table_id: null,
                         customer_id: null,
                         service_head_id: null,
                         amount: 0,
                         description: ''
                     },
                     services: [],
-                    rooms: [],
-                    selectedRoom: null,
+                    tables: [],
+                    selectedTable: null,
                     heads: [],
                     selectedHead: null,
                     selectedCustomer: {
@@ -210,14 +210,14 @@
     
             created() {
                 this.getService();
-                this.getRoom();
+                this.getTables();
                 this.getServiceHead();
             },
 
             methods: {
-                getRoom() {
-                    axios.get('/get-room').then(res => {
-                        this.rooms = res.data;
+                getTables() {
+                    axios.get('/get-table').then(res => {
+                        this.tables = res.data;
                     })
                 },
 
@@ -231,11 +231,11 @@
                 },
 
                 getCustomer() {
-                    if(this.selectedRoom == null) {
+                    if(this.selectedTable == null) {
                         return;
                     }
                     axios.post('/get_checkin_customer', {
-                        roomId: this.selectedRoom.id,
+                        tableId: this.selectedTable.id,
                         date: this.service.date
                     }).then(res => {
                         this.selectedCustomer = res.data;
@@ -270,7 +270,7 @@
                     } else {
                         url = '/update-service';
                     }
-                    this.service.room_id = this.selectedRoom != null ? this.selectedRoom.id : null;
+                    this.service.table_id = this.selectedTable != null ? this.selectedTable.id : null;
                     this.service.customer_id = this.selectedCustomer.id != null ? this.selectedCustomer.id : null;
                     this.service.booking_id = this.selectedCustomer.id != null ? this.selectedCustomer.booking_id : null;
                     this.service.service_head_id = this.selectedHead != null ? this.selectedHead.id : null;
@@ -309,10 +309,10 @@
                         this.service[key] = row[key];
                     });
 
-                    if(row.room_id != null) {
-                        this.selectedRoom = {
-                            id: row.room_id,
-                            name: row.room_name
+                    if(row.table_id != null) {
+                        this.selectedTable = {
+                            id: row.table_id,
+                            name: row.table_name
                         }
                     }
                     if(row.customer_id != null) {
@@ -357,14 +357,14 @@
                         id: "",
                         invoice: "{{ invoiceGenerate('Service', 'S') }}",
                         date: moment().format("YYYY-MM-DD"),
-                        room_id: null,
+                        table_id: null,
                         customer_id: null,
                         service_head_id: null,
                         amount: 0,
                         description: ''
                     }
 
-                    this.selectedRoom = null;
+                    this.selectedTable = null;
                     this.selectedHead = null;
                     this.selectedCustomer = {
                         id: null,

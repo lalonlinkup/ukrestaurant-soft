@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Room Booking Entry')
-@section('breadcrumb_title', 'Room Booking Entry')
+@section('title', 'Table Booking Entry')
+@section('breadcrumb_title', 'Table Booking Entry')
 @push('style')
 <link rel="stylesheet" href="{{asset('backend')}}/css/booking.css" />
 <link rel="stylesheet" href="{{asset('backend')}}/css/fullcalendar.css" />
@@ -77,7 +77,7 @@
                                 <div style="width: 80%;">
                                     <select class="form-control" v-model="filter.typeId" style="border-radius:5px;margin:0;height:30px;">
                                         <option value="">All</option>
-                                        <option v-for="roomtype in roomtypes" :value="roomtype.id">@{{roomtype.name}}</option>
+                                        <option v-for="tabletype in tabletypes" :value="tabletype.id">@{{tabletype.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="col-md-1 col-xs-12" style="float:right">
-                            <button type="button" @click="getRooms" style="cursor:pointer;font-size:18px;border:1px groove #848f95;padding:0px 10px;border-radius:5px;background:white;">
+                            <button type="button" @click="getTables" style="cursor:pointer;font-size:18px;border:1px groove #848f95;padding:0px 10px;border-radius:5px;background:white;">
                                 <i class="bi bi-search"></i>
                             </button>
                         </div>
@@ -121,32 +121,32 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top:10px;padding:0;display:none;" v-if="floors.length > 0 && showReport" :style="{display: floors.length > 0 && showReport ? '' : 'none'}">
-                    <div class="col-md-12 col-xs-12" v-for="floor in floors" style="padding:0;" v-if="floor.rooms.length > 0">
+                    <div class="col-md-12 col-xs-12" v-for="floor in floors" style="padding:0;" v-if="floor.tables.length > 0">
                         <h3 style="border-bottom: 1px double rgb(232, 97, 0); text-align: left; background: #224079; padding: 5px;">@{{floor.name}}</h3>
                         <form action="">
-                            <div class="col-md-12 col-xs-12 about-room" style="padding-left:12px !important;">
+                            <div class="col-md-12 col-xs-12 about-table" style="padding-left:12px !important;">
                                 <div class="row">
                                     <div class="col-md-12 col-xs-12 no-padding" style="display:flex;flex-wrap: wrap;">
-                                        <div class="content" v-for="roomItem in floor.rooms">
-                                            <label :for="'room-'+roomItem.id">
-                                                <div class="booking-card" :style="{background: roomItem.color}">
+                                        <div class="content" v-for="tableItem in floor.tables">
+                                            <label :for="'table-'+tableItem.id">
+                                                <div class="booking-card" :style="{background: tableItem.color}">
                                                     <div class="card-image text-center">
                                                         <!-- <i class="bi bi-house fa-4x" alt="House Image" style=" color:white;width: 100%; height: 100%; object-fit: cover;"></i> -->
                                                         <div class="overlay">
-                                                            <p>@{{roomItem.name}}</p>
+                                                            <p>@{{tableItem.name}}</p>
                                                         </div>
                                                         <div class="top-right-text">
                                                             <div class="col-xs-6 no-padding" style="text-align: left;">
-                                                                <input v-if="roomItem.color == '#aee2ff'" :style="{visibility: roomItem.color == '#aee2ff' ? '' : 'hidden'}" @change="addToCart($event)" type="checkbox" :value="roomItem.id" v-model="roomItem.checkStatus" :id="'room-'+roomItem.id">
+                                                                <input v-if="tableItem.color == '#aee2ff'" :style="{visibility: tableItem.color == '#aee2ff' ? '' : 'hidden'}" @change="addToCart($event)" type="checkbox" :value="tableItem.id" v-model="tableItem.checkStatus" :id="'table-'+tableItem.id">
                                                             </div>
                                                             <div class="col-xs-6 no-padding" style="display: flex; justify-content: end;">
-                                                                <button type="button" class="icon-container" @click="showRoomInfo(roomItem.id)">
+                                                                <button type="button" class="icon-container" @click="showTableInfo(tableItem.id)">
                                                                     <i class="bi bi-info"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="card-button">@{{roomItem.color == '#aee2ff' ? 'Available' : roomItem.color == '#ff0000ab' ? 'Check In' : 'Booked'}}</div>
+                                                    <div class="card-button">@{{tableItem.color == '#aee2ff' ? 'Available' : tableItem.color == '#ff0000ab' ? 'Check In' : 'Booked'}}</div>
                                                 </div>
                                             </label>
                                         </div>
@@ -257,7 +257,7 @@
                                     </div>
                                     <div v-if="booking.is_other == true" class="col-md-12 col-xs-12 no-padding">
                                         <div class="form-group col-md-6">
-                                            <label class="col-xs-4 no-padding-left">Room:</label>
+                                            <label class="col-xs-4 no-padding-left">Table:</label>
                                             <div class="col-xs-8 no-padding-left">
                                                 <v-select :options="carts" v-model="selectedCart" label="name"></v-select>
                                             </div>
@@ -296,7 +296,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sl</th>
-                                                    <th>Room</th>
+                                                    <th>Table</th>
                                                     <th>Name</th>
                                                     <th>NID</th>
                                                     <th>Gender</th>
@@ -306,7 +306,7 @@
                                             <tbody>
                                                 <tr v-for="(item, sl) in members">
                                                     <td>@{{sl + 1}}</td>
-                                                    <td>@{{item.room_name}}</td>
+                                                    <td>@{{item.table_name}}</td>
                                                     <td style="text-align: left;">@{{item.name}}</td>
                                                     <td>@{{item.nid}}</td>
                                                     <td>@{{item.gender}}</td>
@@ -322,7 +322,7 @@
 
                             <div class="col-md-7 col-xs-12" style="padding:10px 0px 10px 10px !important;">
                                 <h5 class="top-radius" style="background:#146C94;text-align:left;color:white;margin:0;padding:5px; ">
-                                    Room Booking List</h5>
+                                    Table Booking List</h5>
                                 <div class="control-group bg-of-yellow border-radius membersection" style="height:252px !important;">
                                     <table class="table" style="padding:5px;">
                                         <thead>
@@ -330,7 +330,7 @@
                                                 <th>Sl</th>
                                                 <th>CheckIn</th>
                                                 <th>CheckOut</th>
-                                                <th>Room</th>
+                                                <th>Table</th>
                                                 <th>Type</th>
                                                 <th>Category</th>
                                                 <th>Days</th>
@@ -356,7 +356,7 @@
                                                         <input type="number" style="padding: 2px 5px;" class="form-control" step="any" min="0" v-model="item.unit_price" @input="editCart(item)" />
                                                     </td>
                                                     <td class="">
-                                                        <button type="button" class="icon-container" @click="showRoomInfo(item.room_id)">
+                                                        <button type="button" class="icon-container" @click="showTableInfo(item.table_id)">
                                                             <i class="bi bi-info"></i>
                                                         </button>
                                                         <!-- <i class="fa fa-times btn btn-xs btn-danger" style="padding:1px !important; border-radius:3px;font-size: 8px;"> -->
@@ -461,14 +461,14 @@
         </div>
     </div>
 
-    <!-- modal for room view -->
+    <!-- modal for table view -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="border-radius:20px;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style="text-align:left;font-weight:bold;color:#000;">Room: @{{roomInfo.name}}</h3>
+                    <h3 class="modal-title" style="text-align:left;font-weight:bold;color:#000;">Table: @{{tableInfo.name}}</h3>
                 </div>
                 <div class="modal-body" style="margin-bottom:15px">
                     <div class="row" style="margin: 10px;  box-shadow: 0px 2px 5px 0px #c2bfbf;border-radius:10px;padding-top:10px;padding-bottom:15px">
@@ -517,7 +517,7 @@
                     note: ''
                 },
                 floors: [],
-                roomtypes: [],
+                tabletypes: [],
                 categories: [],
                 customers: [],
                 selectedCustomer: {
@@ -543,18 +543,18 @@
                 selectedCart: null,
                 members: [],
 
-                roomInfo: {},
+                tableInfo: {},
                 onProgress: false,
                 showReport: null,
             }
         },
 
         created() {
-            this.getRoomType();
+            this.getTableType();
             this.getCategory();
             this.getCustomer();
             this.getReference();
-            this.getRooms();
+            this.getTables();
             if (this.booking.id > 0) {
                 $("#tab1").removeClass('in active')
                 $("#tab2").addClass('in active')
@@ -614,39 +614,37 @@
                 })
             },
 
-            getRoomType() {
-                axios.get("/get-roomtype")
-                    .then(res => {
-                        this.roomtypes = res.data;
-                    })
+            getTableType() {
+                axios.get("/get-tabletype").then(res => {
+                    this.tabletypes = res.data;
+                })
             },
 
-            getRooms() {
+            getTables() {
                 this.carts = [];
                 this.showReport = false;
-                axios.post("/get-room-list", this.filter)
-                    .then(res => {
-                        this.floors = res.data.map(floor => {
-                            floor.rooms = floor.rooms.map(item => {
-                                item.checkStatus = false;
-                                return item;
-                            })
-                            if (this.filter.searchType == 'booked') {
-                                floor.rooms = floor.rooms.filter(item => item.booked == 'true');
-                            } else if (this.filter.searchType == 'checkin') {
-                                floor.rooms = floor.rooms.filter(item => item.checkin == 'true');
-                            } else if (this.filter.searchType == 'available') {
-                                floor.rooms = floor.rooms.filter(item => item.available == 'true');
-                            }
-                            return floor;
-                        });
-                        this.showReport = true;
-                    })
+                axios.post("/get-table-list", this.filter).then(res => {
+                    this.floors = res.data.map(floor => {
+                        floor.tables = floor.tables.map(item => {
+                            item.checkStatus = false;
+                            return item;
+                        })
+                        if (this.filter.searchType == 'booked') {
+                            floor.tables = floor.tables.filter(item => item.booked == 'true');
+                        } else if (this.filter.searchType == 'checkin') {
+                            floor.tables = floor.tables.filter(item => item.checkin == 'true');
+                        } else if (this.filter.searchType == 'available') {
+                            floor.tables = floor.tables.filter(item => item.available == 'true');
+                        }
+                        return floor;
+                    });
+                    this.showReport = true;
+                })
             },
 
             async addToCart(event) {
                 if (event.target.checked) {
-                    let avaiable = await axios.post('/get-available-room', {
+                    let avaiable = await axios.post('/get-available-table', {
                             id: event.target.value,
                             checkin_date: this.filter.checkin_date,
                             checkout_date: this.filter.checkout_date,
@@ -657,12 +655,12 @@
 
                     if (avaiable.status == false) {
                         event.target.checked = false;
-                        toastr.error(`This room not available on this date: ${avaiable.date}`);
+                        toastr.error(`This table not available on this date: ${avaiable.date}`);
                         return;
                     }
 
-                    let room = await axios.post('/get-room', {
-                            roomId: event.target.value
+                    let table = await axios.post('/get-table', {
+                            tableId: event.target.value
                         })
                         .then(res => {
                             return res.data[0];
@@ -675,19 +673,19 @@
                     let checkout_date = moment(this.filter.checkout_date);
                     let totalDays = checkout_date.diff(checkin_date, 'days');
                     let cart = {
-                        room_id: room.id,
-                        name: room.name,
-                        typeName: room.roomtype_name,
-                        categoryName: room.category_name,
+                        table_id: table.id,
+                        name: table.name,
+                        typeName: table.tabletype_name,
+                        categoryName: table.category_name,
                         days: totalDays,
-                        unit_price: parseFloat(room.price).toFixed(2),
-                        total: parseFloat(room.price * totalDays).toFixed(2),
+                        unit_price: parseFloat(table.price).toFixed(2),
+                        total: parseFloat(table.price * totalDays).toFixed(2),
                         checkin_date: moment(this.filter.checkin_date).format('YYYY-MM-DD'),
                         checkout_date: moment(this.filter.checkout_date).format('YYYY-MM-DD'),
                     }
                     this.carts.push(cart);
                 } else {
-                    let findIndex = this.carts.findIndex(item => item.room_id == event.target.value);
+                    let findIndex = this.carts.findIndex(item => item.table_id == event.target.value);
                     this.carts.splice(findIndex, 1);
                 }
 
@@ -702,20 +700,20 @@
                     return;
                 }
                 let filter = {
-                    id: item.room_id,
+                    id: item.table_id,
                     checkin_date: item.checkin_date,
                     checkout_date: item.checkout_date
                 }
                 if (this.booking.id > 0) {
                     filter.booking_id = this.booking.id;
                 }
-                let avaiable = await axios.post('/get-available-room', filter)
+                let avaiable = await axios.post('/get-available-table', filter)
                     .then(res => {
                         return res.data;
                     })
 
                 if (avaiable.status == false) {
-                    toastr.error(`This room not available on this date: ${avaiable.date}`);
+                    toastr.error(`This table not available on this date: ${avaiable.date}`);
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
@@ -752,7 +750,7 @@
 
             otherAddToCart() {
                 if (this.selectedCart == null) {
-                    toastr.error("Room name is required");
+                    toastr.error("Table name is required");
                     return
                 }
                 if (this.selectedOtherCustomer.name == '') {
@@ -760,8 +758,8 @@
                     return
                 }
                 let member = {
-                    room_id: this.selectedCart.room_id,
-                    room_name: this.selectedCart.name,
+                    table_id: this.selectedCart.table_id,
+                    table_name: this.selectedCart.name,
                     name: this.selectedOtherCustomer.name,
                     nid: this.selectedOtherCustomer.nid,
                     gender: this.selectedOtherCustomer.gender,
@@ -834,17 +832,17 @@
                     })
             },
 
-            async showRoomInfo(id) {
-                let roomInfo = await axios.post('/get-room', {
-                        roomId: id
+            async showTableInfo(id) {
+                let tableInfo = await axios.post('/get-table', {
+                        tableId: id
                     })
                     .then(res => {
                         return res.data[0];
                     })
                 setTimeout(() => {
-                    this.roomCalendar(id);
+                    this.tableCalendar(id);
                 }, 500)
-                this.roomInfo = roomInfo;
+                this.tableInfo = tableInfo;
                 $("#myModal").modal("show");
             },
 
@@ -885,8 +883,8 @@
                         this.members = booking.othercustomer;
                         booking.booking_details.forEach(item => {
                             let detail = {
-                                room_id: item.room_id,
-                                name: item.room_name,
+                                table_id: item.table_id,
+                                name: item.table_name,
                                 typeName: item.type_name,
                                 categoryName: item.category_name,
                                 days: item.days,
@@ -901,12 +899,12 @@
                     })
             },
 
-            roomCalendar(roomId) {
+            tableCalendar(tableId) {
                 $.ajax({
-                    url: "/get-roomcalendar",
+                    url: "/get-tablecalendar",
                     method: 'post',
                     data: {
-                        roomId: roomId
+                        tableId: tableId
                     },
                     success: res => {
                         $('#calendar').fullCalendar('destroy');

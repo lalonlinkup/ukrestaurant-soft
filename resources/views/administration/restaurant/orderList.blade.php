@@ -31,7 +31,7 @@
                             <select class="form-select no-padding" @change="onChangeType" style="width: 100%;" v-model="filter.searchType">
                                 <option value="">All</option>
                                 <option value="customer">By Customer</option>
-                                <option value="room">By Room</option>
+                                <option value="table">By Table</option>
                                 <option value="category">By Category</option>
                                 <option value="quantity">By Quantity</option>
                                 <option value="user">By User</option>
@@ -44,12 +44,12 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'room'" style="display: none;" :style="{display: filter.searchType == 'room' ? '': 'none'}">
+                    <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'table'" style="display: none;" :style="{display: filter.searchType == 'table' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="rooms" v-model="selectedRoom" label="name"></v-select>
+                            <v-select :options="tables" v-model="selectedTable" label="name"></v-select>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'user'" style="display: none;" :style="{display: filter.searchType == 'user' ? '': 'none'}">
                         <div class="form-group">
                             <v-select :options="users" v-model="selectedUser" label="name"></v-select>
@@ -180,6 +180,7 @@
                             <th>Paid</th>
                             <th>Due</th>
                             <th>Note</th>
+                            <th>Type</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -196,6 +197,7 @@
                             <td style="text-align:right;">@{{ order.paid | decimal }}</td>
                             <td style="text-align:right;">@{{ order.due | decimal }}</td>
                             <td style="text-align:left;">@{{ order.note }}</td>
+                            <td style="text-align:left;">@{{ order.order_type }}</td>
                             <td style="text-align:center;">
                                 <a href="" title="Order Invoice" v-bind:href="`/order-invoice-print/${order.id}`" target="_blank"><i class="fa fa-file-text"></i></a>
                                 @if(userAction('u'))
@@ -214,6 +216,7 @@
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.total)}, 0) | decimal }}</td>
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.paid)}, 0) | decimal }}</td>
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.due)}, 0) | decimal }}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -279,8 +282,8 @@
 
                 customers: [],
                 selectedCustomer: null,
-                rooms: [],
-                selectedRoom: null,
+                tables: [],
+                selectedTable: null,
                 categories: [],
                 selectedCategory: null,
                 menus: [],
@@ -304,7 +307,11 @@
 
         methods: {
             async orderEdit(row) {
-                location.href = "/order/" + row.id
+                if (row.order_type == 'PayFirst') {
+                    location.href = "/payFirst/" + row.id
+                } else {
+                    location.href = "/order/" + row.id
+                }
             },
 
             getCategory() {
@@ -343,11 +350,11 @@
                     })
             },
 
-            getRooms() {
-                axios.get('/get-room')
-                .then(res => {
-                    this.rooms = res.data;
-                })
+            getTables() {
+                axios.get('/get-table')
+                    .then(res => {
+                        this.tables = res.data;
+                    })
             },
 
             onChangeType(event) {
@@ -363,8 +370,8 @@
                 this.filter.userId = "";
                 if (event.target.value == 'customer') {
                     this.getCustomer();
-                } else if(event.target.value == 'room') {
-                    this.getRooms();
+                } else if (event.target.value == 'table') {
+                    this.getTables();
                 } else if (event.target.value == 'quantity') {
                     this.getMenu();
                 } else if (event.target.value == 'category') {
@@ -373,13 +380,13 @@
                     this.getUser();
                 }
             },
-            
+
             getOrder() {
                 if (this.filter.searchType == 'customer') {
                     this.filter.customerId = this.selectedCustomer != null ? this.selectedCustomer.id : ""
                 }
-                if (this.filter.searchType == 'room') {
-                    this.filter.roomId = this.selectedRoom != null ? this.selectedRoom.id : ""
+                if (this.filter.searchType == 'table') {
+                    this.filter.tableId = this.selectedTable != null ? this.selectedTable.id : ""
                 }
                 if (this.filter.searchType == 'quantity' || this.filter.searchType == 'category') {
                     var url = '/get-order-details';
@@ -492,7 +499,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">orders Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">orders Record</h4>
                             </div>
                         </div>
                         <div class="row">

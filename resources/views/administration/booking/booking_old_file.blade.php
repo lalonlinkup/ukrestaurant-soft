@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Room Booking Entry')
-@section('breadcrumb_title', 'Room Booking Entry')
+@section('title', 'Table Booking Entry')
+@section('breadcrumb_title', 'Table Booking Entry')
 @push('style')
 <link rel="stylesheet" href="{{asset('backend')}}/css/booking.css" />
 @endpush
@@ -18,7 +18,7 @@
                                 <div class="card">
                                     <div class="text" v-html="floorItem.name"></div>
                                     <div class="button">
-                                        View Room
+                                        View Table
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +30,7 @@
                         <div class="col-md-1"></div>
                         <div class="col-md-10 col-xs-10" style="margin-top:30px">
                             <h3 style="border-bottom:1px double #e86100;padding-bottom:10px;text-align:left !important">
-                                Room Information</h3>
+                                Table Information</h3>
                             <form action="">
                                 <div class="col-md-12 col-xs-12 border-radius" style="padding:0 !important;background:#aee2ff;border: 1px groove #848f95 !important;">
                                     <div class="col-md-4 col-xs-4" style="padding-top:8px">
@@ -48,13 +48,13 @@
                                             <p style="font-size:18px">Type</p>
                                             <select class="form-control" v-model="typeId" style="height:32px;border-radius:5px;width:150px">
                                                 <option value="">All</option>
-                                                <option v-for="roomtype in roomtypes" :value="roomtype.id">@{{roomtype.name}}</option>
+                                                <option v-for="tabletype in tabletypes" :value="tabletype.id">@{{tabletype.name}}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-1 col-xs-4" style="padding-top:8px;float:right">
                                         <div class="date" style="display:flex">
-                                            <p @click="getRooms" style="cursor:pointer;font-size:18px;border:1px groove #848f95;padding:0px 10px;border-radius:5px;background:white">
+                                            <p @click="getTables" style="cursor:pointer;font-size:18px;border:1px groove #848f95;padding:0px 10px;border-radius:5px;background:white">
                                                 <i class="bi bi-search"></i>
                                             </p>
                                         </div>
@@ -80,25 +80,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-xs-12 about-room" style="padding-left:12px !important;">
+                                <div class="col-md-12 col-xs-12 about-table" style="padding-left:12px !important;">
                                     <div class="row">
                                         <div class="col-md-12 col-xs-12 no-padding" style="display:flex;flex-wrap: wrap;">
-                                            <div class="content" v-for="roomItem in rooms">
-                                                <label :for="roomItem.id">
-                                                    <div class="booking-card" :style="{background: roomItem.color}">
+                                            <div class="content" v-for="tableItem in tables">
+                                                <label :for="tableItem.id">
+                                                    <div class="booking-card" :style="{background: tableItem.color}">
                                                         <div class="card-image text-center">
                                                             <i class="bi bi-house fa-4x" alt="House Image" style=" color:white;width: 100%; height: 100%; object-fit: cover;"></i>
                                                             <div class="overlay">
-                                                                <p>@{{roomItem.name}}</p>
+                                                                <p>@{{tableItem.name}}</p>
                                                             </div>
                                                             <div class="top-right-text">
-                                                                <input :style="{visibility: roomItem.color == '#B2BEB5' ? '' : 'hidden'}" onchange="addToCart(event)" type="checkbox" :id="roomItem.id">
+                                                                <input :style="{visibility: tableItem.color == '#B2BEB5' ? '' : 'hidden'}" onchange="addToCart(event)" type="checkbox" :id="tableItem.id">
                                                                 <button type="button" class="icon-container" data-toggle="modal" data-target="#myModal">
                                                                     <i class="bi bi-info"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <div class="card-button">@{{roomItem.color == '#B2BEB5' ? 'Available' : roomItem.color == 'red' ? 'Check In' : 'Booked'}}</div>
+                                                        <div class="card-button">@{{tableItem.color == '#B2BEB5' ? 'Available' : tableItem.color == 'red' ? 'Check In' : 'Booked'}}</div>
                                                     </div>
                                                 </label>
                                             </div>
@@ -143,7 +143,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </form>
                         </div>
                     </div>
@@ -308,12 +308,12 @@
 
                                 <div class="col-md-6 col-xs-12" style="padding:10px 0px 10px 10px !important;">
                                     <h5 class="top-radius" style="background:#146C94;text-align:left;color:white;margin:0;padding:5px; ">
-                                        Room Booking List</h5>
+                                        Table Booking List</h5>
                                     <div class="control-group bg-of-yellow border-radius" style="height:252px !important;">
                                         <table class="table" style="padding:5px;">
                                             <thead>
                                                 <tr style="background:white;color:black;border:1px solid #D5D5D5">
-                                                    <th>Room</th>
+                                                    <th>Table</th>
                                                     <th>Days</th>
                                                     <th>Fare</th>
                                                     <th>Sub Total</th>
@@ -458,14 +458,14 @@
         </div>
     </div>
 
-    <!-- modal for room view -->
+    <!-- modal for table view -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="border-radius:20px;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style="text-align:center;font-weight:bold">Room Information</h3>
+                    <h3 class="modal-title" style="text-align:center;font-weight:bold">Table Information</h3>
                 </div>
                 <div class="modal-body" style="margin-bottom:15px">
                     <div class="row" style="margin: 10px;  box-shadow: 0px 2px 5px 0px #c2bfbf;border-radius:10px;padding-top:10px;padding-bottom:15px">
@@ -478,7 +478,7 @@
                             <h4><b>Name:</b> <span>A Beautiful Name</span></h4>
                             <p style="margin-bottom:2px !important"><b>Floor:</b> <span>12 floor(Lift-11)</span>
                             </p>
-                            <p style="margin-bottom:2px !important"><b>Type:</b> <span>Triple Bed Room (VIP)</span>
+                            <p style="margin-bottom:2px !important"><b>Type:</b> <span>Triple Bed Table (VIP)</span>
                             </p>
                             <p style="margin-bottom:2px !important"><b>Bed:</b> <span>2 Double Bed 1 single
                                     Bed</span>
@@ -487,7 +487,7 @@
                             <p style="margin-bottom:2px !important"><b>Price: </b> <span>10 Doller</span></p>
                         </div>
                         <div class="col-md-12 col-xs-12" style="text-align: justify;margin-top:10px">
-                            A room is more than just four walls; it's a canvas waiting for life to fill it. Picture
+                            A table is more than just four walls; it's a canvas waiting for life to fill it. Picture
                             a
                             cozy space, where sunlight dances through curtains, casting warm hues upon the walls.
                             The
@@ -516,9 +516,9 @@
                     checkout: moment().format("YYYY-MM-DD"),
                 },
                 floors: [],
-                roomtypes: [],
+                tabletypes: [],
 
-                rooms: [],
+                tables: [],
 
                 onProgress: false,
             }
@@ -526,36 +526,33 @@
 
         created() {
             this.getFloor();
-            this.getRoomType();
-            this.getRooms();
+            this.getTableType();
+            this.getTables();
         },
 
         methods: {
             getFloor() {
-                axios.get("/get-floor")
-                    .then(res => {
-                        this.floors = res.data;
-                    })
+                axios.get("/get-floor").then(res => {
+                    this.floors = res.data;
+                })
             },
 
-            getRoomType() {
-                axios.get("/get-roomtype")
-                    .then(res => {
-                        this.roomtypes = res.data;
-                    })
+            getTableType() {
+                axios.get("/get-tabletype").then(res => {
+                    this.tabletypes = res.data;
+                })
             },
 
-            getRooms() {
+            getTables() {
                 let filter = {
-                    floorId   : this.floorId,
-                    roomtypeId: this.typeId,
-                    checkin   : this.booking.checkin,
-                    checkout  : this.booking.checkout,
+                    floorId: this.floorId,
+                    tabletypeId: this.typeId,
+                    checkin: this.booking.checkin,
+                    checkout: this.booking.checkout,
                 }
-                axios.post("/get-room-list", filter)
-                    .then(res => {
-                        this.rooms = res.data;
-                    })
+                axios.post("/get-table-list", filter).then(res => {
+                    this.tables = res.data;
+                })
             },
         },
     })

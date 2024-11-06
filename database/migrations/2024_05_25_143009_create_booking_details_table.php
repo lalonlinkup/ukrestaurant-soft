@@ -16,7 +16,7 @@ class CreateBookingDetailsTable extends Migration
         Schema::create('booking_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id')->index();
-            $table->unsignedBigInteger('room_id')->index();
+            $table->unsignedBigInteger('table_id')->index();
             $table->dateTime('checkin_date');
             $table->dateTime('checkout_date');
             $table->integer('days')->default(0)->index();
@@ -33,7 +33,7 @@ class CreateBookingDetailsTable extends Migration
             $table->ipAddress('last_update_ip');
 
             $table->foreign('booking_id')->references('id')->on('booking_masters');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

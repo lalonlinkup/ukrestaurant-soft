@@ -15,6 +15,7 @@
     .v-select .dropdown-menu {
         width: 100% !important;
     }
+
     .icon-size {
         font-size: 16px;
     }
@@ -32,15 +33,15 @@
                             <label for="" style="width:150px;">Search Type</label>
                             <select class="form-select no-padding" @change="onChangeSearchType" style="width: 100%;" v-model="searchType">
                                 <option value="">All</option>
-                                <option value="room">By Room</option>
+                                <option value="table">By Table</option>
                                 <option value="customer">By Customer</option>
                                 <option value="head">By Service Head</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-xs-12" v-if="searchType == 'room'" style="display: none;" :style="{display: searchType == 'room' ? '':'none'}">
+                    <div class="col-md-3 col-xs-12" v-if="searchType == 'table'" style="display: none;" :style="{display: searchType == 'table' ? '':'none'}">
                         <div class="form-group">
-                            <v-select v-bind:options="rooms" id="room" v-model="selectedRoom" label="name"></v-select>
+                            <v-select v-bind:options="tables" id="table" v-model="selectedTable" label="name"></v-select>
                         </div>
                     </div>
                     <div class="col-md-3 col-xs-12" v-if="searchType == 'customer'" style="display: none;" :style="{display: searchType == 'customer' ? '':'none'}">
@@ -89,7 +90,7 @@
                                 <th>Sl</th>
                                 <th>Date</th>
                                 <th>Invoice</th>
-                                <th>Room Number</th>
+                                <th>Table Number</th>
                                 <th>Service Head</th>
                                 <th>Description</th>
                                 <th>Amount</th>
@@ -100,7 +101,7 @@
                                 <td style="text-align:center;">@{{ sl + 1 }}</td>
                                 <td>@{{ item.date }}</td>
                                 <td>@{{ item.invoice }}</td>
-                                <td>@{{ item.room_name }}</td>
+                                <td>@{{ item.table_name }}</td>
                                 <td>@{{ item.head_name }}</td>
                                 <td style="text-align: left;">@{{ item.description }}</td>
                                 <td style="text-align: right;">@{{ item.amount }}</td>
@@ -132,8 +133,8 @@
                 dateTo: moment().format("YYYY-MM-DD"),
                 services: [],
 
-                rooms: [],
-                selectedRoom: null,
+                tables: [],
+                selectedTable: null,
                 customers: [],
                 selectedCustomer: null,
                 heads: [],
@@ -145,11 +146,10 @@
         },
 
         methods: {
-            getRoom() {
-                axios.get("/get-room")
-                    .then(res => {
-                        this.rooms = res.data
-                    })
+            getTables() {
+                axios.get("/get-table").then(res => {
+                    this.tables = res.data
+                })
             },
 
             getCustomer() {
@@ -167,14 +167,14 @@
             },
 
             onChangeSearchType() {
-                this.rooms = [];
-                this.selectedRoom = null;
+                this.tables = [];
+                this.selectedTable = null;
                 this.heads = [];
                 this.selectedHead = null;
                 this.customers = [];
                 this.selectedCustomer = null;
-                if (this.searchType == 'room') {
-                    this.getRoom();
+                if (this.searchType == 'table') {
+                    this.getTables();
                 }
                 if (this.searchType == 'customer') {
                     this.getCustomer();
@@ -186,7 +186,7 @@
 
             getService() {
                 let filter = {
-                    roomId: this.selectedRoom != null ? this.selectedRoom.id : '',
+                    tableId: this.selectedTable != null ? this.selectedTable.id : '',
                     headId: this.selectedHead != null ? this.selectedHead.id : '',
                     customerId: this.selectedCustomer != null ? this.selectedCustomer.id : '',
                     dateFrom: this.dateFrom,
@@ -194,30 +194,28 @@
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-service", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.services = r.filter(item => item.status != 'd')
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        this.showReport = null
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-service", filter).then(res => {
+                    let r = res.data;
+                    this.services = r.filter(item => item.status != 'd')
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.onProgress = false
+                    this.showReport = null
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {
@@ -225,7 +223,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Service List</h4 style="text-align:center">
+                                <h4 style="text-align:center">Service List</h4>
                             </div>
                         </div>
 					</div>

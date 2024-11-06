@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-xs-12 col-md-5">
                     <fieldset class="scheduler-border bg-of-skyblue" style="height: 115px;">
-                        <legend class="scheduler-border">Room Information</legend>
+                        <legend class="scheduler-border">Table Information</legend>
                         <div class="control-group">
                             <div class="form-group">
                                 <label class="col-xs-3 control-label" style="padding-left: 0;"> Issue To </label>
@@ -32,14 +32,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label" style="padding-left: 0;"> Select Room </label>
+                                <label class="col-xs-3 control-label" style="padding-left: 0;"> Select Table </label>
                                 <div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:4px;">
                                     <div style="width: 89%;">
-                                        <v-select v-bind:options="rooms" style="margin: 0;" v-model="selectedRoom"
-                                            @input="onChangeRoom" @search="onSearchRoom" label="display_name"></v-select>
+                                        <v-select v-bind:options="tables" style="margin: 0;" v-model="selectedTable"
+                                            @input="onChangeTable" @search="onSearchTable" label="display_name"></v-select>
                                     </div>
                                     <div style="width: 11%;margin-left:2px;">
-                                        <a href="/room" title="Add New Room" class="btn btn-xs btn-danger"
+                                        <a href="/table" title="Add New Table" class="btn btn-xs btn-danger"
                                             style="width: 100%;height: 23px;border: 0px;border-radius: 3px;"
                                             target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                     </div>
@@ -47,10 +47,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-xs-3 control-label" style="padding-left: 0;"> Room Name </label>
+                                <label class="col-xs-3 control-label" style="padding-left: 0;"> Table Name </label>
                                 <div class="col-xs-9">
-                                    <input type="text" placeholder="Room Name" class="form-control"
-                                        v-model="selectedRoom.name" disabled />
+                                    <input type="text" placeholder="Table Name" class="form-control"
+                                        v-model="selectedTable.name" disabled />
                                 </div>
                             </div>
                         </div>
@@ -190,17 +190,17 @@
                 return {
                     issueReturn: {
                         id: '',
-                        room_id: null,
+                        table_id: null,
                         date: moment().format("YYYY-MM-DD"),
                         total: 0.00,
                         description: ''
                     },
-                    rooms: [],
-                    selectedRoom: {
+                    tables: [],
+                    selectedTable: {
                         id: "",
-                        name: "Select Room",
+                        name: "Select Table",
                         code: "",
-                        display_name: "Select Room"
+                        display_name: "Select Table"
                     },
 
                     assets: [],
@@ -227,18 +227,18 @@
             },
 
             created() {
-                this.getRoom();
+                this.getTables();
             },
 
             methods: {
-                getRoom() {
+                getTables() {
                     let filter = {
                         forSearch: 'yes'
                     }
-                    axios.post("/get-room", filter)
+                    axios.post("/get-table", filter)
                         .then(res => {
                             let r = res.data;
-                            this.rooms = r.map((item, index) => {
+                            this.tables = r.map((item, index) => {
                                 item.display_name = `${item.code} - ${item.name}`
                                 return item;
                             });
@@ -247,7 +247,7 @@
 
                 getAsset() {
                     axios.post("/get-asset-for-return", {
-                            roomId: this.selectedRoom.id
+                            tableId: this.selectedTable.id
                         })
                         .then(res => {
                             this.assets = res.data.map((item, index) => {
@@ -257,8 +257,8 @@
                         })
                 },
 
-                async onChangeRoom() {
-                    if (this.selectedRoom.id == '') {
+                async onChangeTable() {
+                    if (this.selectedTable.id == '') {
                         return;
                     }
                     await this.getAsset();
@@ -357,15 +357,15 @@
                     this.calculateTotal();
                 },
 
-                async onSearchRoom(val, loading) {
+                async onSearchTable(val, loading) {
                     if (val.length > 2) {
                         loading(true)
-                        await axios.post("/get-room", {
+                        await axios.post("/get-table", {
                                 name: val
                             })
                             .then(res => {
                                 let r = res.data.data;
-                                this.rooms = r.rooms.map((item, index) => {
+                                this.tables = r.tables.map((item, index) => {
                                     item.display_name = `${item.name} - ${item.code}`
                                     return item;
                                 });
@@ -373,7 +373,7 @@
                             })
                     } else {
                         loading(false)
-                        await this.getRoom();
+                        await this.getTables();
                     }
                 },
 
@@ -405,7 +405,7 @@
                 },
 
                 async saveIssueReturn() {
-                    this.issueReturn.room_id = this.selectedRoom.id != "" ? this.selectedRoom.id : "";
+                    this.issueReturn.table_id = this.selectedTable.id != "" ? this.selectedTable.id : "";
                     let data = {
                         issueReturn: this.issueReturn,
                         carts: this.carts
@@ -451,17 +451,17 @@
                 clearForm() {
                     this.issueReturn = {
                         id: '',
-                        room_id: null,
+                        table_id: null,
                         date: moment().format("YYYY-MM-DD"),
                         total: 0.00,
                         description: ''
                     }
                     this.carts = [];
-                    this.selectedRoom = {
+                    this.selectedTable = {
                         id: "",
-                        name: "Select Room",
+                        name: "Select Table",
                         code: "",
-                        display_name: "Select Room"
+                        display_name: "Select Table"
                     }
                 }
             }

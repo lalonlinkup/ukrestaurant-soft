@@ -12,8 +12,8 @@ class Disposal extends Model
 
     protected $guarded = ['id'];
 
-    public function room() {
-        return $this->belongsTo(Room::class)->select('id', 'code', 'name');
+    public function table() {
+        return $this->belongsTo(Table::class)->select('id', 'code', 'name');
     }
 
     public function disposalDetails() {

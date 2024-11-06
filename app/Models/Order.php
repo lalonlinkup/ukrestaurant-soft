@@ -22,9 +22,9 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id')->select('id', 'code', 'name', 'phone', 'address', 'nid', 'image');
     }
 
-    public function room()
+    public function table()
     {
-        return $this->belongsTo(Room::class, 'room_id', 'id')->select('id', 'name', 'code');
+        return $this->belongsTo(Table::class, 'table_id', 'id')->select('id', 'name', 'code');
     }
 
     public function bank()
@@ -40,5 +40,10 @@ class Order extends Model
     public function orderDetails() 
     {
         return $this->hasMany(OrderDetails::class, 'order_id', 'id')->with('menu');
+    }
+
+    public function orderTables() 
+    {
+        return $this->hasMany(OrderTable::class, 'order_id', 'id')->with('tabletype', 'floor', 'employee');
     }
 }

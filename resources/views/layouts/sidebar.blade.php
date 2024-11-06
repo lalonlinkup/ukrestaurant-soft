@@ -28,6 +28,15 @@ $module = session('module');
         <b class="arrow"></b>
     </li>
 
+    <!-- module/RestaurantModule -->
+    <li class="">
+        <a href="{{ url('module/RestaurantModule') }}">
+            <i class="menu-icon bi bi-cup-hot"></i>
+            <span class="menu-text"> Restaurant Module </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+
     <li class="">
         <a href="{{ url('module/BookingModule') }}">
             <i class="menu-icon bi bi-bookmark-plus"></i>
@@ -40,15 +49,6 @@ $module = session('module');
         <a href="{{ url('module/ServiceModule') }}">
             <i class="menu-icon bi bi-person-workspace"></i>
             <span class="menu-text"> Service Module </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-
-    <!-- module/RestaurantModule -->
-    <li class="">
-        <a href="{{ url('module/RestaurantModule') }}">
-            <i class="menu-icon bi bi-cup-hot"></i>
-            <span class="menu-text"> Restaurant Module </span>
         </a>
         <b class="arrow"></b>
     </li>
@@ -95,14 +95,6 @@ $module = session('module');
         </a>
         <b class="arrow"></b>
     </li>
-    <li class="">
-        <a href="{{ url('module/WebsiteModule') }}">
-            <i class="menu-icon bi bi-globe"></i>
-            <span class="menu-text"> Website Module </span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-
     @if (checkAccess('graph'))
     <li class="{{ Request::is('graph') ? 'active' : '' }}">
         <a href="/graph">
@@ -112,6 +104,13 @@ $module = session('module');
         <b class="arrow"></b>
     </li>
     @endif
+    <li class="">
+        <a href="{{ url('module/WebsiteModule') }}">
+            <i class="menu-icon bi bi-globe"></i>
+            <span class="menu-text"> Website Module </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
 </ul>
 @elseif ($module == 'Administration')
 @if (checkAccess('user') ||
@@ -150,11 +149,11 @@ checkAccess('damageList'))
         <b class="arrow"></b>
     </li>
     @endif
-    @if (checkAccess('room') || checkAccess('roomList'))
-    <li class="{{ Request::is('room') || Request::is('roomlist') ? 'open' : '' }}">
+    @if (checkAccess('table') || checkAccess('tableList'))
+    <li class="{{ Request::is('table') || Request::is('tablelist') ? 'open' : '' }}">
         <a href="/" class="dropdown-toggle">
-            <i class="menu-icon bi bi-shop"></i>
-            <span class="menu-text"> Room Info </span>
+            <i class="menu-icon bi bi-table"></i>
+            <span class="menu-text"> Table Info </span>
 
             <b class="arrow fa fa-angle-down"></b>
         </a>
@@ -162,21 +161,21 @@ checkAccess('damageList'))
         <b class="arrow"></b>
 
         <ul class="submenu">
-            @if (checkAccess('room'))
-            <li class="{{ Request::is('room') ? 'active' : '' }}">
-                <a href="/room">
+            @if (checkAccess('table'))
+            <li class="{{ Request::is('table') ? 'active' : '' }}">
+                <a href="/table">
                     <i class="menu-icon fa fa-caret-right"></i>
-                    Room Entry
+                    Table Entry
                 </a>
 
                 <b class="arrow"></b>
             </li>
             @endif
-            @if (checkAccess('roomList'))
-            <li class="{{ Request::is('roomlist') ? 'active' : '' }}">
-                <a href="/roomlist">
+            @if (checkAccess('tableList'))
+            <li class="{{ Request::is('tablelist') ? 'active' : '' }}">
+                <a href="/tablelist">
                     <i class="menu-icon fa fa-caret-right"></i>
-                    Room List
+                    Table List
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -264,11 +263,11 @@ checkAccess('damageList'))
     </li>
     @endif
 
-    @if (checkAccess('roomType'))
-    <li class="{{ Request::is('roomtype') ? 'active' : '' }}">
-        <a href="/roomtype">
-            <i class="menu-icon bi bi-shop"></i>
-            <span class="menu-text"> Room Type </span>
+    @if (checkAccess('tabletype'))
+    <li class="{{ Request::is('tabletype') ? 'active' : '' }}">
+        <a href="/tabletype">
+            <i class="menu-icon bi bi-view-stacked"></i>
+            <span class="menu-text"> Table Type </span>
         </a>
     </li>
     @endif
@@ -1346,7 +1345,7 @@ checkAccess('salaryPaymentReport'))
 </ul>
 @endif
 @elseif($module == 'RestaurantModule')
-@if (checkAccess('order') || checkAccess('orderList') || checkAccess('menuCategory') || checkAccess('unit'))
+@if (checkAccess('order') || checkAccess('payFirst') || checkAccess('orderList') || checkAccess('menuCategory') || checkAccess('unit'))
 <ul class="nav nav-list">
     <li class="active">
         <a href="/module/dashboard">
@@ -1367,6 +1366,16 @@ checkAccess('salaryPaymentReport'))
         <a href="/order">
             <i class="menu-icon bi bi-building-add"></i>
             <span class="menu-text">Order Entry</span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif
+
+    @if (checkAccess('payFirst'))
+    <li class="{{ Route::is('payFirst') ? 'active' : '' }}">
+        <a href="/payFirst">
+            <i class="menu-icon bi bi-cash-stack"></i>
+            <span class="menu-text">Pay First</span>
         </a>
         <b class="arrow"></b>
     </li>
@@ -1534,7 +1543,7 @@ checkAccess('salaryPaymentReport'))
         <b class="arrow"></b>
     </li>
     @endif
-    
+
     @if (checkAccess('issueList'))
     <li class="{{ Request::is('issueList') ? 'active' : '' }}">
         <a href="/issueList">
@@ -1544,7 +1553,7 @@ checkAccess('salaryPaymentReport'))
         <b class="arrow"></b>
     </li>
     @endif
-    
+
     @if (checkAccess('issueReturnList'))
     <li class="{{ Request::is('issueReturnList') ? 'active' : '' }}">
         <a href="/issueReturnList">

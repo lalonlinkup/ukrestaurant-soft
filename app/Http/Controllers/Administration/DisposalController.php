@@ -153,8 +153,8 @@ class DisposalController extends Controller
             if (!empty($request->invoice)) {
                 array_push($whereCluase, ['invoice', 'LIKE', $request->invoice . '%']);
             }
-            if (!empty($request->roomId)) {
-                array_push($whereCluase, ['room_id', '=', $request->roomId]);
+            if (!empty($request->tableId)) {
+                array_push($whereCluase, ['table_id', '=', $request->tableId]);
             }
             if (!empty($request->userId)) {
                 array_push($whereCluase, ['added_by', '=', $request->userId]);
@@ -170,9 +170,9 @@ class DisposalController extends Controller
             }
 
             if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
-                $disposal = Disposal::with('disposalDetails', 'room', 'user')->where($whereCluase)->latest('id');
+                $disposal = Disposal::with('disposalDetails', 'table', 'user')->where($whereCluase)->latest('id');
             } else {
-                $disposal = Disposal::with('room', 'user')->where($whereCluase)->latest('id');
+                $disposal = Disposal::with('table', 'user')->where($whereCluase)->latest('id');
             }
 
             if (!empty($request->forSearch)) {
@@ -198,8 +198,8 @@ class DisposalController extends Controller
     {
         try {
             $whereCluase = "";
-            if (!empty($request->roomId)) {
-                $whereCluase .= " AND r.id = '$request->roomId'";
+            if (!empty($request->tableId)) {
+                $whereCluase .= " AND r.id = '$request->tableId'";
             }
 
             if (!empty($request->assetId)) {
@@ -219,12 +219,12 @@ class DisposalController extends Controller
                             a.name,
                             d.invoice,
                             d.date,
-                            r.code as room_code,
-                            r.name as room_name
+                            r.code as table_code,
+                            r.name as table_name
                         FROM disposal_details dd
                         LEFT JOIN assets a ON a.id = dd.asset_id
                         LEFT JOIN disposals d ON d.id = dd.disposal_id
-                        LEFT JOIN rooms r ON r.id = d.room_id
+                        LEFT JOIN tables r ON r.id = d.table_id
                         WHERE dd.status != 'd' 
                         $whereCluase");
 

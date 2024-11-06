@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Administration;
 
-use App\Models\RoomType;
+use App\Models\TableType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class RoomTypeController extends Controller
+class TableTypeController extends Controller
 {
     public function __construct()
     {
@@ -19,17 +19,17 @@ class RoomTypeController extends Controller
 
     public function index()
     {
-        $roomTypes = RoomType::where('status', 'a')->latest()->get();
-        return response()->json($roomTypes, 200);
+        $tableTypes = TableType::where('status', 'a')->latest()->get();
+        return response()->json($tableTypes, 200);
     }
 
     public function create()
     {
-        if (!checkAccess('roomType')) {
+        if (!checkAccess('tableType')) {
             return view('error.unauthorize');
         }
 
-        return view('administration.room.roomtype');
+        return view('administration.table.tabletype');
     }
 
     public function store(Request $request)
@@ -38,14 +38,14 @@ class RoomTypeController extends Controller
             'name' => 'required'
         ]);
         if ($validator->fails()) return send_error("Validation Error", $validator->errors(), 422);
-        $roomtypename = RoomType::where('name', $request->name)->first();
-        if (!empty($roomtypename)) return send_error("This name have been already exists", null, 422);
+        $tabletypename = TableType::where('name', $request->name)->first();
+        if (!empty($tabletypename)) return send_error("This name have been already exists", null, 422);
         try {
-            $check = DB::table('room_types')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();;
+            $check = DB::table('table_types')->where('deleted_at', '!=', NULL)->where('name', $request->name)->first();;
             if (!empty($check)) {
-                DB::select("UPDATE room_types SET deleted_by = NULL, deleted_at = NULL , status = 'a' WHERE id = ?", [$check->id]);
+                DB::select("UPDATE table_types SET deleted_by = NULL, deleted_at = NULL , status = 'a' WHERE id = ?", [$check->id]);
             } else {
-                $data = new RoomType();
+                $data = new TableType();
                 $data->name = $request->name;
                 $data->slug = make_slug($request->name);
                 $data->status = 'a';
@@ -54,7 +54,7 @@ class RoomTypeController extends Controller
                 $data->save();
             }
 
-            return response()->json(['status' => true, 'message' => 'Room Type insert successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Type insert successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
@@ -65,10 +65,10 @@ class RoomTypeController extends Controller
             'name' => 'required'
         ]);
         if ($validator->fails()) return send_error("Validation Error", $validator->errors(), 422);
-        $roomtypename = RoomType::where('id', '!=', $request->id)->where('name', $request->name)->first();
-        if (!empty($roomtypename)) return send_error("This name have been already exists", null, 422);
+        $tabletypename = TableType::where('id', '!=', $request->id)->where('name', $request->name)->first();
+        if (!empty($tabletypename)) return send_error("This name have been already exists", null, 422);
         try {
-            $data = RoomType::find($request->id);
+            $data = TableType::find($request->id);
             $data->name = $request->name;
             $data->slug = make_slug($request->name);
             $data->updated_by = Auth::user()->id;
@@ -76,7 +76,7 @@ class RoomTypeController extends Controller
             $data->last_update_ip = request()->ip();
             $data->update();
             
-            return response()->json(['status' => true, 'message' => 'Room Type update successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Type update successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
@@ -85,14 +85,14 @@ class RoomTypeController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $data = RoomType::find($request->id);
+            $data = TableType::find($request->id);
             $data->status = 'd';
             $data->last_update_ip = request()->ip();
             $data->deleted_by = Auth::user()->id;
             $data->update();
 
             $data->delete();
-            return response()->json(['status' => true, 'message' => 'Room Type delete successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Type delete successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }

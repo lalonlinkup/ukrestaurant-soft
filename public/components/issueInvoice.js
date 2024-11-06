@@ -18,8 +18,8 @@ const issueInvoice = Vue.component("issue-invoice", {
                 <div class="row">
                     <div class="col-xs-7">
                         <strong>Issue To:</strong> {{ issue.issue_to }}<br>
-                        <strong>Room Id:</strong> {{ issue.room.code }}<br>
-                        <strong>Room No:</strong> {{ issue.room.name }}
+                        <strong>Table Id:</strong> {{ issue.table.code }}<br>
+                        <strong>Table No:</strong> {{ issue.table.name }}
                     </div>
                     <div class="col-xs-5 text-right">
                         <strong>Issue by:</strong> {{ issue.user.name }}<br>
@@ -98,7 +98,7 @@ const issueInvoice = Vue.component("issue-invoice", {
     data() {
         return {
             issue: {
-                room: {},
+                table: {},
                 user: {},
             },
             cart: [],

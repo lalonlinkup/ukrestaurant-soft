@@ -2478,7 +2478,7 @@
 .mdi-brightness-percent::before {
     content: "\FCCE";
 }
-.mdi-broom::before {
+.mdi-btable::before {
     content: "\F0E2";
 }
 .mdi-brush::before {
@@ -7293,7 +7293,7 @@
 .mdi-google-circles-group::before {
     content: "\F2B3";
 }
-.mdi-google-classroom::before {
+.mdi-google-classtable::before {
     content: "\F2C0";
 }
 .mdi-google-cloud::before {
@@ -9480,10 +9480,10 @@
 .mdi-multiplication-box::before {
     content: "\F383";
 }
-.mdi-mushroom::before {
+.mdi-mushtable::before {
     content: "\F7DE";
 }
-.mdi-mushroom-outline::before {
+.mdi-mushtable-outline::before {
     content: "\F7DF";
 }
 .mdi-music::before {
@@ -11448,10 +11448,10 @@
 .mdi-roman-numeral-9::before {
     content: "\F00BB";
 }
-.mdi-room-service::before {
+.mdi-table-service::before {
     content: "\F88C";
 }
-.mdi-room-service-outline::before {
+.mdi-table-service-outline::before {
     content: "\FD73";
 }
 .mdi-rotate-3d::before {
@@ -11583,7 +11583,7 @@
 .mdi-scale-balance::before {
     content: "\F5D1";
 }
-.mdi-scale-bathroom::before {
+.mdi-scale-bathtable::before {
     content: "\F473";
 }
 .mdi-scale-off::before {
@@ -11679,13 +11679,13 @@
 .mdi-seat-individual-suite::before {
     content: "\F47D";
 }
-.mdi-seat-legroom-extra::before {
+.mdi-seat-legtable-extra::before {
     content: "\F47E";
 }
-.mdi-seat-legroom-normal::before {
+.mdi-seat-legtable-normal::before {
     content: "\F47F";
 }
-.mdi-seat-legroom-reduced::before {
+.mdi-seat-legtable-reduced::before {
     content: "\F480";
 }
 .mdi-seat-outline::before {

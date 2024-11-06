@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Models\OrderDetails;
+use App\Models\OrderTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
@@ -107,6 +108,7 @@ class OrderController extends Controller
                 $order->customer_phone = $request->customer['phone'];
                 $order->customer_address = $request->customer['address'];
             }
+            $order->order_type = 'Order';
             $order->added_by = Auth::user()->id;
             $order->last_update_ip = request()->ip();
             $order->save();
@@ -125,13 +127,13 @@ class OrderController extends Controller
                 $detail->save();
 
                 $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
-                if(isset($recipes)) {
+                if (isset($recipes)) {
                     $production = new Production();
                     $production->invoice = invoiceGenerate('Production', 'PR');
                     $production->date = date('Y-m-d');
                     $production->order_id = $order->id;
                     $production->total = $recipes->sum('total');
-                    $production->description = 'Order production invoice -'. $invoice;
+                    $production->description = 'Order production invoice -' . $invoice;
                     $production->status = 'a';
                     $production->added_by = Auth::user()->id;
                     $production->last_update_ip = request()->ip();
@@ -152,6 +154,18 @@ class OrderController extends Controller
                 }
             }
 
+            // Order tables
+            foreach ($request->tableCart as $table) {
+                $tables = new OrderTable();
+                $tables->order_id = $order->id;
+                $tables->table_id = $table['table_id'];
+                $tables->incharge_id = $table['inchargeId'];
+                $tables->date = date('Y-m-d');
+                $tables->booking_status = 'booked';
+                $tables->added_by = Auth::user()->id;
+                $tables->last_update_ip = request()->ip();
+                $tables->save();
+            }
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order insert successfully', 'id' => $order->id], 200);
@@ -230,7 +244,7 @@ class OrderController extends Controller
                 $detail->save();
 
                 $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
-                if(isset($recipes)) {
+                if (isset($recipes)) {
                     $production = Production::where('order_id', $order->id)->first();
                     $production->date = date('Y-m-d');
                     $production->total = $recipes->sum('total');
@@ -284,8 +298,8 @@ class OrderController extends Controller
             if (!empty($request->bookingId)) {
                 array_push($whereCluase, ['booking_id', '=', $request->bookingId]);
             }
-            if (!empty($request->roomId)) {
-                array_push($whereCluase, ['room_id', '=', $request->roomId]);
+            if (!empty($request->tableId)) {
+                array_push($whereCluase, ['table_id', '=', $request->tableId]);
             }
             if (!empty($request->userId)) {
                 array_push($whereCluase, ['added_by', '=', $request->userId]);
@@ -301,9 +315,9 @@ class OrderController extends Controller
             }
 
             if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
-                $orders = Order::with('orderDetails', 'customer', 'room', 'bank', 'user')->where($whereCluase)->latest('id');
+                $orders = Order::with('orderDetails', 'customer', 'orderTables', 'bank', 'user')->where($whereCluase)->latest('id');
             } else {
-                $orders = Order::with('customer', 'room', 'bank', 'user')->where($whereCluase)->latest('id');
+                $orders = Order::with('customer', 'orderTables', 'bank', 'user')->where($whereCluase)->latest('id');
             }
 
             if (!empty($request->forSearch)) {
@@ -325,7 +339,7 @@ class OrderController extends Controller
         }
     }
 
-    public function orderDetails(Request $request) 
+    public function orderDetails(Request $request)
     {
         try {
             $whereCluase = "";
@@ -343,7 +357,7 @@ class OrderController extends Controller
 
             if (!empty($request->status)) {
                 $whereCluase .= " AND od.status = '$request->status'";
-            } 
+            }
 
             if (!empty($request->dateFrom) && !empty($request->dateTo)) {
                 $whereCluase .= " AND o.date BETWEEN '$request->dateFrom' AND '$request->dateTo'";
@@ -436,6 +450,267 @@ class OrderController extends Controller
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order approve successfully.'], 200);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+            DB::rollBack();
+        }
+    }
+
+    // Pay First Order Functions   
+    public function payFirst($id = 0)
+    {
+        if (!checkAccess('payFirst')) {
+            return view('error.unauthorize');
+        }
+
+        $check = Order::where('id', $id)->first();
+        if (empty($check)) {
+            if ($id != 0) {
+                Session::flash('error', 'Order not found');
+            }
+            $id = 0;
+        }
+        $invoice = invoiceGenerate("Order", 'O');
+
+        return view('administration.restaurant.payFirst', compact('id', 'invoice'));
+    }
+
+    public function storePayFirst(OrderRequest $request)
+    {
+        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        if ($request->customer['type'] == 'G' && $request->order['paid'] < $request->order['total']) {
+            return send_error("Cash Guest can not due", null, 422);
+        }
+
+        $checkInvoice = Order::where('invoice', $request->order['invoice'])->first();
+        $invoice = $request->order['invoice'];
+        if (!empty($checkInvoice)) {
+            $invoice = invoiceGenerate("Order", 'O');
+        }
+
+        try {
+            DB::beginTransaction();
+            //customer
+            if ($request->customer['type'] != 'G') {
+                $check = Customer::where('phone', $request->customer['phone'])->first();
+                if (empty($check)) {
+                    $customer = new Customer();
+                    $customer->code = generateCode("Customer", "C");
+                    $customer->name = $request->customer['name'];
+                    $customer->phone = $request->customer['phone'];
+                    $customer->address = $request->customer['address'];
+                    $customer->added_by = Auth::user()->id;
+                    $customer->last_update_ip = request()->ip();
+                    $customer->save();
+                    $customerId = $customer->id;
+                } else {
+                    $customerId = $check->id;
+                }
+            }
+
+            //Order master
+            $orderKey = $request->order;
+            $order = new Order();
+            unset($orderKey['id']);
+            unset($orderKey['invoice']);
+            foreach ($orderKey as $key => $item) {
+                $order->$key = $item;
+            }
+            $order->invoice = $invoice;
+            if ($request->customer['type'] != 'G') {
+                $order->customer_id = $customerId;
+            } else {
+                $order->customer_id = NULL;
+                $order->customer_name = $request->customer['name'];
+                $order->customer_phone = $request->customer['phone'];
+                $order->customer_address = $request->customer['address'];
+            }
+            $order->added_by = Auth::user()->id;
+            $order->last_update_ip = request()->ip();
+            $order->save();
+
+            // Order detail
+            foreach ($request->carts as $cart) {
+                unset($cart['code']);
+                unset($cart['name']);
+                $detail = new OrderDetails();
+                foreach ($cart as $key => $item) {
+                    $detail->$key = $item;
+                }
+                $detail->order_id = $order->id;
+                $detail->added_by = Auth::user()->id;
+                $detail->last_update_ip = request()->ip();
+                $detail->save();
+
+                $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
+                if (isset($recipes)) {
+                    $production = new Production();
+                    $production->invoice = invoiceGenerate('Production', 'PR');
+                    $production->date = date('Y-m-d');
+                    $production->order_id = $order->id;
+                    $production->total = $recipes->sum('total');
+                    $production->description = 'Order production invoice -' . $invoice;
+                    $production->status = 'a';
+                    $production->added_by = Auth::user()->id;
+                    $production->last_update_ip = request()->ip();
+                    $production->save();
+
+                    foreach ($recipes as $item) {
+                        $productionDetails = new ProductionDetail();
+                        $productionDetails->production_id = $production->id;
+                        $productionDetails->material_id = $item->material_id;
+                        $productionDetails->quantity = $item->quantity;
+                        $productionDetails->price = $item->price;
+                        $productionDetails->total = $item->total;
+                        $productionDetails->status = 'a';
+                        $productionDetails->added_by = Auth::user()->id;
+                        $productionDetails->last_update_ip = request()->ip();
+                        $productionDetails->save();
+                    }
+                }
+            }
+
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Order insert successfully', 'id' => $order->id], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function updatePayFirst(OrderRequest $request)
+    {
+        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        if ($request->customer['type'] == 'G' && $request->order['paid'] < $request->order['total']) {
+            return send_error("Cash Guest can not due", null, 422);
+        }
+
+        try {
+            DB::beginTransaction();
+            //customer
+            if ($request->customer['type'] != 'G') {
+                $check = Customer::where('phone', $request->customer['phone'])->first();
+                if (empty($check)) {
+                    $customer = new Customer();
+                    $customer->code = generateCode("Customer", "C");
+                    $customer->name = $request->customer['name'];
+                    $customer->phone = $request->customer['phone'];
+                    $customer->address = $request->customer['address'];
+                    $customer->added_by = Auth::user()->id;
+                    $customer->last_update_ip = request()->ip();
+                    $customer->save();
+                    $customerId = $customer->id;
+                } else {
+                    $customerId = $check->id;
+                }
+            }
+
+            //Order master
+            $orderKey = $request->order;
+            $order = Order::find($request->order['id']);
+            unset($orderKey['id']);
+            foreach ($orderKey as $key => $item) {
+                $order->$key = $item;
+            }
+
+            if ($request->customer['type'] != 'G') {
+                $order->customer_id = $customerId;
+            } else {
+                $order->customer_id = NULL;
+                $order->customer_name = $request->customer['name'];
+                $order->customer_phone = $request->customer['phone'];
+                $order->customer_address = $request->customer['address'];
+            }
+            $order->updated_by = Auth::user()->id;
+            $order->updated_at = Carbon::now();
+            $order->last_update_ip = request()->ip();
+            $order->update();
+
+            //old order detail
+            $olddetail = OrderDetails::where('order_id', $request->order['id'])->get();
+            foreach ($olddetail as $item) {
+                // old detail delete
+                OrderDetails::find($item->id)->forceDelete();
+            }
+
+            // Order detail
+            foreach ($request->carts as $cart) {
+                unset($cart['code']);
+                unset($cart['name']);
+                $detail = new OrderDetails();
+                foreach ($cart as $key => $item) {
+                    $detail->$key = $item;
+                }
+                $detail->order_id = $order->id;
+                $detail->added_by = Auth::user()->id;
+                $detail->last_update_ip = request()->ip();
+                $detail->save();
+
+                $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
+                if (isset($recipes)) {
+                    $production = Production::where('order_id', $order->id)->first();
+                    $production->date = date('Y-m-d');
+                    $production->total = $recipes->sum('total');
+                    $production->updated_by = Auth::user()->id;
+                    $production->updated_at = Carbon::now();
+                    $production->last_update_ip = request()->ip();
+                    $production->update();
+
+                    //old production detail
+                    $oldProductionDetail = ProductionDetail::where('production_id', $production->id)->get();
+                    foreach ($oldProductionDetail as $opd) {
+                        ProductionDetail::find($opd->id)->forceDelete();
+                    }
+
+                    foreach ($recipes as $item) {
+                        $productionDetails = new ProductionDetail();
+                        $productionDetails->production_id = $production->id;
+                        $productionDetails->material_id = $item->material_id;
+                        $productionDetails->quantity = $item->quantity;
+                        $productionDetails->price = $item->price;
+                        $productionDetails->total = $item->total;
+                        $productionDetails->status = 'a';
+                        $productionDetails->added_by = Auth::user()->id;
+                        $productionDetails->last_update_ip = request()->ip();
+                        $productionDetails->save();
+                    }
+                }
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Order update successfully.', 'id' => $order->id], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function destroyPayFirst(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = Order::find($request->id);
+            $data->status = 'd';
+            $data->last_update_ip = request()->ip();
+            $data->deleted_by = Auth::user()->id;
+            $data->update();
+
+            //old order detail
+            $olddetail = OrderDetails::where('order_id', $request->id)->get();
+            foreach ($olddetail as $item) {
+                // old detail delete
+                $detail = OrderDetails::find($item->id);
+                $detail->status = 'd';
+                $detail->last_update_ip = request()->ip();
+                $detail->deleted_at = Carbon::now();
+                $detail->deleted_by = Auth::user()->id;
+                $detail->update();
+            }
+
+            $data->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Order delete successfully.'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
             DB::rollBack();

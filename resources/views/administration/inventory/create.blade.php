@@ -10,6 +10,7 @@
     .v-select .dropdown-menu {
         width: 400px !important;
     }
+
     .v-select .selected-tag {
         margin: 8px 2px !important;
         white-space: nowrap;
@@ -52,7 +53,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-5">
                 <fieldset class="scheduler-border bg-of-skyblue" style="height: 149px;">
-                    <legend class="scheduler-border">Room Information</legend>
+                    <legend class="scheduler-border">Table Information</legend>
                     <div class="control-group">
                         <div class="form-group">
                             <label class="col-xs-3 control-label" style="padding-left: 0;"> Issue To </label>
@@ -61,13 +62,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-3 control-label" style="padding-left: 0;"> Room </label>
+                            <label class="col-xs-3 control-label" style="padding-left: 0;"> Table </label>
                             <div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:4px;">
                                 <div style="width: 89%;">
-                                    <v-select v-bind:options="rooms" style="margin: 0;" v-model="selectedRoom" @search="onSearchRoom" label="display_name"></v-select>
+                                    <v-select v-bind:options="tables" style="margin: 0;" v-model="selectedTable" @search="onSearchTable" label="display_name"></v-select>
                                 </div>
                                 <div style="width: 11%;margin-left:2px;">
-                                    <a href="/room" title="Add New Room" class="btn btn-xs btn-danger" style="width: 100%;height: 23px;border: 0px;border-radius: 3px;" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                    <a href="/table" title="Add New Table" class="btn btn-xs btn-danger" style="width: 100%;height: 23px;border: 0px;border-radius: 3px;" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +76,7 @@
                         <div class="form-group">
                             <label class="col-xs-3 control-label" style="padding-left: 0;"> Name </label>
                             <div class="col-xs-9">
-                                <input type="text" placeholder="Room Name" class="form-control" v-model="selectedRoom.name" disabled />
+                                <input type="text" placeholder="Table Name" class="form-control" v-model="selectedTable.name" disabled />
                             </div>
                         </div>
                     </div>
@@ -291,7 +292,7 @@
                     invoice: "{{$invoice}}",
                     date: moment().format("YYYY-MM-DD"),
                     issue_to: '',
-                    room_id: null,
+                    table_id: null,
                     subtotal: 0,
                     discount: 0,
                     discountAmount: 0,
@@ -301,12 +302,12 @@
                     description: "",
                 },
                 carts: [],
-                rooms: [],
-                selectedRoom: {
+                tables: [],
+                selectedTable: {
                     id: "",
-                    name: "Select Room",
+                    name: "Select Table",
                     code: "",
-                    display_name: "Select Room"
+                    display_name: "Select Table"
                 },
 
                 assets: [],
@@ -335,25 +336,24 @@
 
         created() {
             this.getAsset();
-            this.getRoom();
+            this.getTables();
             if (this.issue.id != 0) {
                 this.getIssue();
             }
         },
 
         methods: {
-            getRoom() {
+            getTables() {
                 let filter = {
                     forSearch: 'yes'
                 }
-                axios.post("/get-room", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.rooms = r.map((item, index) => {
-                            item.display_name = `${item.code} - ${item.name}`
-                            return item;
-                        });
-                    })
+                axios.post("/get-table", filter).then(res => {
+                    let r = res.data;
+                    this.tables = r.map((item, index) => {
+                        item.display_name = `${item.code} - ${item.name}`
+                        return item;
+                    });
+                })
             },
             getAsset() {
                 axios.post("/get-asset", {
@@ -367,26 +367,25 @@
                         });
                     })
             },
-            async onSearchRoom(val, loading) {
+            async onSearchTable(val, loading) {
                 if (val.length > 2) {
                     loading(true)
-                    await axios.post("/get-room", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data.data;
-                            this.rooms = r.rooms.map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                    await axios.post("/get-table", {
+                        name: val
+                    }).then(res => {
+                        let r = res.data.data;
+                        this.tables = r.tables.map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
-                    await this.getRoom();
+                    await this.getTables();
                 }
             },
-            
+
             async onSearchAsset(val, loading) {
                 if (val.length > 2) {
                     loading(true);
@@ -557,7 +556,7 @@
                 this.issue.total = parseFloat((parseFloat(this.issue.subtotal) + +parseFloat(this.issue.vatAmount)) - parseFloat(this.issue.discountAmount)).toFixed(this.fixed)
             },
             async saveIssue() {
-                this.issue.room_id = this.selectedRoom.id != "" ? this.selectedRoom.id : "";
+                this.issue.table_id = this.selectedTable.id != "" ? this.selectedTable.id : "";
                 if (this.issue.id == 0) {
                     var url = '/add-issue';
                 } else {
@@ -617,11 +616,11 @@
                     description: ""
                 }
                 this.carts = [];
-                this.selectedRoom = {
+                this.selectedTable = {
                     id: "",
-                    name: "Select Room",
+                    name: "Select Table",
                     code: "",
-                    display_name: "Select Room"
+                    display_name: "Select Table"
                 };
             },
 
@@ -637,11 +636,11 @@
                         });
 
 
-                        this.selectedRoom = {
-                            id: issue.room_id,
-                            name: issue.room ? issue.room.name : 'n/a',
-                            code: issue.room ? issue.room.code : 'n/a',
-                            display_name: `${issue.room ? issue.room.code : 'n/a'} - ${issue.room ? issue.room.name : 'n/a'}`
+                        this.selectedTable = {
+                            id: issue.table_id,
+                            name: issue.table ? issue.table.name : 'n/a',
+                            code: issue.table ? issue.table.code : 'n/a',
+                            display_name: `${issue.table ? issue.table.code : 'n/a'} - ${issue.table ? issue.table.name : 'n/a'}`
                         }
 
                         issue.issue_details.forEach(async detail => {

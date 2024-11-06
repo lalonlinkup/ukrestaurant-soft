@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Room Category Entry')
-@section('breadcrumb_title', 'Room Category Entry')
+@section('title', 'Table Category Entry')
+@section('breadcrumb_title', 'Table Category Entry')
 @push('style')
 <style>
     .category{
@@ -14,11 +14,11 @@
         <div class="col-md-12 category">
             <form @submit.prevent="saveCategory">
                 <fieldset class="scheduler-border bg-of-skyblue">
-                    <legend class="scheduler-border">Room Category Entry Form</legend>
+                    <legend class="scheduler-border">Table Category Entry Form</legend>
                     <div class="control-group">
                         <div class="col-xs-12 col-md-6 col-md-offset-3">
                             <div class="form-group clearfix">
-                                <label class="control-label col-md-4">Room Category:</label>
+                                <label class="control-label col-md-4">Table Category:</label>
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" name="name" v-model="category.name" autocomplete="off"/>
                                 </div>
@@ -170,14 +170,14 @@
             },
 
             async deleteData(rowId) {
-                let roomCheck = await axios.post("/get-room", {
+                let tableCheck = await axios.post("/get-table", {
                         categoryId: rowId
                     })
                     .then(res => {
                         return res.data
                     })
-                if (roomCheck.length > 0) {
-                    toastr.error("Room found on this Category, You can not delete");
+                if (tableCheck.length > 0) {
+                    toastr.error("Table found on this Category, You can not delete");
                     return
                 }
                 let formdata = {

@@ -221,13 +221,13 @@
             },
 
             async deleteData(rowId) {
-                let roomCheck = await axios.post("/get-menu", {
+                let tableCheck = await axios.post("/get-menu", {
                         categoryId: rowId
                     })
                     .then(res => {
                         return res.data
                     })
-                if (roomCheck.length > 0) {
+                if (tableCheck.length > 0) {
                     toastr.error("Menu found on this Category, You can not delete");
                     return
                 }

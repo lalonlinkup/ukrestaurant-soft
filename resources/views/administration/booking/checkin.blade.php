@@ -96,7 +96,7 @@
                             <th>Date</th>
                             <th>Guest Name</th>
                             <th></th>
-                            <th>Room Name</th>
+                            <th>Table Name</th>
                             <th>Price</th>
                             <th>Days</th>
                             <th style="text-align: right;">Total</th>
@@ -115,7 +115,7 @@
                                 <td>
                                     <input type="checkbox" @change="singleCheck(index)" v-model="booking.booking_details[0].checkStatus" />
                                 </td>
-                                <td>@{{ booking.booking_details[0].room_name }}</td>
+                                <td>@{{ booking.booking_details[0].table_name }}</td>
                                 <td style="text-align:center;">@{{ booking.booking_details[0].unit_price | decimal }}</td>
                                 <td style="text-align:center;">@{{ booking.booking_details[0].days }}</td>
                                 <td style="text-align:right;">@{{ booking.booking_details[0].total | decimal }}</td>
@@ -125,7 +125,7 @@
                                 <td>
                                     <input type="checkbox" @change="singleCheck(index)" v-model="product.checkStatus" />
                                 </td>
-                                <td>@{{ product.room_name }}</td>
+                                <td>@{{ product.table_name }}</td>
                                 <td style="text-align:center;">@{{ product.unit_price | decimal }}</td>
                                 <td style="text-align:center;">@{{ product.days }}</td>
                                 <td style="text-align:right;">@{{ product.total | decimal }}</td>
@@ -341,7 +341,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">bookings Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">bookings Record</h4>
                             </div>
                         </div>
                         <div class="row">

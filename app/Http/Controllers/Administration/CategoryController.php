@@ -29,7 +29,7 @@ class CategoryController extends Controller
             return view('error.unauthorize');
         }
 
-        return view('administration.room.category');
+        return view('administration.table.category');
     }
 
     public function store(Request $request)
@@ -54,7 +54,7 @@ class CategoryController extends Controller
                 $data->save();
             }
 
-            return response()->json(['status' => true, 'message' => 'Room Category insert successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Category insert successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
@@ -77,7 +77,7 @@ class CategoryController extends Controller
             $data->last_update_ip = request()->ip();
             $data->update();
             
-            return response()->json(['status' => true, 'message' => 'Room Category update successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Category update successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
@@ -93,7 +93,7 @@ class CategoryController extends Controller
             $data->update();
 
             $data->delete();
-            return response()->json(['status' => true, 'message' => 'Room Category delete successfully'], 200);
+            return response()->json(['status' => true, 'message' => 'Table Category delete successfully'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }

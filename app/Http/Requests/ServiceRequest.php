@@ -26,7 +26,7 @@ class ServiceRequest extends FormRequest
         return [
             'invoice' => 'required|string',
             'date' => 'required',
-            'room_id' => 'required',
+            'table_id' => 'required',
             'service_head_id' => 'required',
             'amount' => 'required',
         ];
@@ -34,7 +34,7 @@ class ServiceRequest extends FormRequest
 
     public function messages() {
         return [
-            "room_id.required" => "Room name required",
+            "table_id.required" => "Table name required",
             "service_head_id.required" => "Service head name required"
         ];
     }

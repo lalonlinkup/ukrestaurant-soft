@@ -28,8 +28,6 @@
                     </a>
                 </li>
 
-
-
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="{{asset(auth()->user()->image != null ? auth()->user()->image: '/no-userimage.png')}}" alt="{{auth()->user()->name}}" />

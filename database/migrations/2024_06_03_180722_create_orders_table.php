@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             $table->date('date')->index();
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('booking_id')->nullable();
-            $table->unsignedBigInteger('room_id')->nullable();
+            $table->unsignedBigInteger('table_id')->nullable();
             $table->string('customer_name', 60)->nullable();
             $table->string('customer_phone', 20)->nullable();
             $table->text('customer_address')->nullable();
@@ -34,6 +34,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('paid', 18, 2)->default(0.00);
             $table->decimal('due', 18, 2)->default(0.00);
             $table->text('note')->nullable();
+            $table->string('order_type', 55)->default('PayFirst');
             $table->char('status', 1)->default('a');
             $table->unsignedBigInteger('added_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
@@ -43,7 +44,7 @@ class CreateOrdersTable extends Migration
             $table->ipAddress('last_update_ip');
 
             $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('booking_id')->references('id')->on('booking_masters');
             $table->foreign('bank_account_id')->references('id')->on('bank_accounts');
             $table->foreign('added_by')->references('id')->on('users');

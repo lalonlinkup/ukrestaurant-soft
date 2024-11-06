@@ -224,7 +224,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Supplier Due List</h4 style="text-align:center">
+                                <h4 style="text-align:center">Supplier Due List</h4>
                             </div>
                         </div>
 					</div>

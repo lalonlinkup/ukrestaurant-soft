@@ -70,13 +70,13 @@ class BookingController extends Controller
         // if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
         foreach ($bookings as $key => $booking) {
             $booking->booking_details = DB::select("select bkd.*,
-                                                        rm.code as room_code,
-                                                        rm.name as room_name,
+                                                        rm.code as table_code,
+                                                        rm.name as table_name,
                                                         tp.name as type_name,
                                                         c.name as category_name
                                                         from booking_details bkd
-                                                        left join rooms rm on rm.id = bkd.room_id
-                                                        left join room_types tp on tp.id = rm.room_type_id
+                                                        left join tables rm on rm.id = bkd.table_id
+                                                        left join table_types tp on tp.id = rm.table_type_id
                                                         left join categories c on c.id = rm.category_id
                                                         where bkd.status = 'a'
                                                         and bkd.booking_id = ?
@@ -182,7 +182,7 @@ class BookingController extends Controller
                 // multiple customer
                 foreach ($request->members as $key => $other) {
                     $othercus = new OtherCustomer();
-                    unset($other['room_name']);
+                    unset($other['table_name']);
                     foreach ($other as $key => $item) {
                         $othercus->$key = $item;
                     }
@@ -277,7 +277,7 @@ class BookingController extends Controller
                 // multiple customer
                 foreach ($request->members as $key => $other) {
                     $othercus = new OtherCustomer();
-                    unset($other['room_name']);
+                    unset($other['table_name']);
                     foreach ($other as $key => $item) {
                         $othercus->$key = $item;
                     }
@@ -357,51 +357,38 @@ class BookingController extends Controller
         return view('administration.booking.bookingInvoice', compact('id'));
     }
 
-    public function getroomList(Request $request)
+    public function getTableList(Request $request)
     {
         $clauses = "";
         if (!empty($request->floorId)) {
             $clauses .= " and r.floor_id = '$request->floorId'";
         }
         if (!empty($request->typeId)) {
-            $clauses .= " and r.room_type_id = '$request->typeId'";
+            $clauses .= " and r.table_type_id = '$request->typeId'";
         }
 
         if (!empty($request->categoryId)) {
             $clauses .= " and r.category_id = '$request->categoryId'";
         }
 
-        $checkin_date = $request->checkin_date . ' 12:00:00';
-
         $floors = DB::select("select f.* from floors f where f.status = 'a'");
 
         foreach ($floors as $key => $floor) {
-            $floor->rooms = DB::select("select r.*,
-                                rt.name as roomtype_name
-                                from rooms r
-                                left join room_types rt on rt.id = r.room_type_id
-                                where r.status != 'd' and r.deleted_at is null
-                                and r.floor_id = ?
+            $floor->tables = DB::select("select t.*,
+                                tt.name as tabletype_name
+                                from tables t
+                                left join table_types tt on tt.id = t.table_type_id
+                                where t.status != 'd' and t.deleted_at is null
+                                and t.floor_id = ?
                                 $clauses
                                 ", [$floor->id]);
 
-            foreach ($floor->rooms as  $item) {
-                // $roomavailable = DB::select("select * from rooms rm where rm.id not in (select bkd.room_id from booking_details bkd where bkd.status = 'a' or bkd.checkout_status = 'true' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                // $item->available = count($roomavailable) > 0 ? 'true' : 'false';
-                $roombooked = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'booked' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                $item->booked = count($roombooked) > 0 ? 'true' : 'false';
-                // $roomcheckin = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'checkin' or bkd.checkout_status = 'false' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-                // $item->checkin = count($roomcheckin) > 0 ? 'true' : 'false';
-
-                $roomcheckin = DB::select("select * from booking_details bkd where bkd.checkout_status = 'false' and bkd.room_id = ?", [$item->id]);
-                $item->checkin = 'false';
-                if (count($roomcheckin) > 0) {
-                    $checkin = DB::select("select * from booking_details bkd where '$checkin_date' between bkd.checkin_date and bkd.checkout_date and bkd.room_id = ?", [$item->id]);
-                    $item->checkin = count($checkin) > 0 ? 'true' : 'false';
-                }
+            foreach ($floor->tables as  $item) {
+                $tablebooked = DB::select("select * from tables rm where rm.id in (select ot.table_id from order_tables ot where ot.status = 'a' and ot.booking_status = 'booked') and rm.id = ?", [$item->id]);
+                $item->booked = count($tablebooked) > 0 ? 'true' : 'false';
 
                 $item->available = 'false';
-                if ($item->checkin == 'false' && $item->booked == 'false') {
+                if ($item->booked == 'false') {
                     $item->available = 'true';
                 }
 
@@ -409,8 +396,6 @@ class BookingController extends Controller
                     $item->color = "#aee2ff";
                 } else if ($item->booked == 'true') {
                     $item->color = '#fffcb2';
-                } else if ($item->checkin == 'true') {
-                    $item->color = '#ff0000ab';
                 } else {
                     $item->color = "#aee2ff";
                 }
@@ -420,7 +405,7 @@ class BookingController extends Controller
         return response()->json($floors, 200);
     }
 
-    public function singleAvailableRoom(Request $request)
+    public function singleAvailableTable(Request $request)
     {
         $clauses = "";
         if (!empty($request->booking_id)) {
@@ -429,7 +414,7 @@ class BookingController extends Controller
         $totalDays = Carbon::parse($request->checkout_date)->diffInDays($request->checkin_date, 'days');
         for ($i = 0; $i < $totalDays; $i++) {
             $date = Carbon::parse($request->checkin_date)->addDays($i)->format('Y-m-d') . ' 12:00:00';
-            $check = DB::select("select * from rooms rm where rm.id not in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status != 'checkout' and bkd.checkout_status = 'true' $clauses and '$date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$request->id]);
+            $check = DB::select("select * from tables rm where rm.id not in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status != 'checkout' and bkd.checkout_status = 'true' $clauses and '$date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$request->id]);
 
             if (count($check) == 0) {
                 return response()->json(['status' => false, 'date' => date('d-m-Y', strtotime($date))]);
@@ -439,14 +424,14 @@ class BookingController extends Controller
         return response()->json(['status' => true]);
     }
 
-    public function roomBookingCalendar(Request $request)
+    public function tableBookingCalendar(Request $request)
     {
         $today = date('Y-m-d') . " 12:00:00";
 
         $query = DB::select("select bkd.*
         from booking_details bkd
-        where bkd.room_id = ?
-        and bkd.status = 'a' and bkd.booking_status != 'checkout'", [$request->roomId]);
+        where bkd.table_id = ?
+        and bkd.status = 'a' and bkd.booking_status != 'checkout'", [$request->tableId]);
 
         $events = [];
         $uniqueEvents = []; // Array to track unique events
@@ -604,34 +589,34 @@ class BookingController extends Controller
             $clauses .= " and r.floor_id = '$request->floorId'";
         }
         if (!empty($request->typeId)) {
-            $clauses .= " and r.room_type_id = '$request->typeId'";
+            $clauses .= " and r.table_type_id = '$request->typeId'";
         }
 
         if (!empty($request->categoryId)) {
             $clauses .= " and r.category_id = '$request->categoryId'";
         }
 
-        if (!empty($request->roomId)) {
-            $clauses .= " and r.id = '$request->roomId'";
+        if (!empty($request->tableId)) {
+            $clauses .= " and r.id = '$request->tableId'";
         }
 
         $checkin_date = date('Y-m-d') . ' 12:00:00';
 
-        $rooms = DB::select("select r.*,
-                                rt.name as roomtype_name
-                                from rooms r
-                                left join room_types rt on rt.id = r.room_type_id
+        $tables = DB::select("select r.*,
+                                rt.name as tabletype_name
+                                from tables r
+                                left join table_types rt on rt.id = r.table_type_id
                                 where r.status != 'd' and r.deleted_at is null
                                 $clauses
                                 ");
 
-        foreach ($rooms as $key => $item) {
-            $roomavailable = DB::select("select * from rooms rm where rm.id not in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-            $item->available = count($roomavailable) > 0 ? 'true' : 'false';
-            $roombooked = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'booked' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-            $item->booked = count($roombooked) > 0 ? 'true' : 'false';
-            $roomcheckin = DB::select("select * from rooms rm where rm.id in (select bkd.room_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'checkin' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
-            $item->checkin = count($roomcheckin) > 0 ? 'true' : 'false';
+        foreach ($tables as $key => $item) {
+            $tableavailable = DB::select("select * from tables rm where rm.id not in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+            $item->available = count($tableavailable) > 0 ? 'true' : 'false';
+            $tablebooked = DB::select("select * from tables rm where rm.id in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'booked' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+            $item->booked = count($tablebooked) > 0 ? 'true' : 'false';
+            $tablecheckin = DB::select("select * from tables rm where rm.id in (select bkd.table_id from booking_details bkd where bkd.status = 'a' and bkd.booking_status = 'checkin' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date) and rm.id = ?", [$item->id]);
+            $item->checkin = count($tablecheckin) > 0 ? 'true' : 'false';
 
             if ($item->available == 'true') {
                 $item->color = "#aee2ff";
@@ -639,7 +624,7 @@ class BookingController extends Controller
                 $item->color = '#fffcb2';
             } else if ($item->checkin == 'true') {
                 $item->color = '#ff0000ab';
-                $item->details = DB::select("select * from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date and bkd.room_id = ? and bkd.booking_status = 'checkin'", [$item->id]);
+                $item->details = DB::select("select * from booking_details bkd where bkd.status = 'a' and '$checkin_date' between bkd.checkin_date and bkd.checkout_date and bkd.table_id = ? and bkd.booking_status = 'checkin'", [$item->id]);
                 $item->customers = DB::select("select 
                                     c.id as customer_id,
                                     ifnull(c.name, '') as customer_name,
@@ -654,11 +639,11 @@ class BookingController extends Controller
             }
         }
 
-        $rooms = array_filter($rooms, function ($item) {
+        $tables = array_filter($tables, function ($item) {
             return $item->checkin == 'true';
         });
 
-        return response()->json(array_values($rooms), 200);
+        return response()->json(array_values($tables), 200);
     }
 
     // billing invoice

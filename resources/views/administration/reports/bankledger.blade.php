@@ -191,7 +191,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Bank Ledger</h4 style="text-align:center">
+                                <h4 style="text-align:center">Bank Ledger</h4>
                             </div>
                         </div>
 					</div>

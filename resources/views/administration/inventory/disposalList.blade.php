@@ -30,18 +30,18 @@
                             <label for="" style="width:150px;">Search Type</label>
                             <select class="form-select no-padding" @change="onChangeType" style="width: 100%;" v-model="filter.searchType">
                                 <option value="">All</option>
-                                <option value="room">By Room</option>
+                                <option value="table">By Table</option>
                                 <option value="quantity">By Quantity</option>
                                 <option value="user">By User</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'room'" style="display: none;" :style="{display: filter.searchType == 'room' ? '': 'none'}">
+                    <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'table'" style="display: none;" :style="{display: filter.searchType == 'table' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="rooms" v-model="selectedRoom" label="display_name" @search="onSearchRoom"></v-select>
+                            <v-select :options="tables" v-model="selectedTable" label="display_name" @search="onSearchTable"></v-select>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'user'" style="display: none;" :style="{display: filter.searchType == 'user' ? '': 'none'}">
                         <div class="form-group">
                             <v-select :options="users" v-model="selectedUser" label="name"></v-select>
@@ -102,7 +102,7 @@
                             <th>Sl.</th>
                             <th>Invoice No.</th>
                             <th>Date</th>
-                            <th>Room No</th>
+                            <th>Table No</th>
                             <th>Asset Name</th>
                             <th>Price</th>
                             <th>Quantity</th>
@@ -117,7 +117,7 @@
                                 <td>@{{ index + 1 }}</td>
                                 <td>@{{ disposal.invoice }}</td>
                                 <td>@{{ disposal.date | dateFormat("DD-MM-YYYY") }}</td>
-                                <td>@{{disposal.room.name }}</td>
+                                <td>@{{disposal.table.name }}</td>
                                 <td>@{{ disposal.disposal_details[0].asset.name }}</td>
                                 <td style="text-align:center;">@{{ disposal.disposal_details[0].price | decimal }}</td>
                                 <td style="text-align:center;">@{{ disposal.disposal_details[0].quantity | decimal }}</td>
@@ -159,7 +159,7 @@
                             <th>Sl.</th>
                             <th>Inv No.</th>
                             <th>Date</th>
-                            <th>Room No.</th>
+                            <th>Table No.</th>
                             <th>Total</th>
                             <th>Note</th>
                             <th>Action</th>
@@ -170,7 +170,7 @@
                             <td>@{{ index + 1 }}</td>
                             <td>@{{ disposal.invoice }}</td>
                             <td>@{{ disposal.date | dateFormat("DD-MM-YYYY") }}</td>
-                            <td>@{{ disposal.room.name }}</td>
+                            <td>@{{ disposal.table.name }}</td>
                             <td style="text-align:right;">@{{ disposal.total | decimal }}</td>
                             <td style="text-align:left;">@{{ disposal.note }}</td>
                             <td style="text-align:center;">
@@ -197,7 +197,7 @@
                             <th>Sl.</th>
                             <th>Invoice No.</th>
                             <th>Date</th>
-                            <th>Room No.</th>
+                            <th>Table No.</th>
                             <th>Asset Name</th>
                             <th>Price</th>
                             <th>Status</th>
@@ -209,7 +209,7 @@
                             <td>@{{ index + 1 }}</td>
                             <td>@{{ disposal.invoice }}</td>
                             <td>@{{ disposal.date | dateFormat("DD-MM-YYYY") }}</td>
-                            <td>@{{ disposal.room_name }}</td>
+                            <td>@{{ disposal.table_name }}</td>
                             <td>@{{ disposal.name }}</td>
                             <td style="text-align:right;">@{{ disposal.price }}</td>
                             <td style="text-align:center;">@{{ disposal.disposal_status }}</td>
@@ -250,8 +250,8 @@
                 disposals: [],
                 disposals2: [],
 
-                rooms: [],
-                selectedRoom: null,
+                tables: [],
+                selectedTable: null,
                 assets: [],
                 selectedAsset: null,
                 users: [],
@@ -277,55 +277,52 @@
             },
 
             getUser() {
-                axios.post("/get-user")
-                    .then(res => {
-                        this.users = res.data.users;
-                    })
+                axios.post("/get-user").then(res => {
+                    this.users = res.data.users;
+                })
             },
 
             getAsset() {
-                axios.get("/get-asset")
-                    .then(res => {
-                        let r = res.data;
-                        this.assets = r.filter(item => item.status == 'a').map((item, index) => {
-                            item.display_name = `${item.name} - ${item.code}`
-                            return item;
-                        });
-                    })
+                axios.get("/get-asset").then(res => {
+                    let r = res.data;
+                    this.assets = r.filter(item => item.status == 'a').map((item, index) => {
+                        item.display_name = `${item.name} - ${item.code}`
+                        return item;
+                    });
+                })
             },
 
-            getRooms() {
-                axios.get("/get-room")
-                    .then(res => {
-                        let r = res.data;
-                        this.rooms = r.map((item, index) => {
-                            item.display_name = `${item.code} - ${item.name} `
-                            return item;
-                        });
-                    })
+            getTables() {
+                axios.get("/get-table").then(res => {
+                    let r = res.data;
+                    this.tables = r.map((item, index) => {
+                        item.display_name = `${item.code} - ${item.name} `
+                        return item;
+                    });
+                })
             },
 
             onChangeType(event) {
                 this.disposals = [];
                 this.disposals2 = [];
-                this.selectedRoom = null;
+                this.selectedTable = null;
                 this.selectedAsset = null;
                 this.selectedUser = null;
-                this.filter.roomId = "";
+                this.filter.tableId = "";
                 this.filter.assetId = "";
                 this.filter.userId = "";
-                if (event.target.value == 'room') {
-                    this.getRooms();
+                if (event.target.value == 'table') {
+                    this.getTables();
                 } else if (event.target.value == 'quantity') {
                     this.getAsset();
                 } else if (event.target.value == 'user') {
                     this.getUser();
                 }
             },
-            
+
             getDisposal() {
-                if (this.filter.searchType == 'room') {
-                    this.filter.roomId = this.selectedRoom != null ? this.selectedRoom.id : ""
+                if (this.filter.searchType == 'table') {
+                    this.filter.tableId = this.selectedTable != null ? this.selectedTable.id : ""
                 }
                 if (this.filter.searchType == 'quantity') {
                     var url = '/get-disposal-details';
@@ -384,23 +381,22 @@
             },
 
             //search method here
-            async onSearchRoom(val, loading) {
+            async onSearchTable(val, loading) {
                 if (val.length > 2) {
                     loading(true)
-                    await axios.post("/get-room", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data;
-                            this.rooms = r.map((item, index) => {
-                                item.display_name = `${item.code} - ${item.name}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                    await axios.post("/get-table", {
+                        name: val
+                    }).then(res => {
+                        let r = res.data;
+                        this.tables = r.map((item, index) => {
+                            item.display_name = `${item.code} - ${item.name}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
-                    await this.getRooms();
+                    await this.getTables();
                 }
             },
 
@@ -416,9 +412,9 @@
                     userText = `<strong>Sold by: </strong> ${this.selectedUser.username}`;
                 }
 
-                let roomText = '';
-                if (this.selectedRoom != null && this.selectedRoom.id != '' && this.filter.searchType == 'room') {
-                    roomText = `<strong>Room: </strong> ${this.selectedRoom.name}<br>`;
+                let tableText = '';
+                if (this.selectedTable != null && this.selectedTable.id != '' && this.filter.searchType == 'table') {
+                    tableText = `<strong>Table: </strong> ${this.selectedTable.name}<br>`;
                 }
 
                 let assetText = '';
@@ -430,12 +426,12 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Disposal Record</h4 style="text-align:center">
+                                <h4 style="text-align:center">Disposal Record</h4>
                             </div>
                         </div>
                         <div class="row">
 							<div class="col-xs-6">
-								${userText} ${roomText} ${assetText} 
+								${userText} ${tableText} ${assetText} 
 							</div>
 							<div class="col-xs-6 text-right">
 								${dateText}

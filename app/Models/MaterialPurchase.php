@@ -10,7 +10,7 @@ class MaterialPurchase extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $gurded = ['id'];
+    protected $guarded = ['id'];
 
     protected $table = 'material_purchases';
 

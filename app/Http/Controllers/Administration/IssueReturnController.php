@@ -37,8 +37,8 @@ class IssueReturnController extends Controller
     public function getAssetForReturn(Request $request)
     {
         $clauses = "";
-        if (!empty($request->roomId)) {
-            $clauses .= " and i.room_id = '$request->roomId'";
+        if (!empty($request->tableId)) {
+            $clauses .= " and i.table_id = '$request->tableId'";
         }
 
         $assets = DB::select("select 
@@ -114,8 +114,8 @@ class IssueReturnController extends Controller
             if (!empty($request->id)) {
                 array_push($whereCluase, ['id', '=', $request->id]);
             }
-            if (!empty($request->roomId)) {
-                array_push($whereCluase, ['room_id', '=', $request->roomId]);
+            if (!empty($request->tableId)) {
+                array_push($whereCluase, ['table_id', '=', $request->tableId]);
             }
             if (!empty($request->userId)) {
                 array_push($whereCluase, ['added_by', '=', $request->userId]);
@@ -131,9 +131,9 @@ class IssueReturnController extends Controller
             }
 
             if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
-                $issue = IssueReturn::with('issueReturnDetails', 'room', 'user')->where($whereCluase)->latest('id');
+                $issue = IssueReturn::with('issueReturnDetails', 'table', 'user')->where($whereCluase)->latest('id');
             } else {
-                $issue = IssueReturn::with('room', 'user')->where($whereCluase)->latest('id');
+                $issue = IssueReturn::with('table', 'user')->where($whereCluase)->latest('id');
             }
 
             if (!empty($request->forSearch)) {
@@ -143,10 +143,10 @@ class IssueReturnController extends Controller
             }
 
             foreach ($issue as $key => $item) {
-                if ($item->room_id != null || $item->room_id != '') {
-                    $item->room = DB::select("select * from rooms where id = ?", [$item->room_id])[0];
+                if ($item->table_id != null || $item->table_id != '') {
+                    $item->table = DB::select("select * from tables where id = ?", [$item->table_id])[0];
                 } else {
-                    $item->room = null;
+                    $item->table = null;
                 }
             }
             return response()->json($issue);
@@ -159,8 +159,8 @@ class IssueReturnController extends Controller
     {
         try {
             $whereCluase = "";
-            if (!empty($request->roomId)) {
-                $whereCluase .= " AND r.id = '$request->roomId'";
+            if (!empty($request->tableId)) {
+                $whereCluase .= " AND r.id = '$request->tableId'";
             }
 
             if (!empty($request->assetId)) {
@@ -179,12 +179,12 @@ class IssueReturnController extends Controller
                             a.code,
                             a.name,
                             ir.date,
-                            r.code as room_code,
-                            r.name as room_name
+                            r.code as table_code,
+                            r.name as table_name
                         FROM issue_return_details ird
                         LEFT JOIN assets a ON a.id = ird.asset_id
                         LEFT JOIN issue_returns ir ON ir.id = ird.issue_return_id
-                        LEFT JOIN rooms r ON r.id = ir.room_id
+                        LEFT JOIN tables r ON r.id = ir.table_id
                         WHERE ird.status != 'd' 
                         $whereCluase");
 

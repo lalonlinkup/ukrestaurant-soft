@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('invoice', 20)->index();
             $table->date('date')->index();
             $table->string('type', 100)->nullable();
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('table_id');
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('booking_id')->nullable();
             $table->unsignedBigInteger('service_head_id');
@@ -32,7 +32,7 @@ class CreateServicesTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('booking_id')->references('id')->on('booking_masters');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('service_head_id')->references('id')->on('service_heads');

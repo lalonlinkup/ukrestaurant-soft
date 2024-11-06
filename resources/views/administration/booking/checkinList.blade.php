@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Checkin Room List')
-@section('breadcrumb_title', 'Checkin Room List')
+@section('title', 'Checkin Table List')
+@section('breadcrumb_title', 'Checkin Table List')
 @push('style')
 <style scoped>
     table>thead>tr>th {
@@ -18,10 +18,10 @@
 </style>
 @endpush
 @section('content')
-<div id="roomList">
+<div id="tableList">
     <div class="row" style="margin:0;">
         <fieldset class="scheduler-border bg-of-skyblue">
-            <legend class="scheduler-border">Checkin Room List Search</legend>
+            <legend class="scheduler-border">Checkin Table List Search</legend>
             <div class="control-group">
                 <form @submit.prevent="getCheckinList">
                     <div class="col-md-3 col-xs-12">
@@ -30,7 +30,7 @@
                             <select class="form-select no-padding" @change="onChangeSearchType" style="width: 100%;" v-model="searchType">
                                 <option value="">All</option>
                                 <option value="category">By Category</option>
-                                <option value="roomtype">By RoomType</option>
+                                <option value="tabletype">By Table Type</option>
                             </select>
                         </div>
                     </div>
@@ -39,9 +39,9 @@
                             <v-select v-bind:options="categories" id="category" v-model="selectedCategory" label="name"></v-select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-xs-12" v-if="searchType == 'roomtype'" style="display: none;" :style="{display: searchType == 'roomtype' ? '':'none'}">
+                    <div class="col-md-3 col-xs-12" v-if="searchType == 'tabletype'" style="display: none;" :style="{display: searchType == 'tabletype' ? '':'none'}">
                         <div class="form-group">
-                            <v-select v-bind:options="roomtypes" id="category" v-model="selectedRoomType" label="name"></v-select>
+                            <v-select v-bind:options="tabletypes" id="category" v-model="selectedTableType" label="name"></v-select>
                         </div>
                     </div>
                     <div class="col-md-1 col-xs-12">
@@ -53,7 +53,7 @@
             </div>
         </fieldset>
     </div>
-    <div style="display:none;" v-bind:style="{display: rooms.length > 0 && showReport ? '' : 'none'}">
+    <div style="display:none;" v-bind:style="{display: tables.length > 0 && showReport ? '' : 'none'}">
         <div class="row">
             <div class="col-md-12 text-right">
                 <a href="" v-on:click.prevent="print">
@@ -68,8 +68,8 @@
                         <thead>
                             <tr>
                                 <th>Sl</th>
-                                <th>Room Name</th>
-                                <th>Room Type</th>
+                                <th>Table Name</th>
+                                <th>Table Type</th>
                                 <th>Customer</th>
                                 <th>AreaName</th>
                                 <th>Checkin</th>
@@ -78,10 +78,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, sl) in rooms">
+                            <tr v-for="(item, sl) in tables">
                                 <td style="text-align:center;">@{{ sl + 1 }}</td>
                                 <td style="text-align: left !important;">@{{ item.name }}</td>
-                                <td>@{{ item.roomtype_name }}</td>
+                                <td>@{{ item.tabletype_name }}</td>
                                 <td>
                                     @{{item.customers?.customer_name}} - @{{item.customers?.customer_code}}
                                 </td>
@@ -109,17 +109,17 @@
 @push('script')
 <script>
     new Vue({
-        el: '#roomList',
+        el: '#tableList',
         data() {
             return {
                 searchType: '',
-                rooms: [],
+                tables: [],
 
                 categories: [],
                 selectedCateogry: null,
 
-                roomtypes: [],
-                selectedRoomType: null,
+                tabletypes: [],
+                selectedTableType: null,
 
                 onProgress: false,
                 showReport: null,
@@ -138,59 +138,55 @@
 
         methods: {
             getCategory() {
-                axios.get("/get-category")
-                    .then(res => {
-                        this.categories = res.data
-                    })
+                axios.get("/get-category").then(res => {
+                    this.categories = res.data
+                })
             },
-            getRoomType() {
-                axios.get("/get-roomtype")
-                    .then(res => {
-                        this.roomtypes = res.data
-                    })
+            getTableType() {
+                axios.get("/get-tabletype").then(res => {
+                    this.tabletypes = res.data
+                })
             },
             onChangeSearchType() {
-                this.roomtypes = [];
+                this.tabletypes = [];
                 this.selectedCategory = null;
-                this.selectedRoomType = null;
+                this.selectedTableType = null;
                 if (this.searchType == 'category') {
                     this.getCategory();
                 }
-                if (this.searchType == 'roomtype') {
-                    this.getRoomType();
+                if (this.searchType == 'tabletype') {
+                    this.getTableType();
                 }
             },
             getCheckinList() {
                 let filter = {
-                    typeId: this.selectedRoomType != null ? this.selectedRoomType.id : '',
+                    typeId: this.selectedTableType != null ? this.selectedTableType.id : '',
                     categoryId: this.selectedCategory != null ? this.selectedCategory.id : '',
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-checkin-list", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.rooms = r.filter(item => item.status == 'a')
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        this.showReport = null
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-checkin-list", filter).then(res => {
+                    let r = res.data;
+                    this.tables = r.filter(item => item.status == 'a')
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.onProgress = false
+                    this.showReport = null
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {
@@ -198,7 +194,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Room List</h4 style="text-align:center">
+                                <h4 style="text-align:center">Table List</h4>
                             </div>
                         </div>
 					</div>

@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Room List')
-@section('breadcrumb_title', 'Room List')
+@section('title', 'Table List')
+@section('breadcrumb_title', 'Table List')
 @push('style')
 <style scoped>
     table>thead>tr>th {
@@ -18,29 +18,35 @@
 </style>
 @endpush
 @section('content')
-<div id="roomList">
+<div id="tableList">
     <div class="row" style="margin:0;">
         <fieldset class="scheduler-border bg-of-skyblue">
-            <legend class="scheduler-border">Room List Search</legend>
+            <legend class="scheduler-border">Table List Search</legend>
             <div class="control-group">
-                <form @submit.prevent="getRoom">
+                <form @submit.prevent="getTables">
                     <div class="col-md-3 col-xs-12">
                         <div class="form-group" style="display: flex;align-items:center;">
                             <label for="" style="width:150px;">Search Type</label>
                             <select class="form-select no-padding" @change="onChangeSearchType" style="width: 100%;" v-model="searchType">
                                 <option value="">All</option>
                                 <option value="floor">By Floor</option>
+                                <option value="incharge">By Incharge</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-3 col-xs-12" v-if="searchType == 'floor'" style="display: none;" :style="{display: searchType == 'floor' ? '':'none'}">
                         <div class="form-group">
-                            <v-select v-bind:options="floors" id="floor" v-model="selectedFloor" label="name"></v-select>
+                            <v-select v-bind:options="floors" id="floor" v-model="selectedFloor" label="name" placeholder="Select Floor"></v-select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-xs-12" v-if="searchType == 'roomtype'" style="display: none;" :style="{display: searchType == 'roomtype' ? '':'none'}">
+                    <div class="col-md-3 col-xs-12" v-if="searchType == 'incharge'" style="display: none;" :style="{display: searchType == 'incharge' ? '':'none'}">
                         <div class="form-group">
-                            <v-select v-bind:options="roomtypes" id="category" v-model="selectedRoomType" label="name"></v-select>
+                            <v-select v-bind:options="incharges" id="incharge" v-model="selectedIncharge" label="name" placeholder="Select Incharge"></v-select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12" v-if="searchType == 'tabletype'" style="display: none;" :style="{display: searchType == 'tabletype' ? '':'none'}">
+                        <div class="form-group">
+                            <v-select v-bind:options="tabletypes" id="category" v-model="selectedTableType" label="name"></v-select>
                         </div>
                     </div>
                     <div class="col-md-1 col-xs-12">
@@ -52,7 +58,7 @@
             </div>
         </fieldset>
     </div>
-    <div style="display:none;" v-bind:style="{display: rooms.length > 0 && showReport ? '' : 'none'}">
+    <div style="display:none;" v-bind:style="{display: tables.length > 0 && showReport ? '' : 'none'}">
         <div class="row">
             <div class="col-md-12 text-right">
                 <a href="" v-on:click.prevent="print">
@@ -67,25 +73,25 @@
                         <thead>
                             <tr>
                                 <th>Sl</th>
-                                <th>Room ID</th>
-                                <th>Room Name</th>
-                                <th>Room Type</th>
+                                <th>Table ID</th>
+                                <th>Table Name</th>
+                                <th>Table Type</th>
                                 <th>Floor</th>
-                                <th>Bed</th>
-                                <th>Bath</th>
-                                <th style="text-align: right;">Price</th>
+                                <th>Incharge</th>
+                                <th>Capacity</th>
+                                <th>Location</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, sl) in rooms">
+                            <tr v-for="(item, sl) in tables">
                                 <td style="text-align:center;">@{{ sl + 1 }}</td>
                                 <td>@{{ item.code }}</td>
                                 <td style="text-align: left !important;">@{{ item.name }}</td>
-                                <td>@{{ item.roomtype_name }}</td>
+                                <td>@{{ item.tabletype_name }}</td>
                                 <td>@{{ item.floor_name }}</td>
-                                <td>@{{ item.bed }}</td>
-                                <td>@{{ item.bath }}</td>
-                                <td style="text-align: right;">@{{ item.price }}</td>
+                                <td>@{{ item.incharge_name }}</td>
+                                <td>@{{ item.capacity }}</td>
+                                <td>@{{ item.location }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -106,17 +112,20 @@
 @push('script')
 <script>
     new Vue({
-        el: '#roomList',
+        el: '#tableList',
         data() {
             return {
                 searchType: '',
-                rooms: [],
+                tables: [],
 
                 floors: [],
                 selectedFloor: null,
 
-                roomtypes: [],
-                selectedRoomType: null,
+                incharges: [],
+                selectedIncharge: null,
+
+                tabletypes: [],
+                selectedTableType: null,
 
                 onProgress: false,
                 showReport: null,
@@ -125,57 +134,72 @@
 
         methods: {
             getFloor() {
-                axios.get("/get-floor")
-                    .then(res => {
-                        this.floors = res.data
-                    })
+                axios.get("/get-floor").then(res => {
+                    this.floors = res.data
+                })
             },
-            getRoomType() {
-                axios.get("/get-roomtype")
-                    .then(res => {
-                        this.roomtypes = res.data
-                    })
+            getIncharge() {
+                axios.get("/get-employee").then(res => {
+                    this.incharges = res.data
+                })
+            },
+            getTableType() {
+                axios.get("/get-tabletype").then(res => {
+                    this.tabletypes = res.data
+                })
             },
             onChangeSearchType() {
-                this.roomtypes = [];
+                this.tabletypes = [];
                 if (this.searchType == 'floor') {
                     this.getFloor();
                 }
-                if (this.searchType == 'roomtype') {
-                    this.getRoomType();
+                if (this.searchType == 'incharge') {
+                    this.getIncharge();
+                }
+                if (this.searchType == 'tabletype') {
+                    this.getTableType();
                 }
             },
-            getRoom() {
+            getTables() {
+                if (this.searchType != 'tabletype') {
+                    this.selectedTableType = null;
+                }
+                if (this.searchType != 'floor') {
+                    this.selectedFloor = null;
+                }
+                if (this.searchType != 'incharge') {
+                    this.selectedIncharge = null;
+                }
+
                 let filter = {
-                    roomtypeId: this.selectedRoomType != null ? this.selectedRoomType.id : '',
+                    tabletypeId: this.selectedTableType != null ? this.selectedTableType.id : '',
                     floorId: this.selectedFloor != null ? this.selectedFloor.id : '',
+                    inchargeId: this.selectedIncharge != null ? this.selectedIncharge.id : ''
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-room", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.rooms = r.filter(item => item.status == 'a')
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        this.showReport = null
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-table", filter).then(res => {
+                    let r = res.data;
+                    this.tables = r.filter(item => item.status == 'a')
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.onProgress = false
+                    this.showReport = null
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {
@@ -183,7 +207,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Room List</h4 style="text-align:center">
+                                <h4 style="text-align:center">Table List</h4>
                             </div>
                         </div>
 					</div>

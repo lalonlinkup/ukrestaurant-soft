@@ -17,8 +17,8 @@ class IssueReturn extends Model
         return $this->hasMany(IssueReturnDetails::class)->with('asset');
     }
 
-    public function room() {
-        return $this->belongsTo(Room::class)->select('id', 'name', 'code', 'price');
+    public function table() {
+        return $this->belongsTo(Table::class)->select('id', 'name', 'code', 'price');
     }
 
     public function user() {

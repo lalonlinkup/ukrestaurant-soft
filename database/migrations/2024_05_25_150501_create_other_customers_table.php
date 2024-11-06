@@ -16,7 +16,7 @@ class CreateOtherCustomersTable extends Migration
         Schema::create('other_customers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id')->index();
-            $table->unsignedBigInteger('room_id')->index();
+            $table->unsignedBigInteger('table_id')->index();
             $table->string('name');
             $table->string('nid', 20)->nullable();
             $table->string('gender', 20)->nullable();
@@ -29,7 +29,7 @@ class CreateOtherCustomersTable extends Migration
             $table->ipAddress('last_update_ip');
 
             $table->foreign('booking_id')->references('id')->on('booking_masters');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

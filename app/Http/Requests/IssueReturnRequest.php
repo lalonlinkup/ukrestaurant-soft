@@ -26,7 +26,7 @@ class IssueReturnRequest extends FormRequest
         return [
             'issueReturn.date' => 'required',
             'issueReturn.total' => 'required',
-            'issueReturn.room_id' => 'required',
+            'issueReturn.table_id' => 'required',
             'carts' => 'required',
         ];
 
@@ -35,7 +35,7 @@ class IssueReturnRequest extends FormRequest
     public function messages()
     {
         return [
-            'issueReturn.room_id.required' => 'Room name required',
+            'issueReturn.table_id.required' => 'Table name required',
             'issueReturn.date.required' => 'Issue Return date required',
             'issueReturn.total.required' => 'Issue Return total required',
             'carts.required' => 'Cart is empty',

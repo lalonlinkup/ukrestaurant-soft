@@ -10,7 +10,7 @@ class Menu extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $gurded = ['id'];
+    protected $guarded = ['id'];
 
     public function category() {
         return $this->belongsTo(MenuCategory::class, 'menu_category_id', 'id');
