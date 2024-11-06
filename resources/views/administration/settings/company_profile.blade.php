@@ -14,7 +14,7 @@
     <div id="companyProfile">
         <form @submit.prevent="updateProfile($event)">
             <div class="row">
-                <div class="col-md-4 col-xs-12">
+                <div class="col-md-2 col-xs-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group ImageBackground clearfix">
@@ -31,6 +31,57 @@
                                 <label for="favicon">Upload Fav</label>
                                 <input type="file" name="favicon" id="favicon" class="form-control shadow-none"
                                     @change="faviconUrl" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="header-title" style="margin: 0;">Company Opening Hours</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Sunday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="sunday" v-model="company.sunday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Monday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="monday" v-model="company.monday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Tuesday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="tuesday" v-model="company.tuesday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Wednesday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="wednesday" v-model="company.wednesday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Thursday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="thursday" v-model="company.thursday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Friday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="friday" v-model="company.friday" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" for="">Saturday:</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="saturday" v-model="company.saturday" class="form-control" />
+                                </div>
                             </div>
                         </div>
                     </div>
