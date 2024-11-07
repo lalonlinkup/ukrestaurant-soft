@@ -27,9 +27,6 @@ class TableController extends Controller
         if (!empty($request->inchargeId)) {
             $clauses .= " and t.incharge_id = '$request->inchargeId'";
         }
-        if (!empty($request->categoryId)) {
-            $clauses .= " and r.category_id = '$request->categoryId'";
-        }
         if (!empty($request->tabletypeId)) {
             $clauses .= " and t.table_type_id = '$request->tabletypeId'";
         }
@@ -40,12 +37,10 @@ class TableController extends Controller
         $tables = DB::select("select t.*,
                 f.name as floor_name,
                 e.name as incharge_name,
-                c.name as category_name,
                 rt.name as tabletype_name
             from tables t
             left join floors f on f.id = t.floor_id
             left join employees e on e.id = t.incharge_id
-            left join categories c on c.id = t.category_id
             left join table_types rt on rt.id = t.table_type_id
             where t.status != 'd' and t.deleted_at is null 
             $clauses");
@@ -104,7 +99,7 @@ class TableController extends Controller
             ->where('id', '!=', $request->id)
             ->exists();
         if ($exists) {
-            return response()->json(['status' => true, 'message' => "The table name must be unique for the given category!"], 422);
+            return response()->json(['status' => true, 'message' => "The table name must be unique for the given floor!"], 422);
         }
         try {
             $data = Table::find($request->id);
@@ -153,5 +148,53 @@ class TableController extends Controller
         }
 
         return view('administration.table.tablelist');
+    }
+
+    public function getTableList(Request $request)
+    {
+        $clauses = "";
+        if (!empty($request->floorId)) {
+            $clauses .= " and t.floor_id = '$request->floorId'";
+        }
+        if (!empty($request->typeId)) {
+            $clauses .= " and t.table_type_id = '$request->typeId'";
+        }
+
+        if (!empty($request->inchargeId)) {
+            $clauses .= " and t.incharge_id = '$request->inchargeId'";
+        }
+
+        $floors = DB::select("select f.* from floors f where f.status = 'a'");
+
+        foreach ($floors as $key => $floor) {
+            $floor->tables = DB::select("select t.*,
+                                tt.name as tabletype_name
+                                from tables t
+                                left join table_types tt on tt.id = t.table_type_id
+                                where t.status != 'd' and t.deleted_at is null
+                                and t.floor_id = ?
+                                $clauses
+                                ", [$floor->id]);
+
+            foreach ($floor->tables as  $item) {
+                $tablebooked = DB::select("select * from tables tt where tt.id in (select ot.table_id from orders ot where ot.status = 'p') and tt.id = ?", [$item->id]);
+                $item->booked = count($tablebooked) > 0 ? 'true' : 'false';
+
+                $item->available = 'false';
+                if ($item->booked == 'false') {
+                    $item->available = 'true';
+                }
+
+                if ($item->available == 'true') {
+                    $item->color = "#aee2ff";
+                } else if ($item->booked == 'true') {
+                    $item->color = '#fffcb2';
+                } else {
+                    $item->color = "#aee2ff";
+                }
+            }
+        }
+
+        return response()->json($floors, 200);
     }
 }

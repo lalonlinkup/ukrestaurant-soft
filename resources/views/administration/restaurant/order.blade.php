@@ -116,7 +116,8 @@
 <div class="row" id="orderBookingForm">
     <div class="col-md-12 col-xs-12">
         <div class="tab-content" style="border: none;padding: 0px">
-            <div id="tab1" class="tab-pane fade in active" style="padding: 10px">
+            <!-- <div id="tab1" class="tab-pane fade in active" style="padding: 10px"> -->
+            <div v-if="tableForm" style="padding: 10px">
                 <div class="row" style="border-bottom: 1px solid gray;">
                     <div class="col-md-12 col-xs-12 border-radius" style="display:flex;align-items:center;padding:0 !important;background:#aee2ff;border: 1px groove #848f95 !important;padding:5px 0;">
                         <div class="col-md-4">
@@ -159,13 +160,12 @@
                                             <label :for="'table-'+tableItem.id">
                                                 <div class="booking-card" :style="{background: tableItem.color}">
                                                     <div class="card-image text-center">
-                                                        <!-- <i class="bi bi-house fa-4x" alt="House Image" style=" color:white;width: 100%; height: 100%; object-fit: cover;"></i> -->
                                                         <div class="overlay">
                                                             <p>@{{tableItem.name}}</p>
                                                         </div>
                                                         <div class="top-right-text">
                                                             <div class="col-xs-6 no-padding" style="text-align: left;">
-                                                                <input v-if="tableItem.color == '#aee2ff'" :style="{visibility: tableItem.color == '#aee2ff' ? '' : 'hidden'}" @change="addToTableCart($event)" type="checkbox" :value="tableItem.id" v-model="tableItem.checkStatus" :id="'table-'+tableItem.id">
+                                                                <input :disabled="tableCart.length == 0 ? false : true" @change="addToTableCart($event)" type="checkbox" :value="tableItem.id" :id="'table-'+tableItem.id">
                                                             </div>
                                                             <div class="col-xs-6 no-padding" style="display: flex; justify-content: end;">
                                                                 <button type="button" class="icon-container" @click="showTableInfo(tableItem.id)">
@@ -183,7 +183,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 col-xs-12 no-padding">
+                    <!-- <div class="col-md-12 col-xs-12 no-padding">
                         <a v-if="tableCart.length > 0" data-toggle="tab" href="#tab2">
                             <button type="button" class="btn btn-next" style="float:right; margin-top:10px; background:#BC2649 !important;">
                                 Next <i class="bi bi-arrow-right"></i>
@@ -194,7 +194,7 @@
                                 Next <i class="bi bi-arrow-right"></i>
                             </button>
                         </a>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row" style="display:none;" v-bind:style="{display: showReport == false ? '' : 'none'}">
                     <div class="col-md-12 text-center">
@@ -202,7 +202,8 @@
                     </div>
                 </div>
             </div>
-            <div id="tab2" class="tab-pane fade">
+            <!-- <div id="tab2" class="tab-pane fade"> -->
+            <div v-if="orderForm">
                 <div class="row" style="margin:0;">
                     <div class="col-md-12">
                         <fieldset class="scheduler-border bg-of-skyblue">
@@ -336,7 +337,6 @@
                                             <p>@{{ menu.name }}</p>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </fieldset>
@@ -479,9 +479,14 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-12 no-padding-right text-right" style="margin-top: 5px;">
-                                            <a data-toggle="tab" href="#tab1" class="btn btn-danger btn-reset" style="font-size:11px;padding:0px 30px !important"><i class="bi bi-arrow-left"></i> Previous</a>
+                                            <!-- <a data-toggle="tab" href="#tab1" v-if="order.id == 0" class="btn btn-danger btn-reset" style="font-size:11px;padding:0px 30px !important"><i class="bi bi-arrow-left"></i> Previous</a> -->
+
+
+                                            <a class="btn btn-danger btn-reset" style="font-size:11px;padding:0px 30px !important" @click.prevent="onClickPrevious($event)"><i class="bi bi-arrow-left"></i> Previous</a>
+
                                             <input :disabled="onProgress" type="button" @click="saveOrder" class="btn btn-warning btn-padding" value="Draft">
-                                            <input :disabled="onProgress" type="button" @click="saveOrder" class="btn btn-primary btn-padding" :value="btnText">
+
+                                            <input :disabled="onProgress" v-if="order.id != 0" type="button" @click="saveOrder" class="btn btn-primary btn-padding" :value="btnText">
                                         </div>
                                     </div>
                                 </div>
@@ -503,11 +508,8 @@
                     <h3 class="modal-title" style="text-align:left;font-weight:bold;color:#000;">Table: @{{tableInfo.name}}</h3>
                 </div>
                 <div class="modal-body" style="margin-bottom:15px">
-                    <div class="row" style="margin: 10px;  box-shadow: 0px 2px 5px 0px #c2bfbf;border-radius:10px;padding-top:10px;padding-bottom:15px">
-                        <div class="col-md-12 col-xs-12" style="text-align: justify;margin-top:10px">
-                            <div id="calendar"></div>
-                        </div>
-                    </div>
+                    <h5 style="text-align:left;font-weight:bold;color:#000;">Incharge: @{{tableInfo.incharge_name}}</h5>
+                    <h5 style="text-align:left;font-weight:bold;color:#000;">Location: @{{tableInfo.location}}</h5>
                 </div>
             </div>
         </div>
@@ -585,6 +587,8 @@
                 vatPercent: 0,
 
                 tableInfo: {},
+                tableForm: true,
+                orderForm: false,
                 onProgress: false,
                 showReport: null,
                 customerType: 'cash',
@@ -784,7 +788,6 @@
                     }
                 })
             },
-
             clearForm() {
                 this.order = {
                     id: "{{ $id }}",
@@ -817,7 +820,6 @@
                     type: "G",
                 }
             },
-
             chooseMenu(menu) {
                 this.selectedMenu = menu;
                 this.selectedMenu.quantity = 1;
@@ -868,18 +870,15 @@
                 this.order.paid = (cashPaid + bankPaid).toFixed(this.fixed);
                 this.calculateTotal();
             },
-
             menuTotal(menu) {
                 menu.total = (parseFloat(menu.quantity) * parseFloat(menu.price)).toFixed(2);
                 this.calculateTotal();
             },
-
             getTableType() {
                 axios.get("/get-tabletype").then(res => {
                     this.tabletypes = res.data;
                 })
             },
-
             getTables() {
                 this.tableCart = [];
                 this.showReport = false;
@@ -894,41 +893,94 @@
                     this.showReport = true;
                 })
             },
-
             async addToTableCart(event) {
-                if (event.target.checked) {
-                    let avaiable = await axios.post('/get-available-table', {
-                        id: event.target.value
-                    }).then(res => {
-                        return res.data;
-                    })
+                this.tableForm = false;
+                this.orderForm = true;
 
-                    if (avaiable.status == false) {
-                        event.target.checked = false;
-                        toastr.error(`This table not available on this date: ${avaiable.date}`);
-                        return;
-                    }
+                // Get Table Wise Order
+                let order = await axios.post('/get-order-by-table', {
+                    tableId: event.target.value
+                }).then(res => {
+                    return res.data[0];
+                })
 
-                    let table = await axios.post('/get-table', {
-                        tableId: event.target.value
-                    }).then(res => {
-                        return res.data[0];
-                    })
-
-                    let cart = {
-                        table_id: table.id,
-                        name: table.name,
-                        typeName: table.tabletype_name,
-                        inchargeId: table.incharge_id,
-                        inchargeName: table.incharge_name,
-                    }
-                    this.tableCart.push(cart);
+                if (order != undefined) {
+                    this.order.id = order.id;
+                    this.getOrder();
                 } else {
-                    let findIndex = this.tableCart.findIndex(item => item.table_id == event.target.value);
-                    this.tableCart.splice(findIndex, 1);
+                    this.order.id = 0;
+
+                    if (event.target.checked) {
+                        let table = await axios.post('/get-table', {
+                            tableId: event.target.value
+                        }).then(res => {
+                            return res.data[0];
+                        })
+
+                        let cart = {
+                            table_id: table.id,
+                            name: table.name,
+                            typeName: table.tabletype_name,
+                            inchargeId: table.incharge_id,
+                            inchargeName: table.incharge_name,
+                        }
+                        this.tableCart.push(cart);
+                    } else {
+                        this.tableCart.splice(findIndex, 1);
+                    }
                 }
 
-                this.calculateTotal();
+                // if (event.target.checked) {
+                //     let table = await axios.post('/get-table', {
+                //         tableId: event.target.value
+                //     }).then(res => {
+                //         return res.data[0];
+                //     })
+
+                //     let cart = {
+                //         table_id: table.id,
+                //         name: table.name,
+                //         typeName: table.tabletype_name,
+                //         inchargeId: table.incharge_id,
+                //         inchargeName: table.incharge_name,
+                //     }
+                //     this.tableCart.push(cart);
+
+                //     // Get Table Wise Order
+                //     let order = await axios.post('/get-order-by-table', {
+                //         tableId: event.target.value
+                //     }).then(res => {
+                //         return res.data[0];
+                //     })
+
+                //     if (order != undefined) {
+                //         this.order.id = order.order_id;
+                //     } else {
+                //         this.order.id = 0;
+                //     }
+                // } else {
+                //     console.log(findIndex);
+
+                //     this.tableCart.splice(findIndex, 1);
+                // }
+
+                // if (this.order.id != 0) {
+                //     this.getOrder();
+                // }
+            },
+            async onClickPrevious(event) {
+                this.tableCart = [];
+                this.clearForm();
+                this.tableForm = true;
+                this.orderForm = false;
+            },
+            removeFromTableCart(ind) {
+                let length = this.tableCart.length - 1;
+                if (length == 0) {
+                    toastr.error("You can not remove all the tables");
+                    return;
+                }
+                this.tableCart.splice(ind, 1);
             },
             async editCart(item) {
                 let today = moment().format("YYYY-MM-DD");
@@ -1008,14 +1060,25 @@
                 }
             },
             async showTableInfo(id) {
+
+                // let orderId = await axios.post('/get-order-by-table', {
+                //     tableId: id
+                // }).then(res => {
+                //     return res.data[0].order_id;
+                // })
+
+                // console.log(orderId);
+
                 let tableInfo = await axios.post('/get-table', {
                     tableId: id
                 }).then(res => {
                     return res.data[0];
                 })
-                setTimeout(() => {
-                    this.tableCalendar(id);
-                }, 500)
+
+                // setTimeout(() => {
+                //     this.tableCalendar(id);
+                // }, 500)
+
                 this.tableInfo = tableInfo;
                 $("#myModal").modal("show");
             },
@@ -1051,21 +1114,18 @@
                         this.selectedBank = {
                             id: order.bank_account_id,
                             name: order.bank != null ? order.bank.name : "",
-                            display_name: order.bank != null ?
-                                `${order.bank.name}-${order.bank.number}-${order.bank.bank_name}` : ""
+                            display_name: order.bank != null ? `${order.bank.name}-${order.bank.number}-${order.bank.bank_name}` : ""
                         }
                     }
 
-                    order.order_tables.forEach(item => {
-                        let tdetail = {
-                            table_id: item.table_id,
-                            name: item.table_name,
-                            typeName: item.type_name,
-                            inchargeId: item.incharge_id,
-                            inchargeName: item.incharge_name,
-                        }
-                        this.tableCart.push(tdetail);
-                    })
+                    let tdetail = {
+                        table_id: order.table_id,
+                        name: order.table.name,
+                        typeName: order.table.tabletype.name,
+                        inchargeId: order.table.incharge_id,
+                        inchargeName: order.table.employee.name,
+                    }
+                    this.tableCart.push(tdetail);
 
                     order.order_details.forEach(detail => {
                         let menu = {
@@ -1083,46 +1143,6 @@
                     this.calculateTotal();
                 })
             },
-            getBooking() {
-                axios.post("/get-booking", {
-                    id: this.booking.id
-                }).then(res => {
-                    let booking = res.data[0];
-                    let keys = Object.keys(this.booking);
-                    keys.forEach(key => {
-                        this.booking[key] = booking[key];
-                    });
-                    this.booking.is_other = booking.is_other == 'true' ? true : false;
-                    this.booking.booking_status = booking.booking_details[0].booking_status
-
-                    this.selectedCustomer = {
-                        id: booking.customer_id,
-                        name: booking.customer_name,
-                        phone: booking.customer_phone,
-                        nid: booking.customer_nid,
-                        address: booking.customer_address,
-                        display_name: `${booking.customer_name} - ${booking.customer_phone}`
-                    }
-
-                    this.members = booking.othercustomer;
-                    booking.booking_details.forEach(item => {
-                        let detail = {
-                            table_id: item.table_id,
-                            name: item.table_name,
-                            typeName: item.type_name,
-                            inchargeName: item.incharge_name,
-                            days: item.days,
-                            unit_price: parseFloat(item.unit_price).toFixed(2),
-                            total: parseFloat(item.unit_price * item.days).toFixed(2),
-                            checkin_date: moment(item.checkin_date).format('YYYY-MM-DD'),
-                            checkout_date: moment(item.checkout_date).format('YYYY-MM-DD'),
-                        }
-                        this.tableCart.push(detail);
-                    })
-                    this.calculateTotal();
-                })
-            },
-
             tableCalendar(tableId) {
                 $.ajax({
                     url: "/get-tablecalendar",

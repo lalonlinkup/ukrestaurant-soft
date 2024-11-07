@@ -361,14 +361,14 @@ class BookingController extends Controller
     {
         $clauses = "";
         if (!empty($request->floorId)) {
-            $clauses .= " and r.floor_id = '$request->floorId'";
+            $clauses .= " and t.floor_id = '$request->floorId'";
         }
         if (!empty($request->typeId)) {
-            $clauses .= " and r.table_type_id = '$request->typeId'";
+            $clauses .= " and t.table_type_id = '$request->typeId'";
         }
 
-        if (!empty($request->categoryId)) {
-            $clauses .= " and r.category_id = '$request->categoryId'";
+        if (!empty($request->inchargeId)) {
+            $clauses .= " and t.incharge_id = '$request->inchargeId'";
         }
 
         $floors = DB::select("select f.* from floors f where f.status = 'a'");

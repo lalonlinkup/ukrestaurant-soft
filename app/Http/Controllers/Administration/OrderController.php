@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Models\OrderDetails;
-use App\Models\OrderTable;
+use App\Models\OrderTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
@@ -73,6 +73,7 @@ class OrderController extends Controller
 
         try {
             DB::beginTransaction();
+            
             //customer
             if ($request->customer['type'] != 'G') {
                 $check = Customer::where('phone', $request->customer['phone'])->first();
@@ -108,7 +109,9 @@ class OrderController extends Controller
                 $order->customer_phone = $request->customer['phone'];
                 $order->customer_address = $request->customer['address'];
             }
+            $order->table_id = $request->tableCart[0]['table_id'];
             $order->order_type = 'Order';
+            $order->status = 'p';
             $order->added_by = Auth::user()->id;
             $order->last_update_ip = request()->ip();
             $order->save();
@@ -155,17 +158,17 @@ class OrderController extends Controller
             }
 
             // Order tables
-            foreach ($request->tableCart as $table) {
-                $tables = new OrderTable();
-                $tables->order_id = $order->id;
-                $tables->table_id = $table['table_id'];
-                $tables->incharge_id = $table['inchargeId'];
-                $tables->date = date('Y-m-d');
-                $tables->booking_status = 'booked';
-                $tables->added_by = Auth::user()->id;
-                $tables->last_update_ip = request()->ip();
-                $tables->save();
-            }
+            // foreach ($request->tableCart as $table) {
+            //     $tables = new OrderTables();
+            //     $tables->order_id = $order->id;
+            //     $tables->table_id = $table['table_id'];
+            //     $tables->incharge_id = $table['inchargeId'];
+            //     $tables->date = date('Y-m-d');
+            //     $tables->booking_status = 'booked';
+            //     $tables->added_by = Auth::user()->id;
+            //     $tables->last_update_ip = request()->ip();
+            //     $tables->save();
+            // }
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order insert successfully', 'id' => $order->id], 200);
@@ -218,6 +221,8 @@ class OrderController extends Controller
                 $order->customer_phone = $request->customer['phone'];
                 $order->customer_address = $request->customer['address'];
             }
+            $order->table_id = $request->tableCart[0]['table_id'];
+            $order->status = 'a';
             $order->updated_by = Auth::user()->id;
             $order->updated_at = Carbon::now();
             $order->last_update_ip = request()->ip();
@@ -315,9 +320,9 @@ class OrderController extends Controller
             }
 
             if ((!empty($request->recordType) && $request->recordType == 'with') || !empty($request->id)) {
-                $orders = Order::with('orderDetails', 'customer', 'orderTables', 'bank', 'user')->where($whereCluase)->latest('id');
+                $orders = Order::with('orderDetails', 'customer', 'table', 'bank', 'user')->where($whereCluase)->latest('id');
             } else {
-                $orders = Order::with('customer', 'orderTables', 'bank', 'user')->where($whereCluase)->latest('id');
+                $orders = Order::with('customer', 'table', 'bank', 'user')->where($whereCluase)->latest('id');
             }
 
             if (!empty($request->forSearch)) {
@@ -381,6 +386,16 @@ class OrderController extends Controller
                         $whereCluase");
 
             return response()->json($details);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function orderDetailsByTable(Request $request)
+    {
+        try {
+            $orders = DB::select("SELECT id FROM orders WHERE status = 'p' AND table_id = '$request->tableId' ORDER BY date DESC LIMIT 1");
+            return response()->json($orders);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
         }
@@ -474,7 +489,6 @@ class OrderController extends Controller
 
         return view('administration.restaurant.payFirst', compact('id', 'invoice'));
     }
-
     public function storePayFirst(OrderRequest $request)
     {
         if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
@@ -570,7 +584,6 @@ class OrderController extends Controller
                 }
             }
 
-
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order insert successfully', 'id' => $order->id], 200);
         } catch (\Throwable $th) {
@@ -578,7 +591,6 @@ class OrderController extends Controller
             return send_error("Something went wrong", $th->getMessage());
         }
     }
-
     public function updatePayFirst(OrderRequest $request)
     {
         if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
@@ -685,7 +697,6 @@ class OrderController extends Controller
             return send_error("Something went wrong", $th->getMessage());
         }
     }
-
     public function destroyPayFirst(Request $request)
     {
         try {

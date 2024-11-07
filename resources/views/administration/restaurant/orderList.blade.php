@@ -181,6 +181,7 @@
                             <th>Due</th>
                             <th>Note</th>
                             <th>Type</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -199,6 +200,10 @@
                             <td style="text-align:left;">@{{ order.note }}</td>
                             <td style="text-align:left;">@{{ order.order_type }}</td>
                             <td style="text-align:center;">
+                                <span v-if="order.status == 'p'" style="color: orange">Draft</span>
+                                <span v-else style="color: green">Billed</span>
+                            </td>
+                            <td style="text-align:center;">
                                 <a href="" title="Order Invoice" v-bind:href="`/order-invoice-print/${order.id}`" target="_blank"><i class="fa fa-file-text"></i></a>
                                 @if(userAction('u'))
                                 <a href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
@@ -216,6 +221,7 @@
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.total)}, 0) | decimal }}</td>
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.paid)}, 0) | decimal }}</td>
                             <td style="text-align:right;">@{{ orders.reduce((prev, curr)=>{return prev + parseFloat(curr.due)}, 0) | decimal }}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -273,7 +279,7 @@
                 filter: {
                     searchType: "",
                     recordType: "without",
-                    status: 'a',
+                    // status: 'a',
                     dateFrom: moment().format("YYYY-MM-DD"),
                     dateTo: moment().format("YYYY-MM-DD"),
                 },
@@ -315,46 +321,41 @@
             },
 
             getCategory() {
-                axios.get("/get-menu-category")
-                    .then(res => {
-                        this.categories = res.data;
-                    })
+                axios.get("/get-menu-category").then(res => {
+                    this.categories = res.data;
+                })
             },
 
             getUser() {
-                axios.post("/get-user")
-                    .then(res => {
-                        this.users = res.data.users;
-                    })
+                axios.post("/get-user").then(res => {
+                    this.users = res.data.users;
+                })
             },
 
             getMenu() {
-                axios.get("/get-menu")
-                    .then(res => {
-                        let r = res.data;
-                        this.menus = r.filter(item => item.status == 'a').map((item, index) => {
-                            item.display_name = `${item.name} - ${item.code}`
-                            return item;
-                        });
-                    })
+                axios.get("/get-menu").then(res => {
+                    let r = res.data;
+                    this.menus = r.filter(item => item.status == 'a').map((item, index) => {
+                        item.display_name = `${item.name} - ${item.code}`
+                        return item;
+                    });
+                })
             },
 
             getCustomer() {
-                axios.get("/get-customer")
-                    .then(res => {
-                        let r = res.data;
-                        this.customers = r.map((item, index) => {
-                            item.display_name = `${item.name} - ${item.code}`
-                            return item;
-                        });
-                    })
+                axios.get("/get-customer").then(res => {
+                    let r = res.data;
+                    this.customers = r.map((item, index) => {
+                        item.display_name = `${item.name} - ${item.code}`
+                        return item;
+                    });
+                })
             },
 
             getTables() {
-                axios.get('/get-table')
-                    .then(res => {
-                        this.tables = res.data;
-                    })
+                axios.get('/get-table').then(res => {
+                    this.tables = res.data;
+                })
             },
 
             onChangeType(event) {
@@ -398,34 +399,32 @@
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post(url, this.filter)
-                    .then(res => {
-                        let orders = res.data;
-                        this.orders = orders.map(item => {
-                            item.paid = parseFloat(parseFloat(item.paid) - parseFloat(item.returnAmount)).toFixed(this.fixed)
-                            return item;
-                        })
-                        this.orders2 = this.orders
-                        this.onProgress = false
-                        this.showReport = true
+                axios.post(url, this.filter).then(res => {
+                    let orders = res.data;
+                    this.orders = orders.map(item => {
+                        item.paid = parseFloat(parseFloat(item.paid) - parseFloat(item.returnAmount)).toFixed(this.fixed)
+                        return item;
                     })
-                    .catch(err => {
-                        this.showReport = null
-                        this.onProgress = false
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                    this.orders2 = this.orders
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.showReport = null
+                    this.onProgress = false
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async deleteOrder(row) {
@@ -433,18 +432,16 @@
                     id: row.id
                 }
                 if (confirm("Are you sure !!")) {
-                    axios.post("/delete-order", formdata)
-                        .then(res => {
-                            toastr.success(res.data.message)
-                            this.getOrder();
-                        })
-                        .catch(err => {
-                            var r = JSON.parse(err.request.response);
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
-                        })
+                    axios.post("/delete-order", formdata).then(res => {
+                        toastr.success(res.data.message)
+                        this.getOrder();
+                    }).catch(err => {
+                        var r = JSON.parse(err.request.response);
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
+                        }
+                        toastr.error(r.message);
+                    })
                 }
             },
 
@@ -453,16 +450,15 @@
                 if (val.length > 2) {
                     loading(true)
                     await axios.post("/get-customer", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data;
-                            this.customers = r.map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                        name: val
+                    }).then(res => {
+                        let r = res.data;
+                        this.customers = r.map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
                     await this.getCustomer();
@@ -495,6 +491,7 @@
                 if (this.selectedCategory != null && this.selectedCategory.id != '' && this.filter.searchType == 'category') {
                     categoryText = `<strong>Category: </strong> ${this.selectedCategory.name}`;
                 }
+                
                 let reportContent = `
 					<div class="container">
                         <div class="row">
@@ -542,8 +539,7 @@
             // filter orderrecord
             filterArray(event) {
                 this.orders = this.orders2.filter(order => {
-                    return order.invoice.toLowerCase().startsWith(event.target.value.toLowerCase()) ||
-                        order.date.toLowerCase().startsWith(event.target.value.toLowerCase());
+                    return order.invoice.toLowerCase().startsWith(event.target.value.toLowerCase()) || order.date.toLowerCase().startsWith(event.target.value.toLowerCase());
                 })
             },
         },

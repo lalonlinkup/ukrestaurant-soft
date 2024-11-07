@@ -27,7 +27,6 @@ class CreateIssueReturnsTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

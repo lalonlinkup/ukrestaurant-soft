@@ -38,8 +38,6 @@ class CreateBookingMastersTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('reference_id')->references('id')->on('references');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');

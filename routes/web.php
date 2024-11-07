@@ -133,6 +133,7 @@ Route::post('table', [TableController::class, 'store'])->name('table.store');
 Route::post('update-table', [TableController::class, 'update'])->name('table.update');
 Route::post('delete-table', [TableController::class, 'destroy'])->name('table.destroy');
 Route::get('tablelist', [TableController::class, 'tableList'])->name('table.tableList');
+Route::match(['get', 'post'], 'get-table-list', [TableController::class, 'getTableList'])->name('get.getTableList');
 
 // Reference route
 Route::get('reference', [ReferenceController::class, 'create'])->name('reference.create')->middleware('useractivity');
@@ -302,7 +303,6 @@ Route::match(['get', 'post'], 'get-booking', [BookingController::class, 'index']
 Route::post('save-booking', [BookingController::class, 'store'])->name('save.booking');
 Route::post('update-booking', [BookingController::class, 'update'])->name('update.booking');
 Route::post('delete-booking', [BookingController::class, 'destroy'])->name('delete.booking');
-Route::match(['get', 'post'], 'get-table-list', [BookingController::class, 'getTableList'])->name('get.getTableList');
 Route::match(['get', 'post'], 'get-available-table', [BookingController::class, 'singleAvailableTable'])->name('get.availabletable');
 Route::match(['get', 'post'], 'get-tablecalendar', [BookingController::class, 'tableBookingCalendar'])->name('get.tablecalendar');
 Route::get('booking-record', [BookingController::class, 'bookingRecord'])->name('booking.bookingRecord')->middleware('useractivity');
@@ -348,6 +348,7 @@ Route::get('orderList', [OrderController::class, 'index'])->name('order.list')->
 Route::get('pendingOrder', [OrderController::class, 'pending'])->name('pending.order')->middleware('useractivity');
 Route::match(['get', 'post'], 'get-order', [OrderController::class, 'getOrder'])->name('get.order');
 Route::post('get-order-details', [OrderController::class, 'orderDetails'])->name('order.details');
+Route::post('get-order-by-table', [OrderController::class, 'orderDetailsByTable'])->name('order.detailsbytable');
 Route::post('add-order', [OrderController::class, 'store'])->name('order.store');
 Route::post('update-order', [OrderController::class, 'update'])->name('order.update');
 Route::post('delete-order', [OrderController::class, 'destroy'])->name('order.delete');

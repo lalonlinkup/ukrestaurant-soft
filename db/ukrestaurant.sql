@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 11:44 AM
+-- Generation Time: Nov 07, 2024 at 12:37 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.27
 
@@ -45,7 +45,7 @@ CREATE TABLE `about_pages` (
 --
 
 INSERT INTO `about_pages` (`id`, `title`, `short_description`, `description`, `image`, `status`, `updated_by`, `created_at`, `updated_at`, `last_update_ip`) VALUES
-(1, 'Welcome To UK Restaurent', 'Ekhane onek valo maner khabar pawa jay', '<p>khaon khaon khaon&nbsp;</p>', 'uploads/about/Welcome To UK Restaurent_67260f6f0f1ba.jpg', 'a', 1, '2024-11-02 09:45:57', '2024-11-02 11:39:27', '127.0.0.1');
+(1, 'Welcome To Uk Restaurent', 'test description here', '<p>test description here</p>', NULL, 'a', 1, '2024-11-06 11:08:01', '2024-11-06 11:08:01', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -272,8 +272,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `slug`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Ac', 'ac', 'a', 1, NULL, '2024-11-02 09:45:56', NULL, NULL, NULL, '127.0.0.1'),
-(2, 'Non Ac', 'non-ac', 'a', 1, NULL, '2024-11-02 09:45:56', NULL, NULL, NULL, '127.0.0.1');
+(1, 'Ac', 'ac', 'a', 1, NULL, '2024-11-06 11:08:01', NULL, NULL, NULL, '127.0.0.1'),
+(2, 'Non Ac', 'non-ac', 'a', 1, NULL, '2024-11-06 11:08:01', NULL, NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -297,6 +297,13 @@ CREATE TABLE `company_profiles` (
   `print_type` int(11) NOT NULL DEFAULT 1,
   `logo` varchar(191) DEFAULT NULL,
   `favicon` varchar(191) DEFAULT NULL,
+  `saturday` varchar(191) DEFAULT NULL,
+  `sunday` varchar(191) DEFAULT NULL,
+  `monday` varchar(191) DEFAULT NULL,
+  `tuesday` varchar(191) DEFAULT NULL,
+  `wednesday` varchar(191) DEFAULT NULL,
+  `thursday` varchar(191) DEFAULT NULL,
+  `friday` varchar(191) DEFAULT NULL,
   `last_update_ip` varchar(45) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -306,8 +313,27 @@ CREATE TABLE `company_profiles` (
 -- Dumping data for table `company_profiles`
 --
 
-INSERT INTO `company_profiles` (`id`, `name`, `title`, `phone`, `email`, `address`, `map_link`, `facebook`, `instagram`, `twitter`, `youtube`, `currency`, `print_type`, `logo`, `favicon`, `last_update_ip`, `created_at`, `updated_at`) VALUES
-(1, 'UK Restaurent', 'UK Restaurent', '01619833307', 'ukrestaurent96@gmail.com', 'Mirpur 10', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29203.581321715606!2d90.3610368!3d23.802675200000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c102e2ece5bb%3A0x446e9dc895326a70!2sBangladesh%20National%20Zoo!5e0!3m2!1sen!2sbd!4v1730612747516!5m2!1sen!2sbd\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', NULL, NULL, NULL, NULL, 'BDT', 1, 'uploads/logo/_672857cdf0173.png', 'uploads/favicon/_672857cdf0b94.png', '127.0.0.1', '2024-11-02 09:45:56', '2024-11-04 05:12:45');
+INSERT INTO `company_profiles` (`id`, `name`, `title`, `phone`, `email`, `address`, `map_link`, `facebook`, `instagram`, `twitter`, `youtube`, `currency`, `print_type`, `logo`, `favicon`, `saturday`, `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `last_update_ip`, `created_at`, `updated_at`) VALUES
+(1, 'UK Restaurant', 'UK Restaurant', '019########', 'Uk_Restaurent@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 'BDT', 1, 'uploads/logo/_672b4efe267f6.png', 'uploads/favicon/_672b4efe273b2.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '127.0.0.1', '2024-11-06 11:08:01', '2024-11-06 11:13:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contacts`
+--
+
+CREATE TABLE `contacts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` varchar(191) DEFAULT NULL,
+  `name` varchar(191) NOT NULL,
+  `subject` varchar(191) NOT NULL,
+  `phone` varchar(191) DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `message` text NOT NULL,
+  `is_read` int(11) NOT NULL DEFAULT 0 COMMENT '0 = Not Read , 1 = Read',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -344,7 +370,8 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `code`, `name`, `phone`, `email`, `nid`, `gender`, `previous_due`, `district_id`, `reference_id`, `address`, `image`, `password`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(2, 'C00001', 'Juwel Mahmud', '01754-525252', NULL, NULL, NULL, '0.00', NULL, NULL, 'Test Address', NULL, NULL, 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1');
+(1, 'C00001', 'Alamin Miah', '01751515151', NULL, NULL, NULL, '0.00', NULL, NULL, 'Mirpur-2', NULL, NULL, 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(2, 'C00002', 'Lalon Hossain', '01414141414', NULL, NULL, NULL, '0.00', NULL, NULL, 'Mirpur-10, Dhaka', NULL, NULL, 'a', 1, NULL, '2024-11-07 04:46:48', '2024-11-07 04:46:48', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -400,7 +427,9 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`id`, `name`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Admin', 'a', 1, NULL, '2024-11-04 11:21:00', '2024-11-04 11:21:00', NULL, NULL, '127.0.0.1');
+(1, 'Admin', 'a', 1, NULL, '2024-11-06 11:17:44', '2024-11-06 11:17:44', NULL, NULL, '127.0.0.1'),
+(2, 'Support', 'a', 1, NULL, '2024-11-06 11:20:33', '2024-11-06 11:20:33', NULL, NULL, '127.0.0.1'),
+(3, 'Marketing', 'a', 1, NULL, '2024-11-06 11:20:38', '2024-11-06 11:20:38', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -426,7 +455,7 @@ CREATE TABLE `designations` (
 --
 
 INSERT INTO `designations` (`id`, `name`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Service Provider', 'a', 1, NULL, '2024-07-28 00:51:29', '2024-07-28 00:51:29', NULL, NULL, '127.0.0.1');
+(1, 'Admin', 'a', 1, NULL, '2024-11-06 11:17:38', '2024-11-06 11:17:38', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -499,7 +528,7 @@ CREATE TABLE `districts` (
 --
 
 INSERT INTO `districts` (`id`, `name`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Dhaka', 'a', 1, NULL, '2024-07-28 00:45:27', '2024-07-28 00:45:27', NULL, NULL, '127.0.0.1');
+(1, 'Dhaka', 'a', 1, NULL, '2024-07-27 18:45:27', '2024-07-27 18:45:27', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -543,7 +572,10 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `code`, `name`, `designation_id`, `department_id`, `bio_id`, `joining`, `gender`, `dob`, `nid_no`, `phone`, `email`, `marital_status`, `father_name`, `mother_name`, `present_address`, `permanent_address`, `image`, `salary`, `reference`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'E00001', 'Mirza Masud', 1, 1, '10001', '2020-08-01', 'Male', '1999-11-04', NULL, '01619833307', 'ukrestaurent96@gmail.com', 'married', 'Test Father', 'Test Mother', 'Test P. Address', 'Test Pr. Address', 'uploads/employee/E00001_6728ae64d408a.jpg', '999999.99', 'Testing Reference', 'a', 1, NULL, '2024-11-04 11:22:12', '2024-11-04 11:22:12', NULL, NULL, '127.0.0.1');
+(1, 'E00001', 'M Lalon', 1, 1, '1001', '2022-11-06', 'Male', '1990-11-06', NULL, '019########', 'Uk_Restaurent@gmail.com', 'married', 'Test FN', 'Test MN', 'Test PA', 'Test PRA', 'uploads/employee/E00001_672b50e234f94.jpg', '100000.00', 'Test Reference', 'a', 1, NULL, '2024-11-06 11:20:02', '2024-11-06 11:20:02', NULL, NULL, '127.0.0.1'),
+(2, 'E00002', 'M Mahi Alam', 1, 2, '1002', '2023-11-06', 'Male', '2000-11-06', NULL, '017########', 'Uk_Restaurent@gmail.com', 'married', 'Test FN', 'Test MN', 'Test T', 'Test T', NULL, '999999.99', 'Test Ref', 'a', 1, NULL, '2024-11-06 11:21:36', '2024-11-06 11:21:36', NULL, NULL, '127.0.0.1'),
+(3, 'E00003', 'M Shamim Hawlader', 1, 2, '1003', '2020-11-25', 'Male', '1999-12-12', NULL, '016########', 'Uk_Restaurent@gmail.com', 'married', 'Test FN', 'Test MN', 'Test T', 'Test T', NULL, '215400.00', 'Test Ref', 'a', 1, NULL, '2024-11-06 11:22:26', '2024-11-06 11:22:26', NULL, NULL, '127.0.0.1'),
+(4, 'E00004', 'M Shuvo Sheikh', 1, 3, '1004', '2022-02-02', 'Male', '1967-12-15', NULL, '015########', 'Uk_Restaurent@gmail.com', 'married', 'Test FN', 'Test MN', 'Test T', 'Test T', NULL, '152540.00', 'Test Ref', 'a', 1, NULL, '2024-11-06 11:24:14', '2024-11-06 11:24:14', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -618,7 +650,9 @@ CREATE TABLE `floors` (
 --
 
 INSERT INTO `floors` (`id`, `name`, `position`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, '1st', 1, 'a', 1, NULL, '2024-07-27 23:22:07', '2024-07-27 23:22:07', NULL, NULL, '127.0.0.1');
+(1, '1st Floor', 1, 'a', 1, NULL, '2024-11-06 11:14:57', '2024-11-06 11:14:57', NULL, NULL, '127.0.0.1'),
+(2, '2nd Floor', 1, 'a', 1, NULL, '2024-11-06 11:15:04', '2024-11-06 11:15:04', NULL, NULL, '127.0.0.1'),
+(3, '3rd Floor', 1, 'a', 1, NULL, '2024-11-06 11:15:09', '2024-11-06 11:15:09', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -640,14 +674,6 @@ CREATE TABLE `galleries` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `last_update_ip` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `galleries`
---
-
-INSERT INTO `galleries` (`id`, `title`, `type`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, NULL, NULL, 'uploads/gallery/_67261414804a8.jpg', 'a', 1, NULL, '2024-11-02 11:59:16', '2024-11-02 11:59:16', NULL, NULL, '127.0.0.1'),
-(2, NULL, NULL, 'uploads/gallery/_6726141ca282e.jpg', 'a', 1, NULL, '2024-11-02 11:59:24', '2024-11-02 11:59:24', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -887,17 +913,6 @@ CREATE TABLE `manages` (
   `last_update_ip` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `manages`
---
-
-INSERT INTO `manages` (`id`, `code`, `name`, `phone`, `email`, `designation_id`, `address`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'M00001', 'Mr Alamin', '00000000000', 'example@gmail.com', 1, 'Dhaka, Bangladesh', 'uploads/manage/M00001_66a5ebc12246d.jpg', 'a', 1, NULL, '2024-07-28 00:57:05', '2024-07-28 00:57:05', NULL, NULL, '127.0.0.1'),
-(2, 'C00002', 'Mr Mehedi Hassan', '0000000000', 'example@gmail.com', 1, 'Dhaka, Bangladesh', 'uploads/manage/C00002_66a5ebe887530.webp', 'a', 1, NULL, '2024-07-28 00:57:44', '2024-07-28 00:57:44', NULL, NULL, '127.0.0.1'),
-(3, 'C00003', 'Mr Atik Hasan', '0170000000', 'example@gmail.com', 1, 'Dhaka , Bangladesh', 'uploads/manage/C00003_66a5ec0feec91.png', 'a', 1, 1, '2024-07-28 00:58:15', '2024-07-28 00:58:23', NULL, NULL, '127.0.0.1'),
-(4, 'C00004', 'Md Azahar Islam', '01700000000', 'azahar@gmail.com', 1, 'Dhaka , Bangladesh', 'uploads/manage/C00004_66a5ec3d38d0a.jpeg', 'a', 1, NULL, '2024-07-28 00:59:09', '2024-07-28 00:59:09', NULL, NULL, '127.0.0.1'),
-(5, 'C00005', 'Alhaque shuvo', '0173501201', 'shuvo@gmail.com', 1, 'Dhaka', 'uploads/manage/C00005_66a5ec612c2d0.jpg', 'a', 1, NULL, '2024-07-28 00:59:45', '2024-07-28 00:59:45', NULL, NULL, '127.0.0.1');
-
 -- --------------------------------------------------------
 
 --
@@ -925,8 +940,8 @@ CREATE TABLE `materials` (
 --
 
 INSERT INTO `materials` (`id`, `name`, `unit_id`, `price`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Beef', 1, '100.00', NULL, 'a', 1, NULL, '2024-11-02 10:23:25', '2024-11-02 10:23:25', NULL, NULL, '127.0.0.1'),
-(2, 'Powder Milk', 2, '395.00', NULL, 'a', 1, NULL, '2024-11-02 10:27:17', '2024-11-02 10:27:17', NULL, NULL, '127.0.0.1');
+(1, 'Beef', 1, '100.00', 'uploads/material/_672b589ecd49f.jpg', 'a', 1, 1, '2024-11-02 04:23:25', '2024-11-06 11:53:02', NULL, NULL, '127.0.0.1'),
+(2, 'Powder Milk', 2, '395.00', 'uploads/material/_672b5873e3cee.jpg', 'a', 1, 1, '2024-11-02 04:27:17', '2024-11-06 11:52:19', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1019,10 +1034,10 @@ CREATE TABLE `menus` (
 --
 
 INSERT INTO `menus` (`id`, `code`, `menu_category_id`, `name`, `slug`, `unit_id`, `vat`, `purchase_rate`, `sale_rate`, `wholesale_rate`, `is_service`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'M00001', 9, 'Grilled Beef with potatoes', 'grilled-beef-with-potatoes', 1, 0.00, '0.00', '500.00', '0.00', 0, 'uploads/menu/M00001_6725fde02961d.jpg', 'a', 1, NULL, '2024-11-02 10:24:32', '2024-11-02 10:25:02', NULL, NULL, '127.0.0.1'),
-(2, 'M00002', 10, 'Strawberry Juice', 'strawberry-juice', 1, 0.00, '0.00', '80.00', '0.00', 0, NULL, 'a', 1, NULL, '2024-11-02 10:29:50', '2024-11-02 10:29:50', NULL, NULL, '127.0.0.1'),
-(3, 'M00003', 9, 'test', 'test', 1, 0.00, '0.00', '0.00', '0.00', 0, 'uploads/menu/M00003_6725ffde35482.jpg', 'a', 1, NULL, '2024-11-02 10:33:02', '2024-11-02 10:33:02', NULL, NULL, '127.0.0.1'),
-(4, 'M00004', 11, 'test1', 'test1', 1, 0.00, '0.00', '5.00', '0.00', 0, NULL, 'a', 1, NULL, '2024-11-02 10:34:28', '2024-11-02 10:34:28', NULL, NULL, '127.0.0.1');
+(1, 'M00001', 9, 'Grilled Beef with potatoes', 'grilled-beef-with-potatoes', 1, 0.00, '0.00', '500.00', '0.00', 0, 'uploads/menu/M00001_6725fde02961d.jpg', 'a', 1, NULL, '2024-11-02 04:24:32', '2024-11-02 04:25:02', NULL, NULL, '127.0.0.1'),
+(2, 'M00002', 10, 'Strawberry Juice', 'strawberry-juice', 1, 0.00, '0.00', '80.00', '0.00', 0, NULL, 'a', 1, NULL, '2024-11-02 04:29:50', '2024-11-02 04:29:50', NULL, NULL, '127.0.0.1'),
+(3, 'M00003', 9, 'test', 'test', 1, 0.00, '0.00', '0.00', '0.00', 0, 'uploads/menu/M00003_6725ffde35482.jpg', 'a', 1, NULL, '2024-11-02 04:33:02', '2024-11-02 04:33:02', NULL, NULL, '127.0.0.1'),
+(4, 'M00004', 11, 'test1', 'test1', 1, 0.00, '0.00', '5.00', '0.00', 0, NULL, 'a', 1, NULL, '2024-11-02 04:34:28', '2024-11-02 04:34:28', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1050,9 +1065,10 @@ CREATE TABLE `menu_categories` (
 --
 
 INSERT INTO `menu_categories` (`id`, `name`, `image`, `slug`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(9, 'Main', 'uploads/category/Main_6725fd3738302.png', 'main', 'a', 1, 1, '2024-11-02 10:17:12', '2024-11-02 10:21:43', NULL, NULL, '127.0.0.1'),
-(10, 'Drinks', 'uploads/category/Drinks_6725fd18a6153.png', 'drinks', 'a', 1, NULL, '2024-11-02 10:21:12', '2024-11-02 10:21:12', NULL, NULL, '127.0.0.1'),
-(11, 'Desert', 'uploads/category/Desert_6725fd301b618.png', 'desert', 'a', 1, NULL, '2024-11-02 10:21:36', '2024-11-02 10:21:36', NULL, NULL, '127.0.0.1');
+(9, 'Main', 'uploads/category/Main_6725fd3738302.png', 'main', 'a', 1, 1, '2024-11-02 04:17:12', '2024-11-02 04:21:43', NULL, NULL, '127.0.0.1'),
+(10, 'Drinks', 'uploads/category/Drinks_6725fd18a6153.png', 'drinks', 'a', 1, NULL, '2024-11-02 04:21:12', '2024-11-02 04:21:12', NULL, NULL, '127.0.0.1'),
+(11, 'Desert', 'uploads/category/Desert_6725fd301b618.png', 'desert', 'a', 1, NULL, '2024-11-02 04:21:36', '2024-11-02 04:21:36', NULL, NULL, '127.0.0.1'),
+(12, 'Breakfast', 'uploads/category/Breakfast_672b5b38ba9cb.jpg', 'breakfast', 'a', 1, NULL, '2024-11-06 12:04:08', '2024-11-06 12:04:08', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1077,64 +1093,67 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (4, '2024_05_11_163144_create_company_profiles_table', 1),
 (5, '2024_05_11_163919_create_user_activities_table', 1),
 (6, '2024_05_11_163938_create_user_accesses_table', 1),
-(7, '2024_05_14_105132_create_room_types_table', 1),
+(7, '2024_05_14_105132_create_table_types_table', 1),
 (8, '2024_05_14_105235_create_categories_table', 1),
 (9, '2024_05_14_105444_create_districts_table', 1),
 (10, '2024_05_14_105445_create_floors_table', 1),
-(11, '2024_05_14_105723_create_rooms_table', 1),
-(12, '2024_05_23_114157_create_departments_table', 1),
-(13, '2024_05_23_114437_create_designations_table', 1),
-(14, '2024_05_23_114453_create_employees_table', 1),
-(15, '2024_05_23_122245_create_employee_payments_table', 1),
-(16, '2024_05_23_122308_create_employee_payment_details_table', 1),
-(17, '2024_05_23_154449_create_references_table', 1),
-(18, '2024_05_23_154450_create_customers_table', 1),
-(19, '2024_05_23_162607_create_suppliers_table', 1),
-(20, '2024_05_25_142744_create_booking_masters_table', 1),
-(21, '2024_05_25_143009_create_booking_details_table', 1),
-(22, '2024_05_25_150501_create_other_customers_table', 1),
-(23, '2024_05_25_154620_create_accounts_table', 1),
-(24, '2024_05_25_154649_create_bank_accounts_table', 1),
-(25, '2024_05_25_154748_create_cash_transactions_table', 1),
-(26, '2024_05_25_154809_create_bank_transactions_table', 1),
-(27, '2024_05_25_154924_create_supplier_payments_table', 1),
-(28, '2024_05_30_152650_create_customer_payments_table', 1),
-(29, '2024_06_03_113601_create_menu_categories_table', 1),
-(30, '2024_06_03_130029_create_units_table', 1),
-(31, '2024_06_03_144652_create_menus_table', 1),
-(32, '2024_06_03_180722_create_orders_table', 1),
-(33, '2024_06_03_180755_create_order_details_table', 1),
-(34, '2024_06_10_161434_create_service_heads_table', 1),
-(35, '2024_06_22_131752_create_leave_types_table', 1),
-(36, '2024_06_24_120604_create_leaves_table', 1),
-(37, '2024_06_25_122143_create_brands_table', 1),
-(38, '2024_06_25_123617_create_assets_table', 1),
-(39, '2024_06_25_164312_create_purchases_table', 1),
-(40, '2024_06_25_171307_create_purchase_details_table', 1),
-(41, '2024_06_26_160450_create_services_table', 1),
-(42, '2024_06_30_115153_create_purchase_returns_table', 1),
-(43, '2024_07_03_145016_create_issues_table', 1),
-(44, '2024_07_03_145218_create_issue_details_table', 1),
-(45, '2024_07_07_145152_create_investment_accounts_table', 1),
-(46, '2024_07_07_145313_create_investment_transactions_table', 1),
-(47, '2024_07_07_154443_create_loan_accounts_table', 1),
-(48, '2024_07_07_160520_create_loan_transactions_table', 1),
-(49, '2024_07_09_143312_create_galleries_table', 1),
-(50, '2024_07_09_152214_create_manages_table', 1),
-(51, '2024_07_09_161753_create_about_pages_table', 1),
-(52, '2024_07_10_122552_create_issue_returns_table', 1),
-(53, '2024_07_11_104600_create_sliders_table', 1),
-(54, '2024_07_13_155600_create_offers_table', 1),
-(55, '2024_07_14_161807_create_materials_table', 1),
-(56, '2024_07_15_144652_create_recipes_table', 1),
-(57, '2024_07_16_163239_create_productions_table', 1),
-(58, '2024_07_16_164334_create_production_details_table', 1),
-(59, '2024_07_25_142447_create_material_purchases_table', 1),
-(60, '2024_07_25_142923_create_material_purchase_details_table', 1),
-(61, '2024_07_29_154051_create_disposals_table', 1),
-(62, '2024_07_29_155301_create_disposal_details_table', 1),
-(63, '2024_10_31_155147_create_specialties_table', 1),
-(64, '2024_11_02_140626_create_specialtie_banners_table', 1);
+(11, '2024_05_23_114157_create_departments_table', 1),
+(12, '2024_05_23_114437_create_designations_table', 1),
+(13, '2024_05_23_114453_create_employees_table', 1),
+(14, '2024_05_23_122245_create_employee_payments_table', 1),
+(15, '2024_05_23_122308_create_employee_payment_details_table', 1),
+(16, '2024_05_23_154449_create_references_table', 1),
+(17, '2024_05_23_154450_create_customers_table', 1),
+(18, '2024_05_23_162607_create_suppliers_table', 1),
+(19, '2024_05_25_142744_create_booking_masters_table', 1),
+(20, '2024_05_25_143009_create_booking_details_table', 1),
+(21, '2024_05_25_150501_create_other_customers_table', 1),
+(22, '2024_05_25_154620_create_accounts_table', 1),
+(23, '2024_05_25_154649_create_bank_accounts_table', 1),
+(24, '2024_05_25_154748_create_cash_transactions_table', 1),
+(25, '2024_05_25_154809_create_bank_transactions_table', 1),
+(26, '2024_05_25_154924_create_supplier_payments_table', 1),
+(27, '2024_05_30_152650_create_customer_payments_table', 1),
+(28, '2024_06_03_113601_create_menu_categories_table', 1),
+(29, '2024_06_03_130029_create_units_table', 1),
+(30, '2024_06_03_144652_create_menus_table', 1),
+(31, '2024_06_03_180722_create_orders_table', 1),
+(32, '2024_06_03_180755_create_order_details_table', 1),
+(33, '2024_06_10_161434_create_service_heads_table', 1),
+(34, '2024_06_22_131752_create_leave_types_table', 1),
+(35, '2024_06_24_120604_create_leaves_table', 1),
+(36, '2024_06_25_122143_create_brands_table', 1),
+(37, '2024_06_25_123617_create_assets_table', 1),
+(38, '2024_06_25_164312_create_purchases_table', 1),
+(39, '2024_06_25_171307_create_purchase_details_table', 1),
+(40, '2024_06_26_160450_create_services_table', 1),
+(41, '2024_06_30_115153_create_purchase_returns_table', 1),
+(42, '2024_07_03_145016_create_issues_table', 1),
+(43, '2024_07_03_145218_create_issue_details_table', 1),
+(44, '2024_07_07_145152_create_investment_accounts_table', 1),
+(45, '2024_07_07_145313_create_investment_transactions_table', 1),
+(46, '2024_07_07_154443_create_loan_accounts_table', 1),
+(47, '2024_07_07_160520_create_loan_transactions_table', 1),
+(48, '2024_07_09_143312_create_galleries_table', 1),
+(49, '2024_07_09_152214_create_manages_table', 1),
+(50, '2024_07_09_161753_create_about_pages_table', 1),
+(51, '2024_07_10_122552_create_issue_returns_table', 1),
+(52, '2024_07_11_104600_create_sliders_table', 1),
+(53, '2024_07_13_155600_create_offers_table', 1),
+(54, '2024_07_14_161807_create_materials_table', 1),
+(55, '2024_07_15_144652_create_recipes_table', 1),
+(56, '2024_07_16_163239_create_productions_table', 1),
+(57, '2024_07_16_164334_create_production_details_table', 1),
+(58, '2024_07_25_142447_create_material_purchases_table', 1),
+(59, '2024_07_25_142923_create_material_purchase_details_table', 1),
+(60, '2024_07_29_154051_create_disposals_table', 1),
+(61, '2024_07_29_155301_create_disposal_details_table', 1),
+(62, '2024_10_31_155147_create_specialties_table', 1),
+(63, '2024_11_02_140626_create_specialtie_banners_table', 1),
+(64, '2024_11_02_140644_create_tables_table', 1),
+(65, '2024_11_04_163450_create_table_bookings_table', 1),
+(66, '2024_11_06_123959_create_contacts_table', 1),
+(67, '2024_11_06_123985_create_order_tables_table', 1);
 
 -- --------------------------------------------------------
 
@@ -1167,12 +1186,12 @@ CREATE TABLE `orders` (
   `invoice` varchar(20) NOT NULL,
   `date` date NOT NULL,
   `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `booking_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `table_id` bigint(20) UNSIGNED DEFAULT NULL,
   `customer_name` varchar(60) DEFAULT NULL,
   `customer_phone` varchar(20) DEFAULT NULL,
   `customer_address` text DEFAULT NULL,
+  `table_id` bigint(20) DEFAULT NULL,
   `sub_total` decimal(18,2) NOT NULL DEFAULT 0.00,
+  `charge` decimal(18,2) NOT NULL DEFAULT 0.00,
   `discount` decimal(18,2) NOT NULL DEFAULT 0.00,
   `vat` decimal(18,2) NOT NULL DEFAULT 0.00,
   `total` decimal(18,2) NOT NULL DEFAULT 0.00,
@@ -1198,9 +1217,16 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `invoice`, `date`, `customer_id`, `booking_id`, `table_id`, `customer_name`, `customer_phone`, `customer_address`, `sub_total`, `discount`, `vat`, `total`, `cashPaid`, `bankPaid`, `bank_account_id`, `returnAmount`, `paid`, `due`, `note`, `order_type`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'O2400001', '2024-11-06', 2, NULL, NULL, NULL, NULL, NULL, '2120.00', '127.20', '84.80', '2077.60', '2200.00', '0.00', NULL, '122.40', '2200.00', '2077.60', 'Tet Order Invoice', 'PayFirst', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(2, 'O2400002', '2024-11-06', NULL, NULL, NULL, 'Cash Customer', '01582141', 'Test Invocie', '1560.00', '78.00', '265.20', '1747.20', '2000.00', '0.00', NULL, '252.80', '2000.00', '0.00', 'Test', 'Order', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1');
+INSERT INTO `orders` (`id`, `invoice`, `date`, `customer_id`, `customer_name`, `customer_phone`, `customer_address`, `table_id`, `sub_total`, `charge`, `discount`, `vat`, `total`, `cashPaid`, `bankPaid`, `bank_account_id`, `returnAmount`, `paid`, `due`, `note`, `order_type`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
+(1, 'O2400001', '2024-11-06', 1, NULL, NULL, NULL, 0, '4665.00', '0.00', '699.75', '466.50', '4431.75', '0.00', '0.00', NULL, '68.25', '4500.00', '4431.75', 'Testing Pay first order', 'PayFirst', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(8, 'O2400002', '2024-11-07', 2, 'Cash Customer', NULL, NULL, 3, '7245.00', '0.00', '237.25', '284.70', '7292.45', '8000.00', '0.00', NULL, '707.55', '8000.00', '7292.45', NULL, 'Order', 'a', 1, 1, '2024-11-07 03:52:33', '2024-11-07 10:03:21', NULL, NULL, '127.0.0.1'),
+(9, 'O2400003', '2024-11-07', 1, NULL, NULL, NULL, 2, '2025.00', '0.00', '101.25', '243.00', '2166.75', '2200.00', '0.00', NULL, '33.25', '2200.00', '2166.75', 'Test Women', 'Order', 'a', 1, 1, '2024-11-07 04:58:09', '2024-11-07 10:37:22', NULL, NULL, '127.0.0.1'),
+(10, 'O2400004', '2024-11-07', NULL, 'Cash Customer', NULL, NULL, 4, '3180.00', '0.00', '222.60', '159.00', '3116.40', '3116.40', '0.00', NULL, '0.00', '3116.40', '0.00', NULL, 'Order', 'a', 1, 1, '2024-11-07 10:03:48', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(11, 'O2400005', '2024-11-07', NULL, 'Cash Customer', NULL, NULL, 1, '1580.00', '0.00', '0.00', '0.00', '1580.00', '1580.00', '0.00', NULL, '0.00', '1580.00', '0.00', NULL, 'Order', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(12, 'O2400006', '2024-11-07', 1, NULL, NULL, NULL, NULL, '1580.00', '0.00', '189.60', '158.00', '1548.40', '16000.00', '0.00', NULL, '14451.60', '16000.00', '1548.40', NULL, 'PayFirst', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(13, 'O2400007', '2024-11-07', NULL, 'Cash Customer', NULL, NULL, 3, '1500.00', '0.00', '0.00', '0.00', '1500.00', '1500.00', '0.00', NULL, '0.00', '1500.00', '0.00', NULL, 'Order', 'a', 1, NULL, '2024-11-07 11:17:10', '2024-11-07 11:17:10', NULL, NULL, '127.0.0.1'),
+(14, 'O2400008', '2024-11-07', NULL, 'Cash Customer', NULL, NULL, 2, '2236.00', '0.00', '178.88', '111.80', '2168.92', '2168.92', '0.00', NULL, '0.00', '2168.92', '0.00', NULL, 'Order', 'p', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(15, 'O2400009', '2024-11-07', 2, NULL, NULL, NULL, 4, '160.00', '0.00', '0.00', '0.00', '160.00', '0.00', '0.00', NULL, '0.00', '160.00', '160.00', NULL, 'Order', 'p', 1, NULL, '2024-11-07 11:22:55', '2024-11-07 11:22:55', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1231,10 +1257,31 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`id`, `order_id`, `menu_id`, `price`, `vat`, `quantity`, `total`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 1, 1, '500.00', '0.00', 4.00, '2000.00', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(2, 1, 3, '120.00', '0.00', 1.00, '120.00', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(3, 2, 1, '500.00', '0.00', 3.00, '1500.00', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1'),
-(4, 2, 3, '30.00', '0.00', 2.00, '60.00', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1');
+(1, 1, 4, '5.00', '0.00', 1.00, '5.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(2, 1, 2, '80.00', '0.00', 2.00, '160.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(3, 1, 1, '500.00', '0.00', 8.00, '4000.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(4, 1, 3, '500.00', '0.00', 1.00, '500.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(32, 8, 4, '5.00', '0.00', 1.00, '5.00', 'a', 1, NULL, '2024-11-07 10:03:21', '2024-11-07 10:03:21', NULL, NULL, '127.0.0.1'),
+(33, 8, 3, '0.00', '0.00', 2.00, '0.00', 'a', 1, NULL, '2024-11-07 10:03:21', '2024-11-07 10:03:21', NULL, NULL, '127.0.0.1'),
+(34, 8, 2, '80.00', '0.00', 3.00, '240.00', 'a', 1, NULL, '2024-11-07 10:03:21', '2024-11-07 10:03:21', NULL, NULL, '127.0.0.1'),
+(35, 8, 1, '500.00', '0.00', 14.00, '7000.00', 'a', 1, NULL, '2024-11-07 10:03:22', '2024-11-07 10:03:22', NULL, NULL, '127.0.0.1'),
+(44, 9, 1, '500.00', '0.00', 4.00, '2000.00', 'a', 1, NULL, '2024-11-07 10:37:22', '2024-11-07 10:37:22', NULL, NULL, '127.0.0.1'),
+(45, 9, 4, '5.00', '0.00', 5.00, '25.00', 'a', 1, NULL, '2024-11-07 10:37:22', '2024-11-07 10:37:22', NULL, NULL, '127.0.0.1'),
+(46, 11, 1, '500.00', '0.00', 3.00, '1500.00', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(47, 11, 2, '80.00', '0.00', 1.00, '80.00', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(48, 11, 3, '0.00', '0.00', 1.00, '0.00', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(49, 10, 4, '5.00', '0.00', 4.00, '20.00', 'a', 1, NULL, '2024-11-07 10:37:54', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(50, 10, 1, '500.00', '0.00', 6.00, '3000.00', 'a', 1, NULL, '2024-11-07 10:37:54', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(51, 10, 2, '80.00', '0.00', 2.00, '160.00', 'a', 1, NULL, '2024-11-07 10:37:54', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(52, 10, 3, '0.00', '0.00', 1.00, '0.00', 'a', 1, NULL, '2024-11-07 10:37:54', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(53, 12, 1, '500.00', '0.00', 3.00, '1500.00', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(54, 12, 2, '80.00', '0.00', 1.00, '80.00', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(55, 12, 3, '0.00', '0.00', 1.00, '0.00', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(56, 13, 1, '500.00', '0.00', 3.00, '1500.00', 'a', 1, NULL, '2024-11-07 11:17:10', '2024-11-07 11:17:10', NULL, NULL, '127.0.0.1'),
+(57, 14, 1, '500.00', '0.00', 4.00, '2000.00', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(58, 14, 2, '80.00', '0.00', 1.00, '80.00', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(59, 14, 3, '156.00', '0.00', 1.00, '156.00', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(60, 15, 2, '80.00', '0.00', 2.00, '160.00', 'a', 1, NULL, '2024-11-07 11:22:55', '2024-11-07 11:22:55', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1246,8 +1293,8 @@ CREATE TABLE `order_tables` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `table_id` bigint(20) UNSIGNED NOT NULL,
-  `incharge_id` bigint(20) NOT NULL,
-  `date` date NOT NULL,
+  `incharge_id` bigint(20) UNSIGNED NOT NULL,
+  `date` datetime NOT NULL,
   `booking_status` varchar(20) NOT NULL DEFAULT 'booked' COMMENT 'booked, available',
   `status` char(1) NOT NULL DEFAULT 'a',
   `added_by` bigint(20) UNSIGNED DEFAULT NULL,
@@ -1264,10 +1311,10 @@ CREATE TABLE `order_tables` (
 --
 
 INSERT INTO `order_tables` (`id`, `order_id`, `table_id`, `incharge_id`, `date`, `booking_status`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 1, 27, 1, '2024-11-06', 'booked', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(2, 1, 17, 1, '2024-11-06', 'booked', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(3, 2, 1, 1, '2024-11-06', 'booked', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1'),
-(4, 2, 28, 1, '2024-11-06', 'booked', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1');
+(1, 8, 3, 1, '2024-11-07 00:00:00', 'booked', 'a', 1, NULL, '2024-11-07 03:52:33', '2024-11-07 03:52:33', NULL, NULL, '127.0.0.1'),
+(2, 9, 2, 2, '2024-11-07 00:00:00', 'booked', 'a', 1, NULL, '2024-11-07 04:58:09', '2024-11-07 04:58:09', NULL, NULL, '127.0.0.1'),
+(3, 10, 4, 3, '2024-11-07 00:00:00', 'booked', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(4, 11, 1, 1, '2024-11-07 00:00:00', 'booked', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1350,41 +1397,27 @@ CREATE TABLE `productions` (
 --
 
 INSERT INTO `productions` (`id`, `invoice`, `date`, `order_id`, `total`, `description`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'PR240001', '2024-11-04', 7, '200.00', 'Order production invoice -O2400007', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(2, 'PR240002', '2024-11-04', 7, '19.75', 'Order production invoice -O2400007', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(3, 'PR240003', '2024-11-04', 7, '100.00', 'Order production invoice -O2400007', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(4, 'PR240004', '2024-11-04', 7, '197.50', 'Order production invoice -O2400007', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(5, 'PR240005', '2024-11-04', 8, '200.00', 'Order production invoice -O2400008', 'a', 1, NULL, '2024-11-04 06:30:19', '2024-11-04 06:30:19', NULL, NULL, '127.0.0.1'),
-(6, 'PR240006', '2024-11-04', 8, '100.00', 'Order production invoice -O2400008', 'a', 1, NULL, '2024-11-04 06:30:19', '2024-11-04 06:30:19', NULL, NULL, '127.0.0.1'),
-(7, 'PR240007', '2024-11-05', 9, '197.50', 'Order production invoice -O2400009', 'a', 1, 1, '2024-11-05 05:47:06', '2024-11-05 08:56:40', NULL, NULL, '127.0.0.1'),
-(8, 'PR240008', '2024-11-05', 9, '19.75', 'Order production invoice -O2400009', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(9, 'PR240009', '2024-11-05', 9, '100.00', 'Order production invoice -O2400009', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(10, 'PR240010', '2024-11-05', 9, '197.50', 'Order production invoice -O2400009', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(11, 'PR240011', '2024-11-06', 10, '200.00', 'Order production invoice -O2400010', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(12, 'PR240012', '2024-11-06', 10, '19.75', 'Order production invoice -O2400010', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(13, 'PR240013', '2024-11-06', 10, '100.00', 'Order production invoice -O2400010', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(14, 'PR240014', '2024-11-06', 10, '197.50', 'Order production invoice -O2400010', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(15, 'PR240015', '2024-11-06', 11, '200.00', 'Order production invoice -O2400011', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(16, 'PR240016', '2024-11-06', 11, '19.75', 'Order production invoice -O2400011', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(17, 'PR240017', '2024-11-06', 11, '197.50', 'Order production invoice -O2400011', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(26, 'PR240018', '2024-11-06', 14, '100.00', 'Order production invoice -O2400012', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(27, 'PR240019', '2024-11-06', 14, '200.00', 'Order production invoice -O2400012', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(28, 'PR240020', '2024-11-06', 14, '19.75', 'Order production invoice -O2400012', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(29, 'PR240021', '2024-11-06', 14, '197.50', 'Order production invoice -O2400012', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(30, 'PR240022', '2024-11-06', 15, '100.00', 'Order production invoice -O2400013', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(31, 'PR240023', '2024-11-06', 15, '200.00', 'Order production invoice -O2400013', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(32, 'PR240024', '2024-11-06', 15, '19.75', 'Order production invoice -O2400013', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(33, 'PR240025', '2024-11-06', 15, '197.50', 'Order production invoice -O2400013', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(34, 'PR240026', '2024-11-06', 16, '100.00', 'Order production invoice -O2400014', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(35, 'PR240027', '2024-11-06', 16, '200.00', 'Order production invoice -O2400014', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(36, 'PR240028', '2024-11-06', 16, '19.75', 'Order production invoice -O2400014', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(37, 'PR240029', '2024-11-06', 16, '197.50', 'Order production invoice -O2400014', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(38, 'PR240030', '2024-11-06', 17, '197.50', 'Order production invoice -O2400015', 'a', 1, NULL, '2024-11-06 08:36:48', '2024-11-06 08:36:48', NULL, NULL, '127.0.0.1'),
-(39, 'PR240031', '2024-11-06', 17, '100.00', 'Order production invoice -O2400015', 'a', 1, NULL, '2024-11-06 08:36:48', '2024-11-06 08:36:48', NULL, NULL, '127.0.0.1'),
-(40, 'PR240032', '2024-11-06', 1, '200.00', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(41, 'PR240033', '2024-11-06', 1, '100.00', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(42, 'PR240034', '2024-11-06', 2, '200.00', 'Order production invoice -O2400002', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1'),
-(43, 'PR240035', '2024-11-06', 2, '100.00', 'Order production invoice -O2400002', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1');
+(1, 'PR240001', '2024-11-06', 1, '197.50', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(2, 'PR240002', '2024-11-06', 1, '19.75', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(3, 'PR240003', '2024-11-06', 1, '200.00', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(4, 'PR240004', '2024-11-06', 1, '100.00', 'Order production invoice -O2400001', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(15, 'PR240005', '2024-11-07', 8, '200.00', 'Order production invoice -O2400002', 'a', 1, 1, '2024-11-07 03:52:33', '2024-11-07 10:03:22', NULL, NULL, '127.0.0.1'),
+(16, 'PR240006', '2024-11-07', 9, '197.50', 'Order production invoice -O2400003', 'a', 1, 1, '2024-11-07 04:58:09', '2024-11-07 10:37:22', NULL, NULL, '127.0.0.1'),
+(17, 'PR240007', '2024-11-07', 10, '100.00', 'Order production invoice -O2400004', 'a', 1, 1, '2024-11-07 10:03:49', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(18, 'PR240008', '2024-11-07', 10, '200.00', 'Order production invoice -O2400004', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(19, 'PR240009', '2024-11-07', 10, '19.75', 'Order production invoice -O2400004', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(20, 'PR240010', '2024-11-07', 10, '100.00', 'Order production invoice -O2400004', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(21, 'PR240011', '2024-11-07', 11, '200.00', 'Order production invoice -O2400005', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(22, 'PR240012', '2024-11-07', 11, '19.75', 'Order production invoice -O2400005', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(23, 'PR240013', '2024-11-07', 11, '100.00', 'Order production invoice -O2400005', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(24, 'PR240014', '2024-11-07', 12, '200.00', 'Order production invoice -O2400006', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(25, 'PR240015', '2024-11-07', 12, '19.75', 'Order production invoice -O2400006', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(26, 'PR240016', '2024-11-07', 12, '100.00', 'Order production invoice -O2400006', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(27, 'PR240017', '2024-11-07', 13, '200.00', 'Order production invoice -O2400007', 'a', 1, NULL, '2024-11-07 11:17:10', '2024-11-07 11:17:10', NULL, NULL, '127.0.0.1'),
+(28, 'PR240018', '2024-11-07', 14, '200.00', 'Order production invoice -O2400008', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(29, 'PR240019', '2024-11-07', 14, '19.75', 'Order production invoice -O2400008', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(30, 'PR240020', '2024-11-07', 14, '100.00', 'Order production invoice -O2400008', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(31, 'PR240021', '2024-11-07', 15, '19.75', 'Order production invoice -O2400009', 'a', 1, NULL, '2024-11-07 11:22:55', '2024-11-07 11:22:55', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1414,41 +1447,27 @@ CREATE TABLE `production_details` (
 --
 
 INSERT INTO `production_details` (`id`, `production_id`, `material_id`, `quantity`, `price`, `total`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 1, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(2, 2, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(3, 3, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(4, 4, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-04 05:24:06', '2024-11-04 05:24:06', NULL, NULL, '127.0.0.1'),
-(5, 5, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-04 06:30:19', '2024-11-04 06:30:19', NULL, NULL, '127.0.0.1'),
-(6, 6, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-04 06:30:19', '2024-11-04 06:30:19', NULL, NULL, '127.0.0.1'),
-(8, 8, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(9, 9, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(10, 10, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-05 05:47:06', '2024-11-05 05:47:06', NULL, NULL, '127.0.0.1'),
-(18, 7, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-05 08:56:40', '2024-11-05 08:56:40', NULL, NULL, '127.0.0.1'),
-(19, 11, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(20, 12, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(21, 13, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(22, 14, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 05:33:39', '2024-11-06 05:33:39', NULL, NULL, '127.0.0.1'),
-(23, 15, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(24, 16, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(25, 17, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 05:36:34', '2024-11-06 05:36:34', NULL, NULL, '127.0.0.1'),
-(34, 26, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(35, 27, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(36, 28, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(37, 29, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 07:01:23', '2024-11-06 07:01:23', NULL, NULL, '127.0.0.1'),
-(38, 30, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(39, 31, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(40, 32, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(41, 33, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 07:02:52', '2024-11-06 07:02:52', NULL, NULL, '127.0.0.1'),
-(42, 34, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(43, 35, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(44, 36, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(45, 37, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 08:20:23', '2024-11-06 08:20:23', NULL, NULL, '127.0.0.1'),
-(46, 38, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 08:36:48', '2024-11-06 08:36:48', NULL, NULL, '127.0.0.1'),
-(47, 39, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 08:36:48', '2024-11-06 08:36:48', NULL, NULL, '127.0.0.1'),
-(48, 40, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(49, 41, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 08:42:40', '2024-11-06 08:42:40', NULL, NULL, '127.0.0.1'),
-(50, 42, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1'),
-(51, 43, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 09:07:22', '2024-11-06 09:07:22', NULL, NULL, '127.0.0.1');
+(1, 1, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(2, 2, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(3, 3, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(4, 4, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-06 12:06:49', '2024-11-06 12:06:49', NULL, NULL, '127.0.0.1'),
+(35, 15, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 10:03:22', '2024-11-07 10:03:22', NULL, NULL, '127.0.0.1'),
+(37, 18, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(38, 19, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(39, 20, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-07 10:03:49', '2024-11-07 10:03:49', NULL, NULL, '127.0.0.1'),
+(45, 16, 2, 0.50, '395.00', '197.50', 'a', 1, NULL, '2024-11-07 10:37:22', '2024-11-07 10:37:22', NULL, NULL, '127.0.0.1'),
+(46, 21, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(47, 22, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(48, 23, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-07 10:37:43', '2024-11-07 10:37:43', NULL, NULL, '127.0.0.1'),
+(52, 17, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-07 10:37:54', '2024-11-07 10:37:54', NULL, NULL, '127.0.0.1'),
+(53, 24, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(54, 25, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(55, 26, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-07 10:49:22', '2024-11-07 10:49:22', NULL, NULL, '127.0.0.1'),
+(56, 27, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 11:17:10', '2024-11-07 11:17:10', NULL, NULL, '127.0.0.1'),
+(57, 28, 1, 2.00, '100.00', '200.00', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(58, 29, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(59, 30, 1, 1.00, '100.00', '100.00', 'a', 1, NULL, '2024-11-07 11:20:56', '2024-11-07 11:20:56', NULL, NULL, '127.0.0.1'),
+(60, 31, 2, 0.05, '395.00', '19.75', 'a', 1, NULL, '2024-11-07 11:22:55', '2024-11-07 11:22:55', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1547,10 +1566,10 @@ CREATE TABLE `recipes` (
 --
 
 INSERT INTO `recipes` (`id`, `menu_id`, `material_id`, `price`, `quantity`, `total`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 1, 1, '100.00', 2.00, '200.00', 'a', 1, NULL, '2024-11-02 10:24:32', '2024-11-02 10:25:02', NULL, NULL, '127.0.0.1'),
-(2, 2, 2, '395.00', 0.05, '19.75', 'a', 1, NULL, '2024-11-02 10:29:50', '2024-11-02 10:29:50', NULL, NULL, '127.0.0.1'),
-(3, 3, 1, '100.00', 1.00, '100.00', 'a', 1, NULL, '2024-11-02 10:33:02', '2024-11-02 10:33:02', NULL, NULL, '127.0.0.1'),
-(4, 4, 2, '395.00', 0.50, '197.50', 'a', 1, NULL, '2024-11-02 10:34:28', '2024-11-02 10:34:28', NULL, NULL, '127.0.0.1');
+(1, 1, 1, '100.00', 2.00, '200.00', 'a', 1, NULL, '2024-11-02 04:24:32', '2024-11-02 04:25:02', NULL, NULL, '127.0.0.1'),
+(2, 2, 2, '395.00', 0.05, '19.75', 'a', 1, NULL, '2024-11-02 04:29:50', '2024-11-02 04:29:50', NULL, NULL, '127.0.0.1'),
+(3, 3, 1, '100.00', 1.00, '100.00', 'a', 1, NULL, '2024-11-02 04:33:02', '2024-11-02 04:33:02', NULL, NULL, '127.0.0.1'),
+(4, 4, 2, '395.00', 0.50, '197.50', 'a', 1, NULL, '2024-11-02 04:34:28', '2024-11-02 04:34:28', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1648,13 +1667,6 @@ CREATE TABLE `sliders` (
   `last_update_ip` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `sliders`
---
-
-INSERT INTO `sliders` (`id`, `title`, `sub_title`, `btn_text`, `btn_url`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Cholo Ekta Table Book Kori Amra', NULL, 'Book Kori', 'http://127.0.0.1:8000/', 'uploads/slider/Cholo Ekta Table Book Kori Amra_67260ea7d3601.jpg', 'a', 1, NULL, '2024-11-02 11:36:07', '2024-11-02 11:36:07', NULL, NULL, '127.0.0.1');
-
 -- --------------------------------------------------------
 
 --
@@ -1677,13 +1689,6 @@ CREATE TABLE `specialties` (
   `last_update_ip` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `specialties`
---
-
-INSERT INTO `specialties` (`id`, `title`, `price`, `description`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Title', 100, 'Test', 'uploads/specialtie/Title_6726129ab0cec.jpg', 'a', 1, NULL, '2024-11-02 11:52:58', '2024-11-02 11:52:58', NULL, NULL, '127.0.0.1');
-
 -- --------------------------------------------------------
 
 --
@@ -1704,7 +1709,7 @@ CREATE TABLE `specialtie_banners` (
 --
 
 INSERT INTO `specialtie_banners` (`id`, `image`, `updated_by`, `created_at`, `updated_at`, `last_update_ip`) VALUES
-(1, 'uploads/specialtie/banner_672610a321cac.jpg', 1, '2024-11-02 09:45:57', '2024-11-02 11:44:35', '');
+(1, NULL, NULL, '2024-11-06 11:08:01', '2024-11-06 11:08:01', '');
 
 -- --------------------------------------------------------
 
@@ -1741,7 +1746,7 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`id`, `code`, `name`, `type`, `phone`, `email`, `office_phone`, `address`, `owner_name`, `contact_person`, `district_id`, `previous_due`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'S00001', 'Chester Rhodes', 'retail', '0170000000', NULL, NULL, 'Bangladesh', 'Chester Rhodes', NULL, 1, '0.00', NULL, 'a', 1, NULL, '2024-07-28 00:45:45', '2024-07-28 00:45:45', NULL, NULL, '127.0.0.1');
+(1, 'S00001', 'Chester Rhodes', 'retail', '0170000000', NULL, NULL, 'Bangladesh', 'Chester Rhodes', NULL, 1, '0.00', NULL, 'a', 1, NULL, '2024-07-27 18:45:45', '2024-07-27 18:45:45', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1780,16 +1785,13 @@ CREATE TABLE `tables` (
   `code` varchar(191) NOT NULL,
   `floor_id` bigint(20) UNSIGNED NOT NULL,
   `incharge_id` bigint(20) UNSIGNED NOT NULL,
-  `category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `table_type_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(191) NOT NULL,
   `capacity` varchar(55) NOT NULL,
   `location` text DEFAULT NULL,
-  `bed` int(11) DEFAULT NULL,
-  `bath` int(11) DEFAULT NULL,
-  `price` decimal(18,2) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `image` varchar(191) DEFAULT NULL,
+  `booking_status` varchar(20) NOT NULL DEFAULT 'available' COMMENT 'booked, available',
   `status` char(1) NOT NULL DEFAULT 'a' COMMENT 'a=active, d=deactive',
   `added_by` bigint(20) UNSIGNED NOT NULL,
   `updated_by` bigint(20) UNSIGNED DEFAULT NULL,
@@ -1804,35 +1806,38 @@ CREATE TABLE `tables` (
 -- Dumping data for table `tables`
 --
 
-INSERT INTO `tables` (`id`, `code`, `floor_id`, `incharge_id`, `category_id`, `table_type_id`, `name`, `capacity`, `location`, `bed`, `bath`, `price`, `note`, `image`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'R00001', 1, 1, 1, 2, '101', '', NULL, 2, 2, '3000.00', NULL, 'uploads/room/R00001_66a5d5d32ec65.jpg', 'a', 1, 1, '2024-07-27 23:23:31', '2024-07-27 23:24:18', NULL, NULL, '127.0.0.1'),
-(2, 'R00002', 1, 0, 1, 1, '102', '', NULL, 1, 1, '1800.00', NULL, 'uploads/room/R00002_66a5d5f90a590.jpg', 'a', 1, NULL, '2024-07-27 23:24:09', '2024-07-27 23:24:09', NULL, NULL, '127.0.0.1'),
-(3, 'R00003', 1, 1, 2, 1, '103', '', NULL, 0, 0, '1500.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:24:39', '2024-07-27 23:24:39', NULL, NULL, '127.0.0.1'),
-(4, 'R00004', 1, 0, 2, 1, '104', '', NULL, 0, 0, '1500.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:24:51', '2024-07-27 23:24:51', NULL, NULL, '127.0.0.1'),
-(5, 'R00005', 1, 0, 2, 2, '105', '', NULL, 0, 0, '2200.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:25:09', '2024-07-27 23:25:09', NULL, NULL, '127.0.0.1'),
-(6, 'R00006', 1, 0, 1, 2, '106', '', NULL, 2, 2, '3000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:25:40', '2024-07-27 23:25:40', NULL, NULL, '127.0.0.1'),
-(7, 'R00007', 1, 1, 1, 2, '201', '', NULL, 0, 0, '2700.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:25:51', '2024-07-27 23:25:51', NULL, NULL, '127.0.0.1'),
-(8, 'R00008', 1, 0, 1, 1, '202', '', NULL, 0, 0, '1800.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:26:04', '2024-07-27 23:26:04', NULL, NULL, '127.0.0.1'),
-(9, 'R00009', 1, 0, 1, 1, '203', '', NULL, 0, 0, '2000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:26:17', '2024-07-27 23:26:17', NULL, NULL, '127.0.0.1'),
-(10, 'R00010', 1, 0, 2, 1, '204', '', NULL, 0, 0, '1300.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:26:39', '2024-07-27 23:26:39', NULL, NULL, '127.0.0.1'),
-(11, 'R00011', 1, 0, 2, 2, '205', '', NULL, 0, 0, '2000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:26:59', '2024-07-27 23:26:59', NULL, NULL, '127.0.0.1'),
-(12, 'R00012', 1, 0, 1, 2, '301', '', NULL, 0, 0, '3000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:27:14', '2024-07-27 23:27:14', NULL, NULL, '127.0.0.1'),
-(13, 'R00013', 1, 0, 1, 1, '302', '', NULL, 0, 0, '2000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:27:30', '2024-07-27 23:27:30', NULL, NULL, '127.0.0.1'),
-(14, 'R00014', 1, 0, 1, 1, '303', '', NULL, 0, 0, '1800.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:27:41', '2024-07-27 23:27:41', NULL, NULL, '127.0.0.1'),
-(15, 'R00015', 1, 0, 2, 2, '304', '', NULL, 0, 0, '1700.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:27:57', '2024-07-27 23:27:57', NULL, NULL, '127.0.0.1'),
-(16, 'R00016', 1, 0, 2, 1, '305', '', NULL, 0, 0, '1300.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:28:26', '2024-07-27 23:28:26', NULL, NULL, '127.0.0.1'),
-(17, 'R00017', 1, 0, 1, 1, '401', '', NULL, 0, 0, '2000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:32:07', '2024-07-27 23:32:07', NULL, NULL, '127.0.0.1'),
-(18, 'R00018', 1, 0, 1, 1, '402', '', NULL, 0, 0, '2000.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:32:24', '2024-07-27 23:32:24', NULL, NULL, '127.0.0.1'),
-(19, 'R00019', 1, 0, 2, 1, '403', '', NULL, 0, 0, '1300.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:32:43', '2024-07-27 23:32:43', NULL, NULL, '127.0.0.1'),
-(20, 'R00020', 1, 0, 1, 2, '405', '', NULL, 0, 0, '2800.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:33:12', '2024-07-27 23:33:12', NULL, NULL, '127.0.0.1'),
-(21, 'R00021', 1, 0, 2, 2, '405', '', NULL, 0, 0, '2300.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:33:28', '2024-07-27 23:33:28', NULL, NULL, '127.0.0.1'),
-(22, 'R00022', 1, 0, 1, 1, '501', '', NULL, 0, 0, '1700.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:34:00', '2024-07-27 23:34:00', NULL, NULL, '127.0.0.1'),
-(23, 'R00023', 1, 0, 2, 1, '502', '', NULL, 0, 0, '1200.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:34:13', '2024-07-27 23:34:13', NULL, NULL, '127.0.0.1'),
-(24, 'R00024', 1, 0, 1, 2, '503', '', NULL, 0, 0, '2500.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:34:29', '2024-07-27 23:34:29', NULL, NULL, '127.0.0.1'),
-(25, 'R00025', 1, 0, 2, 2, '504', '', NULL, 0, 0, '1800.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:35:05', '2024-07-27 23:35:05', NULL, NULL, '127.0.0.1'),
-(26, 'R00026', 1, 0, 1, 1, '505', '', NULL, 0, 0, '1700.00', NULL, NULL, 'a', 1, NULL, '2024-07-27 23:35:43', '2024-07-27 23:35:43', NULL, NULL, '127.0.0.1'),
-(27, 'T00027', 1, 1, NULL, 2, 'Table 1', '4', 'Table 1', NULL, NULL, NULL, NULL, 'uploads/table/T00027_6729ae659fb59.jpg', 'a', 1, 1, '2024-11-05 05:28:49', '2024-11-06 05:54:59', NULL, NULL, '127.0.0.1'),
-(28, 'T00028', 1, 1, NULL, 5, 'Table 2', '5', 'Table 2', NULL, NULL, NULL, NULL, 'uploads/table/T00028_6729ae56e06c4.jpg', 'a', 1, 1, '2024-11-05 05:31:39', '2024-11-06 05:54:43', NULL, NULL, '127.0.0.1');
+INSERT INTO `tables` (`id`, `code`, `floor_id`, `incharge_id`, `table_type_id`, `name`, `capacity`, `location`, `note`, `image`, `booking_status`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
+(1, 'T00001', 1, 1, 1, 'Table 01', '4', 'Left Corner', NULL, NULL, 'available', 'a', 1, NULL, '2024-11-06 11:24:41', '2024-11-06 11:24:41', NULL, NULL, '127.0.0.1'),
+(2, 'T00002', 1, 2, 1, 'Table 02', '4', 'Left Corner', NULL, NULL, 'available', 'a', 1, NULL, '2024-11-06 11:38:30', '2024-11-06 11:38:30', NULL, NULL, '127.0.0.1'),
+(3, 'T00003', 1, 1, 1, 'Table 03', '4', 'Right Corner', NULL, NULL, 'available', 'a', 1, 1, '2024-11-06 11:38:43', '2024-11-06 11:38:52', NULL, NULL, '127.0.0.1'),
+(4, 'T00004', 1, 3, 1, 'Table 04', '4', 'Right Corner', NULL, NULL, 'available', 'a', 1, NULL, '2024-11-06 11:39:09', '2024-11-06 11:39:09', NULL, NULL, '127.0.0.1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_bookings`
+--
+
+CREATE TABLE `table_bookings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `invoice` varchar(20) NOT NULL,
+  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `name` varchar(191) DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `phone` varchar(191) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `persons` varchar(191) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `status` char(1) NOT NULL DEFAULT 'p' COMMENT 'p=pending,a=approve,c=cancel,d=done',
+  `added_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `updated_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `last_update_ip` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1859,11 +1864,12 @@ CREATE TABLE `table_types` (
 --
 
 INSERT INTO `table_types` (`id`, `name`, `slug`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'Classic', 'classic', 'a', 1, 1, '2024-07-27 23:21:43', '2024-11-04 09:03:20', NULL, NULL, '127.0.0.1'),
-(2, 'Premium', 'premium', 'a', 1, 1, '2024-07-27 23:21:52', '2024-11-04 09:03:13', NULL, NULL, '127.0.0.1'),
-(3, 'Test Table Type', 'test-table-type', 'd', 1, 1, '2024-11-04 09:02:02', '2024-11-04 09:02:18', 1, '2024-11-04 09:02:18', '127.0.0.1'),
-(4, 'Dining', 'dining', 'a', 1, NULL, '2024-11-04 09:14:59', '2024-11-04 09:14:59', NULL, NULL, '127.0.0.1'),
-(5, 'Outdoor', 'outdoor', 'a', 1, NULL, '2024-11-04 09:15:05', '2024-11-04 09:15:05', NULL, NULL, '127.0.0.1');
+(1, 'Premium', 'premium', 'a', 1, 1, '2024-11-06 11:14:25', '2024-11-06 11:15:58', NULL, NULL, '127.0.0.1'),
+(2, 'Classic', 'classic', 'a', 1, 1, '2024-11-06 11:14:29', '2024-11-06 11:16:14', NULL, NULL, '127.0.0.1'),
+(3, 'Outdoor', 'outdoor', 'a', 1, 1, '2024-11-06 11:14:35', '2024-11-06 11:16:27', NULL, NULL, '127.0.0.1'),
+(4, 'Indoor', 'indoor', 'a', 1, 1, '2024-11-06 11:14:38', '2024-11-06 11:16:36', NULL, NULL, '127.0.0.1'),
+(5, 'Table 05', 'table-05', 'd', 1, NULL, '2024-11-06 11:14:39', '2024-11-06 11:16:50', 1, '2024-11-06 11:16:50', '127.0.0.1'),
+(6, 'Table 06', 'table-06', 'd', 1, NULL, '2024-11-06 11:14:41', '2024-11-06 11:16:48', 1, '2024-11-06 11:16:48', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1889,8 +1895,9 @@ CREATE TABLE `units` (
 --
 
 INSERT INTO `units` (`id`, `name`, `status`, `added_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`, `last_update_ip`) VALUES
-(1, 'PCS', 'a', 1, NULL, '2024-11-02 10:22:47', '2024-11-02 10:22:47', NULL, NULL, '127.0.0.1'),
-(2, 'kg', 'a', 1, NULL, '2024-11-02 10:26:30', '2024-11-02 10:26:30', NULL, NULL, '127.0.0.1');
+(1, 'Pcs', 'a', 1, NULL, '2024-11-06 11:46:09', '2024-11-06 11:46:09', NULL, NULL, '127.0.0.1'),
+(2, 'Kg', 'a', 1, NULL, '2024-11-06 11:46:11', '2024-11-06 11:46:11', NULL, NULL, '127.0.0.1'),
+(3, 'gm', 'a', 1, NULL, '2024-11-06 11:46:15', '2024-11-06 11:46:15', NULL, NULL, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1922,8 +1929,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `code`, `name`, `username`, `email`, `password`, `phone`, `role`, `image`, `status`, `action`, `last_update_ip`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'U00001', 'Admin', 'admin', 'admin@gmail.com', '$2y$10$553DdMzA87PCY1kJOxJ4X.VKb/R1Npz1XeBUmtUHF2CcUsLvACkf.', '019########', 'Superadmin', NULL, 'a', NULL, '127.0.0.1', NULL, '2024-11-02 09:45:56', '2024-11-02 09:45:56', NULL),
-(2, 'U00002', 'Mahi', 'mahi', 'mahi@gmail.com', '$2y$10$D8MbcMxLK21LGzBvBJqmLeCYlqy419zckW1bStUr3mQYo6S/tcN7q', '01619833307', 'admin', 'uploads/user/U00002_672768d73fb4b.jpg', 'a', NULL, '127.0.0.1', NULL, '2024-11-03 12:13:11', '2024-11-03 12:13:11', NULL);
+(1, 'U00001', 'Admin', 'admin', 'admin@gmail.com', '$2y$10$xQ2LrR1OBVwSOn/k5hwvCOPEtacw/ifZAU/ycuiZuh.hetMataTXa', '019########', 'Superadmin', NULL, 'a', NULL, '127.0.0.1', NULL, '2024-11-06 11:08:01', '2024-11-06 11:08:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -1968,33 +1974,11 @@ CREATE TABLE `user_activities` (
 --
 
 INSERT INTO `user_activities` (`id`, `user_id`, `page_name`, `login_time`, `logout_time`, `status`, `ip_address`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'http://127.0.0.1:8000/menu', '2024-11-02 15:46:18', NULL, 'a', '127.0.0.1', '2024-11-02 09:46:18', '2024-11-02 10:32:33', NULL),
-(2, 1, 'Dashboard', '2024-11-02 17:34:30', NULL, 'a', '127.0.0.1', '2024-11-02 11:34:30', '2024-11-02 11:34:30', NULL),
-(3, 1, 'http://127.0.0.1:8001/slider', '2024-11-02 17:35:13', NULL, 'a', '127.0.0.1', '2024-11-02 11:35:13', '2024-11-02 11:35:21', NULL),
-(4, 1, 'http://127.0.0.1:8001/about', '2024-11-02 17:38:36', NULL, 'a', '127.0.0.1', '2024-11-02 11:38:36', '2024-11-02 11:38:45', NULL),
-(5, 1, 'http://127.0.0.1:8001/gallery', '2024-11-02 17:43:52', NULL, 'a', '127.0.0.1', '2024-11-02 11:43:52', '2024-11-02 11:59:08', NULL),
-(6, 1, 'http://127.0.0.1:8001/update-company', '2024-11-03 10:09:01', NULL, 'a', '127.0.0.1', '2024-11-03 04:09:01', '2024-11-03 04:10:13', NULL),
-(7, 1, 'Logout', NULL, '2024-11-03 10:11:09', 'a', '127.0.0.1', '2024-11-03 04:11:09', '2024-11-03 04:11:09', NULL),
-(8, 1, 'http://127.0.0.1:8001/update-company', '2024-11-03 10:11:51', NULL, 'a', '127.0.0.1', '2024-11-03 04:11:51', '2024-11-03 04:25:14', NULL),
-(9, 1, 'http://127.0.0.1:8001/booking', '2024-11-03 15:07:13', NULL, 'a', '127.0.0.1', '2024-11-03 09:07:13', '2024-11-03 09:07:19', NULL),
-(10, 1, 'http://127.0.0.1:8001/user', '2024-11-03 18:11:25', NULL, 'a', '127.0.0.1', '2024-11-03 12:11:25', '2024-11-03 12:12:29', NULL),
-(11, 1, 'Logout', NULL, '2024-11-03 18:13:27', 'a', '127.0.0.1', '2024-11-03 12:13:27', '2024-11-03 12:13:27', NULL),
-(12, 2, 'Dashboard', '2024-11-03 18:13:33', NULL, 'a', '127.0.0.1', '2024-11-03 12:13:33', '2024-11-03 12:13:33', NULL),
-(13, 2, 'http://127.0.0.1:8001/checkin-record', '2024-11-04 09:44:37', NULL, 'a', '127.0.0.1', '2024-11-04 03:44:37', '2024-11-04 03:50:26', NULL),
-(14, 1, 'http://127.0.0.1:8000/room', '2024-11-04 11:10:44', NULL, 'a', '127.0.0.1', '2024-11-04 05:10:44', '2024-11-04 05:13:03', NULL),
-(15, 1, 'Logout', NULL, '2024-11-04 11:13:09', 'a', '127.0.0.1', '2024-11-04 05:13:09', '2024-11-04 05:13:09', NULL),
-(16, 1, 'http://127.0.0.1:8000/user', '2024-11-04 11:13:15', NULL, 'a', '127.0.0.1', '2024-11-04 05:13:15', '2024-11-04 06:00:17', NULL),
-(17, 1, 'Logout', NULL, '2024-11-04 12:00:27', 'a', '127.0.0.1', '2024-11-04 06:00:27', '2024-11-04 06:00:27', NULL),
-(18, 1, 'http://127.0.0.1:8000/payFirst', '2024-11-04 12:00:31', NULL, 'a', '127.0.0.1', '2024-11-04 06:00:31', '2024-11-04 08:53:09', NULL),
-(19, 1, 'Logout', NULL, '2024-11-04 14:57:14', 'a', '127.0.0.1', '2024-11-04 08:57:14', '2024-11-04 08:57:14', NULL),
-(20, 1, 'Dashboard', '2024-11-04 14:57:18', NULL, 'a', '127.0.0.1', '2024-11-04 08:57:18', '2024-11-04 08:57:18', NULL),
-(21, 1, 'Logout', NULL, '2024-11-04 14:57:58', 'a', '127.0.0.1', '2024-11-04 08:57:58', '2024-11-04 08:57:58', NULL),
-(22, 1, 'http://127.0.0.1:8000/table', '2024-11-04 14:58:03', NULL, 'a', '127.0.0.1', '2024-11-04 08:58:03', '2024-11-04 11:22:16', NULL),
-(23, 1, 'http://127.0.0.1:8000/order', '2024-11-05 10:52:00', NULL, 'a', '127.0.0.1', '2024-11-05 04:52:00', '2024-11-05 06:16:23', NULL),
-(24, 1, 'http://127.0.0.1:8000/order', '2024-11-05 14:54:33', NULL, 'a', '127.0.0.1', '2024-11-05 08:54:33', '2024-11-05 10:51:26', NULL),
-(25, 1, 'Logout', NULL, '2024-11-05 17:45:12', 'a', '127.0.0.1', '2024-11-05 11:45:12', '2024-11-05 11:45:12', NULL),
-(26, 1, 'http://127.0.0.1:8000/order', '2024-11-05 17:45:28', NULL, 'a', '127.0.0.1', '2024-11-05 11:45:28', '2024-11-05 11:53:15', NULL),
-(27, 1, 'http://127.0.0.1:8000/order/2', '2024-11-06 09:58:23', NULL, 'a', '127.0.0.1', '2024-11-06 03:58:23', '2024-11-06 10:39:37', NULL);
+(1, 1, 'Logout', NULL, '2024-11-06 17:08:53', 'a', '127.0.0.1', '2024-11-06 11:08:53', '2024-11-06 11:08:53', NULL),
+(2, 1, 'http://127.0.0.1:8000/update-company', '2024-11-06 17:09:01', NULL, 'a', '127.0.0.1', '2024-11-06 11:09:01', '2024-11-06 11:10:20', NULL),
+(3, 1, 'Logout', NULL, '2024-11-06 17:10:24', 'a', '127.0.0.1', '2024-11-06 11:10:24', '2024-11-06 11:10:24', NULL),
+(4, 1, 'http://127.0.0.1:8000/order', '2024-11-06 17:10:29', NULL, 'a', '127.0.0.1', '2024-11-06 11:10:29', '2024-11-06 12:49:11', NULL),
+(5, 1, 'http://127.0.0.1:8000/order', '2024-11-07 09:35:30', NULL, 'a', '127.0.0.1', '2024-11-07 03:35:30', '2024-11-07 11:22:57', NULL);
 
 --
 -- Indexes for dumped tables
@@ -2064,17 +2048,16 @@ ALTER TABLE `booking_details`
   ADD KEY `booking_details_updated_by_foreign` (`updated_by`),
   ADD KEY `booking_details_deleted_by_foreign` (`deleted_by`),
   ADD KEY `booking_details_booking_id_index` (`booking_id`),
+  ADD KEY `booking_details_table_id_index` (`table_id`),
   ADD KEY `booking_details_days_index` (`days`),
   ADD KEY `booking_details_unit_price_index` (`unit_price`),
-  ADD KEY `booking_details_total_index` (`total`),
-  ADD KEY `booking_details_table_id_index` (`table_id`) USING BTREE;
+  ADD KEY `booking_details_total_index` (`total`);
 
 --
 -- Indexes for table `booking_masters`
 --
 ALTER TABLE `booking_masters`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `booking_masters_reference_id_foreign` (`reference_id`),
   ADD KEY `booking_masters_added_by_foreign` (`added_by`),
   ADD KEY `booking_masters_updated_by_foreign` (`updated_by`),
   ADD KEY `booking_masters_deleted_by_foreign` (`deleted_by`),
@@ -2120,6 +2103,12 @@ ALTER TABLE `categories`
 -- Indexes for table `company_profiles`
 --
 ALTER TABLE `company_profiles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2181,8 +2170,7 @@ ALTER TABLE `disposals`
   ADD KEY `disposals_added_by_foreign` (`added_by`),
   ADD KEY `disposals_updated_by_foreign` (`updated_by`),
   ADD KEY `disposals_deleted_by_foreign` (`deleted_by`),
-  ADD KEY `disposals_status_index` (`status`),
-  ADD KEY `disposals_table_id_index` (`table_id`) USING BTREE;
+  ADD KEY `disposals_status_index` (`status`);
 
 --
 -- Indexes for table `disposal_details`
@@ -2296,8 +2284,7 @@ ALTER TABLE `issues`
   ADD KEY `issues_deleted_by_foreign` (`deleted_by`),
   ADD KEY `issues_date_index` (`date`),
   ADD KEY `issues_invoice_index` (`invoice`),
-  ADD KEY `issues_status_index` (`status`),
-  ADD KEY `issues_table_id_foreign` (`table_id`) USING BTREE;
+  ADD KEY `issues_status_index` (`status`);
 
 --
 -- Indexes for table `issue_details`
@@ -2320,8 +2307,7 @@ ALTER TABLE `issue_returns`
   ADD KEY `issue_returns_updated_by_foreign` (`updated_by`),
   ADD KEY `issue_returns_deleted_by_foreign` (`deleted_by`),
   ADD KEY `issue_returns_date_index` (`date`),
-  ADD KEY `issue_returns_status_index` (`status`),
-  ADD KEY `issue_returns_table_id_foreign` (`table_id`) USING BTREE;
+  ADD KEY `issue_returns_status_index` (`status`);
 
 --
 -- Indexes for table `leaves`
@@ -2466,7 +2452,8 @@ ALTER TABLE `orders`
   ADD KEY `orders_updated_by_foreign` (`updated_by`),
   ADD KEY `orders_deleted_by_foreign` (`deleted_by`),
   ADD KEY `orders_date_index` (`date`),
-  ADD KEY `orders_bank_account_id_index` (`bank_account_id`);
+  ADD KEY `orders_bank_account_id_index` (`bank_account_id`),
+  ADD KEY `orders_table_id_index` (`table_id`) USING BTREE;
 
 --
 -- Indexes for table `order_details`
@@ -2484,12 +2471,12 @@ ALTER TABLE `order_details`
 --
 ALTER TABLE `order_tables`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_tables_added_by_foreign` (`added_by`) USING BTREE,
-  ADD KEY `order_tables_updated_by_foreign` (`updated_by`) USING BTREE,
-  ADD KEY `order_tables_deleted_by_foreign` (`deleted_by`) USING BTREE,
-  ADD KEY `order_tables_table_id_index` (`table_id`) USING BTREE,
-  ADD KEY `order_tables_order_id_index` (`order_id`) USING BTREE,
-  ADD KEY `order_tables_incharge_id_index` (`incharge_id`) USING BTREE;
+  ADD KEY `order_tables_added_by_foreign` (`added_by`),
+  ADD KEY `order_tables_updated_by_foreign` (`updated_by`),
+  ADD KEY `order_tables_deleted_by_foreign` (`deleted_by`),
+  ADD KEY `order_tables_order_id_index` (`order_id`),
+  ADD KEY `order_tables_table_id_index` (`table_id`),
+  ADD KEY `order_tables_incharge_id_index` (`incharge_id`);
 
 --
 -- Indexes for table `other_customers`
@@ -2500,7 +2487,7 @@ ALTER TABLE `other_customers`
   ADD KEY `other_customers_updated_by_foreign` (`updated_by`),
   ADD KEY `other_customers_deleted_by_foreign` (`deleted_by`),
   ADD KEY `other_customers_booking_id_index` (`booking_id`),
-  ADD KEY `other_customers_table_id_index` (`table_id`) USING BTREE;
+  ADD KEY `other_customers_table_id_index` (`table_id`);
 
 --
 -- Indexes for table `password_resets`
@@ -2609,8 +2596,7 @@ ALTER TABLE `services`
   ADD KEY `services_deleted_by_foreign` (`deleted_by`),
   ADD KEY `services_invoice_index` (`invoice`),
   ADD KEY `services_date_index` (`date`),
-  ADD KEY `services_status_index` (`status`),
-  ADD KEY `services_table_id_foreign` (`table_id`) USING BTREE;
+  ADD KEY `services_status_index` (`status`);
 
 --
 -- Indexes for table `service_heads`
@@ -2684,22 +2670,33 @@ ALTER TABLE `supplier_payments`
 --
 ALTER TABLE `tables`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `tables_added_by_foreign` (`added_by`) USING BTREE,
-  ADD KEY `tables_updated_by_foreign` (`updated_by`) USING BTREE,
-  ADD KEY `tables_deleted_by_foreign` (`deleted_by`) USING BTREE,
-  ADD KEY `tables_code_index` (`code`) USING BTREE,
-  ADD KEY `tables_floor_id_index` (`floor_id`) USING BTREE,
-  ADD KEY `tables_table_type_id_index` (`table_type_id`) USING BTREE,
-  ADD KEY `tables_incharge_id_index` (`incharge_id`) USING BTREE;
+  ADD KEY `tables_added_by_foreign` (`added_by`),
+  ADD KEY `tables_updated_by_foreign` (`updated_by`),
+  ADD KEY `tables_deleted_by_foreign` (`deleted_by`),
+  ADD KEY `tables_code_index` (`code`),
+  ADD KEY `tables_floor_id_index` (`floor_id`),
+  ADD KEY `tables_incharge_id_index` (`incharge_id`),
+  ADD KEY `tables_table_type_id_index` (`table_type_id`);
+
+--
+-- Indexes for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `table_bookings_invoice_unique` (`invoice`),
+  ADD KEY `table_bookings_customer_id_foreign` (`customer_id`),
+  ADD KEY `table_bookings_added_by_foreign` (`added_by`),
+  ADD KEY `table_bookings_updated_by_foreign` (`updated_by`),
+  ADD KEY `table_bookings_deleted_by_foreign` (`deleted_by`);
 
 --
 -- Indexes for table `table_types`
 --
 ALTER TABLE `table_types`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `room_types_added_by_foreign` (`added_by`),
-  ADD KEY `room_types_updated_by_foreign` (`updated_by`),
-  ADD KEY `room_types_deleted_by_foreign` (`deleted_by`);
+  ADD KEY `table_types_added_by_foreign` (`added_by`),
+  ADD KEY `table_types_updated_by_foreign` (`updated_by`),
+  ADD KEY `table_types_deleted_by_foreign` (`deleted_by`);
 
 --
 -- Indexes for table `units`
@@ -2771,13 +2768,13 @@ ALTER TABLE `bank_transactions`
 -- AUTO_INCREMENT for table `booking_details`
 --
 ALTER TABLE `booking_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `booking_masters`
 --
 ALTER TABLE `booking_masters`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -2804,6 +2801,12 @@ ALTER TABLE `company_profiles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
@@ -2819,7 +2822,7 @@ ALTER TABLE `customer_payments`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `designations`
@@ -2849,7 +2852,7 @@ ALTER TABLE `districts`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `employee_payments`
@@ -2867,13 +2870,13 @@ ALTER TABLE `employee_payment_details`
 -- AUTO_INCREMENT for table `floors`
 --
 ALTER TABLE `floors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `galleries`
 --
 ALTER TABLE `galleries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `investment_accounts`
@@ -2891,13 +2894,13 @@ ALTER TABLE `investment_transactions`
 -- AUTO_INCREMENT for table `issues`
 --
 ALTER TABLE `issues`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_details`
 --
 ALTER TABLE `issue_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_returns`
@@ -2933,7 +2936,7 @@ ALTER TABLE `loan_transactions`
 -- AUTO_INCREMENT for table `manages`
 --
 ALTER TABLE `manages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `materials`
@@ -2963,13 +2966,13 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `menu_categories`
 --
 ALTER TABLE `menu_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `offers`
@@ -2981,13 +2984,13 @@ ALTER TABLE `offers`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `order_tables`
@@ -3011,13 +3014,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `productions`
 --
 ALTER TABLE `productions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `production_details`
 --
 ALTER TABLE `production_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `purchases`
@@ -3065,13 +3068,13 @@ ALTER TABLE `service_heads`
 -- AUTO_INCREMENT for table `sliders`
 --
 ALTER TABLE `sliders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `specialties`
 --
 ALTER TABLE `specialties`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `specialtie_banners`
@@ -3095,25 +3098,31 @@ ALTER TABLE `supplier_payments`
 -- AUTO_INCREMENT for table `tables`
 --
 ALTER TABLE `tables`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `table_types`
 --
 ALTER TABLE `table_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_accesses`
@@ -3125,7 +3134,7 @@ ALTER TABLE `user_accesses`
 -- AUTO_INCREMENT for table `user_activities`
 --
 ALTER TABLE `user_activities`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -3177,9 +3186,7 @@ ALTER TABLE `bank_transactions`
 --
 ALTER TABLE `booking_details`
   ADD CONSTRAINT `booking_details_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `booking_details_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `booking_masters` (`id`),
   ADD CONSTRAINT `booking_details_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `booking_details_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `booking_details_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3187,9 +3194,7 @@ ALTER TABLE `booking_details`
 --
 ALTER TABLE `booking_masters`
   ADD CONSTRAINT `booking_masters_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `booking_masters_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   ADD CONSTRAINT `booking_masters_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `booking_masters_reference_id_foreign` FOREIGN KEY (`reference_id`) REFERENCES `references` (`id`),
   ADD CONSTRAINT `booking_masters_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3260,7 +3265,6 @@ ALTER TABLE `designations`
 ALTER TABLE `disposals`
   ADD CONSTRAINT `disposals_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `disposals_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `disposals_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `disposals_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3347,7 +3351,6 @@ ALTER TABLE `investment_transactions`
 ALTER TABLE `issues`
   ADD CONSTRAINT `issues_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `issues_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `issues_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `issues_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3366,7 +3369,6 @@ ALTER TABLE `issue_details`
 ALTER TABLE `issue_returns`
   ADD CONSTRAINT `issue_returns_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `issue_returns_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `issue_returns_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `issue_returns_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3474,10 +3476,8 @@ ALTER TABLE `offers`
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `orders_bank_account_id_foreign` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_accounts` (`id`),
-  ADD CONSTRAINT `orders_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `booking_masters` (`id`),
   ADD CONSTRAINT `orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   ADD CONSTRAINT `orders_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `orders_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `orders_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3491,13 +3491,21 @@ ALTER TABLE `order_details`
   ADD CONSTRAINT `order_details_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
+-- Constraints for table `order_tables`
+--
+ALTER TABLE `order_tables`
+  ADD CONSTRAINT `order_tables_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `order_tables_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `order_tables_incharge_id_foreign` FOREIGN KEY (`incharge_id`) REFERENCES `employees` (`id`),
+  ADD CONSTRAINT `order_tables_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `order_tables_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `other_customers`
 --
 ALTER TABLE `other_customers`
   ADD CONSTRAINT `other_customers_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `other_customers_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `booking_masters` (`id`),
   ADD CONSTRAINT `other_customers_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `other_customers_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `other_customers_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
@@ -3565,7 +3573,6 @@ ALTER TABLE `services`
   ADD CONSTRAINT `services_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `booking_masters` (`id`),
   ADD CONSTRAINT `services_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   ADD CONSTRAINT `services_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `services_room_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`),
   ADD CONSTRAINT `services_service_head_id_foreign` FOREIGN KEY (`service_head_id`) REFERENCES `service_heads` (`id`),
   ADD CONSTRAINT `services_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
@@ -3622,20 +3629,29 @@ ALTER TABLE `supplier_payments`
 -- Constraints for table `tables`
 --
 ALTER TABLE `tables`
-  ADD CONSTRAINT `rooms_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `rooms_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-  ADD CONSTRAINT `rooms_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `rooms_floor_id_foreign` FOREIGN KEY (`floor_id`) REFERENCES `floors` (`id`),
-  ADD CONSTRAINT `rooms_room_type_id_foreign` FOREIGN KEY (`table_type_id`) REFERENCES `table_types` (`id`),
-  ADD CONSTRAINT `rooms_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `tables_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `tables_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `tables_floor_id_foreign` FOREIGN KEY (`floor_id`) REFERENCES `floors` (`id`),
+  ADD CONSTRAINT `tables_incharge_id_foreign` FOREIGN KEY (`incharge_id`) REFERENCES `employees` (`id`),
+  ADD CONSTRAINT `tables_table_type_id_foreign` FOREIGN KEY (`table_type_id`) REFERENCES `table_types` (`id`),
+  ADD CONSTRAINT `tables_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  ADD CONSTRAINT `table_bookings_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `table_bookings_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
+  ADD CONSTRAINT `table_bookings_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `table_bookings_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `table_types`
 --
 ALTER TABLE `table_types`
-  ADD CONSTRAINT `room_types_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `room_types_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `room_types_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `table_types_added_by_foreign` FOREIGN KEY (`added_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `table_types_deleted_by_foreign` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `table_types_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `units`

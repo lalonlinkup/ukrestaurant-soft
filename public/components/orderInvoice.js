@@ -317,12 +317,12 @@ const orderInvoice = Vue.component("order-invoice", {
                         <div class="container">
                             <div class="row">
                                 <div class="col-xs-2">
-                                    <img src="${ this.company.logo ? this.company.logo : '/noImage.gif' }" alt="Logo" style="height:80px;border: 1px solid gray; border-radius: 5px;" />
+                                    <img src="${this.company.logo ? this.company.logo : '/noImage.gif'}" alt="Logo" style="height:80px;border: 1px solid gray; border-radius: 5px;" />
                                 </div>
                                 <div class="col-xs-10" style="padding-top:5px;">
-                                    <strong style="font-size:18px;">${ this.company.title }</strong><br>
-                                    <p style="white-space: pre-line;">${ this.company.address}</p>
-                                    <p style="white-space: pre-line;">${ this.company.phone }</p>
+                                    <strong style="font-size:18px;">${this.company.title}</strong><br>
+                                    <p style="white-space: pre-line;">${this.company.address}</p>
+                                    <p style="white-space: pre-line;">${this.company.phone}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -334,11 +334,10 @@ const orderInvoice = Vue.component("order-invoice", {
                                 <div class="col-xs-12">${invoiceContent}</div>
                             </div>
                         </div>                            
-                        <div class="container" style="${
-                            this.cart.length > 15
-                                ? "margin-top:50px;"
-                                : "position:fixed;bottom:15px;width:100%;"
-                        }">
+                        <div class="container" style="${this.cart.length > 15
+                    ? "margin-top:50px;"
+                    : "position:fixed;bottom:15px;width:100%;"
+                }">
                             <div class="row" style="border-bottom:1px solid #ccc;margin-bottom:5px;padding-bottom:6px;">
                                 <div class="col-xs-6">
                                     <span style="text-decoration:overline;">Received by</span>
@@ -351,8 +350,8 @@ const orderInvoice = Vue.component("order-invoice", {
                             <div class="row" style="font-size:12px;">
                                 <div class="col-xs-6">
                                     Print Date: ${moment().format(
-                                        "DD-MM-YYYY h:mm a"
-                                    )}, Printed by: ${this.order.user?.name}
+                    "DD-MM-YYYY h:mm a"
+                )}, Printed by: ${this.order.user?.name}
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     contract info

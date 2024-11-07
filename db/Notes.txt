@@ -1,3 +1,26 @@
+Update files - Nov 07, 2024
+==================================================
+ALTER TABLE `tables` ADD `booking_status` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available' COMMENT 'booked, available' AFTER `image`;
+
+ALTER TABLE `orders` ADD `table_id` BIGINT(20) UNSIGNED NOT NULL AFTER `customer_address`, ADD INDEX `orders_table_id` (`table_id`);
+
+ALTER TABLE `orders` CHANGE `table_id` `table_id` BIGINT(20) NULL DEFAULT NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Update files - Nov 06, 2024
 ==================================================
 Create order_tables tables

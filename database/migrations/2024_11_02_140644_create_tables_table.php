@@ -28,6 +28,7 @@ class CreateTablesTable extends Migration
             $table->decimal('price', 18, 2)->nullable();
             $table->text('note')->nullable();
             $table->string('image')->nullable();
+            $table->string('booking_status', 20)->default('available')->comment('booked, available');
             $table->char('status', 1)->default('a')->comment('a=active, d=deactive');
             $table->unsignedBigInteger('added_by');
             $table->unsignedBigInteger('updated_by')->nullable();

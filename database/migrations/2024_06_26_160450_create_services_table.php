@@ -32,7 +32,6 @@ class CreateServicesTable extends Migration
             $table->softDeletes();
             $table->ipAddress('last_update_ip');
 
-            $table->foreign('table_id')->references('id')->on('tables');
             $table->foreign('booking_id')->references('id')->on('booking_masters');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('service_head_id')->references('id')->on('service_heads');

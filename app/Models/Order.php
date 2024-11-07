@@ -24,7 +24,7 @@ class Order extends Model
 
     public function table()
     {
-        return $this->belongsTo(Table::class, 'table_id', 'id')->select('id', 'name', 'code');
+        return $this->belongsTo(Table::class, 'table_id', 'id')->with('tabletype', 'floor', 'employee');
     }
 
     public function bank()
@@ -44,6 +44,6 @@ class Order extends Model
 
     public function orderTables() 
     {
-        return $this->hasMany(OrderTable::class, 'order_id', 'id')->with('tabletype', 'floor', 'employee');
+        return $this->hasMany(OrderTables::class, 'order_id', 'id')->with('tabletype', 'floor', 'employee');
     }
 }
