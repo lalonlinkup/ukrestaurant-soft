@@ -73,7 +73,223 @@ class OrderController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
+            //customer
+            if ($request->customer['type'] != 'G') {
+                $check = Customer::where('phone', $request->customer['phone'])->first();
+                if (empty($check)) {
+                    $customer = new Customer();
+                    $customer->code = generateCode("Customer", "C");
+                    $customer->name = $request->customer['name'];
+                    $customer->phone = $request->customer['phone'];
+                    $customer->address = $request->customer['address'];
+                    $customer->added_by = Auth::user()->id;
+                    $customer->last_update_ip = request()->ip();
+                    $customer->save();
+                    $customerId = $customer->id;
+                } else {
+                    $customerId = $check->id;
+                }
+            }
+
+            //Order master
+            $orderKey = $request->order;
+            $order = new Order();
+            unset($orderKey['id']);
+            unset($orderKey['invoice']);
+            foreach ($orderKey as $key => $item) {
+                $order->$key = $item;
+            }
+            $order->invoice = $invoice;
+            if ($request->customer['type'] != 'G') {
+                $order->customer_id = $customerId;
+            } else {
+                $order->customer_id = NULL;
+                $order->customer_name = $request->customer['name'];
+                $order->customer_phone = $request->customer['phone'];
+                $order->customer_address = $request->customer['address'];
+            }
+            $order->table_id = $request->tableCart[0]['table_id'];
+            $order->order_type = 'Order';
+            $order->status = 'a';
+            $order->added_by = Auth::user()->id;
+            $order->last_update_ip = request()->ip();
+            $order->save();
+
+            // Order detail
+            foreach ($request->carts as $cart) {
+                unset($cart['code']);
+                unset($cart['name']);
+                $detail = new OrderDetails();
+                foreach ($cart as $key => $item) {
+                    $detail->$key = $item;
+                }
+                $detail->order_id = $order->id;
+                $detail->added_by = Auth::user()->id;
+                $detail->last_update_ip = request()->ip();
+                $detail->save();
+
+                $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
+                if (isset($recipes)) {
+                    $production = new Production();
+                    $production->invoice = invoiceGenerate('Production', 'PR');
+                    $production->date = date('Y-m-d');
+                    $production->order_id = $order->id;
+                    $production->total = $recipes->sum('total');
+                    $production->description = 'Order production invoice -' . $invoice;
+                    $production->status = 'a';
+                    $production->added_by = Auth::user()->id;
+                    $production->last_update_ip = request()->ip();
+                    $production->save();
+
+                    foreach ($recipes as $item) {
+                        $productionDetails = new ProductionDetail();
+                        $productionDetails->production_id = $production->id;
+                        $productionDetails->material_id = $item->material_id;
+                        $productionDetails->quantity = $item->quantity;
+                        $productionDetails->price = $item->price;
+                        $productionDetails->total = $item->total;
+                        $productionDetails->status = 'a';
+                        $productionDetails->added_by = Auth::user()->id;
+                        $productionDetails->last_update_ip = request()->ip();
+                        $productionDetails->save();
+                    }
+                }
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Order insert successfully', 'id' => $order->id], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function update(OrderRequest $request)
+    {
+        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        if ($request->customer['type'] == 'G' && $request->order['paid'] < $request->order['total']) {
+            return send_error("Cash Guest can not due", null, 422);
+        }
+
+        try {
+            DB::beginTransaction();
+            //customer
+            if ($request->customer['type'] != 'G') {
+                $check = Customer::where('phone', $request->customer['phone'])->first();
+                if (empty($check)) {
+                    $customer = new Customer();
+                    $customer->code = generateCode("Customer", "C");
+                    $customer->name = $request->customer['name'];
+                    $customer->phone = $request->customer['phone'];
+                    $customer->address = $request->customer['address'];
+                    $customer->added_by = Auth::user()->id;
+                    $customer->last_update_ip = request()->ip();
+                    $customer->save();
+                    $customerId = $customer->id;
+                } else {
+                    $customerId = $check->id;
+                }
+            }
+
+            //Order master
+            $orderKey = $request->order;
+            $order = Order::find($request->order['id']);
+            unset($orderKey['id']);
+            foreach ($orderKey as $key => $item) {
+                $order->$key = $item;
+            }
+
+            if ($request->customer['type'] != 'G') {
+                $order->customer_id = $customerId;
+            } else {
+                $order->customer_id = NULL;
+                $order->customer_name = $request->customer['name'];
+                $order->customer_phone = $request->customer['phone'];
+                $order->customer_address = $request->customer['address'];
+            }
+            $order->table_id = $request->tableCart[0]['table_id'];
+            $order->status = 'a';
+            $order->updated_by = Auth::user()->id;
+            $order->updated_at = Carbon::now();
+            $order->last_update_ip = request()->ip();
+            $order->update();
+
+            //old order detail
+            $olddetail = OrderDetails::where('order_id', $request->order['id'])->get();
+            foreach ($olddetail as $item) {
+                // old detail delete
+                OrderDetails::find($item->id)->forceDelete();
+            }
+
+            // Order detail
+            foreach ($request->carts as $cart) {
+                unset($cart['code']);
+                unset($cart['name']);
+                $detail = new OrderDetails();
+                foreach ($cart as $key => $item) {
+                    $detail->$key = $item;
+                }
+                $detail->order_id = $order->id;
+                $detail->added_by = Auth::user()->id;
+                $detail->last_update_ip = request()->ip();
+                $detail->save();
+
+                $recipes = Recipe::where('menu_id', $cart['menu_id'])->get();
+                if (isset($recipes)) {
+                    $production = Production::where('order_id', $order->id)->first();
+                    $production->date = date('Y-m-d');
+                    $production->total = $recipes->sum('total');
+                    $production->updated_by = Auth::user()->id;
+                    $production->updated_at = Carbon::now();
+                    $production->last_update_ip = request()->ip();
+                    $production->update();
+
+                    //old production detail
+                    $oldProductionDetail = ProductionDetail::where('production_id', $production->id)->get();
+                    foreach ($oldProductionDetail as $opd) {
+                        ProductionDetail::find($opd->id)->forceDelete();
+                    }
+
+                    foreach ($recipes as $item) {
+                        $productionDetails = new ProductionDetail();
+                        $productionDetails->production_id = $production->id;
+                        $productionDetails->material_id = $item->material_id;
+                        $productionDetails->quantity = $item->quantity;
+                        $productionDetails->price = $item->price;
+                        $productionDetails->total = $item->total;
+                        $productionDetails->status = 'a';
+                        $productionDetails->added_by = Auth::user()->id;
+                        $productionDetails->last_update_ip = request()->ip();
+                        $productionDetails->save();
+                    }
+                }
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Order update successfully.', 'id' => $order->id], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
+    public function storeDraft(OrderRequest $request)
+    {
+        if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
+        if ($request->customer['type'] == 'G' && $request->order['paid'] < $request->order['total']) {
+            return send_error("Cash Guest can not due", null, 422);
+        }
+
+        $checkInvoice = Order::where('invoice', $request->order['invoice'])->first();
+        $invoice = $request->order['invoice'];
+        if (!empty($checkInvoice)) {
+            $invoice = invoiceGenerate("Order", 'O');
+        }
+
+        try {
+            DB::beginTransaction();
+
             //customer
             if ($request->customer['type'] != 'G') {
                 $check = Customer::where('phone', $request->customer['phone'])->first();
@@ -178,7 +394,7 @@ class OrderController extends Controller
         }
     }
 
-    public function update(OrderRequest $request)
+    public function updateDraft(OrderRequest $request)
     {
         if (!$request->validated()) return send_error("Validation Error", $request->validated(), 422);
         if ($request->customer['type'] == 'G' && $request->order['paid'] < $request->order['total']) {
@@ -222,7 +438,7 @@ class OrderController extends Controller
                 $order->customer_address = $request->customer['address'];
             }
             $order->table_id = $request->tableCart[0]['table_id'];
-            $order->status = 'a';
+            $order->status = 'p';
             $order->updated_by = Auth::user()->id;
             $order->updated_at = Carbon::now();
             $order->last_update_ip = request()->ip();

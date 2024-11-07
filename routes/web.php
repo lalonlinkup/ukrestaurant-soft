@@ -351,6 +351,8 @@ Route::post('get-order-details', [OrderController::class, 'orderDetails'])->name
 Route::post('get-order-by-table', [OrderController::class, 'orderDetailsByTable'])->name('order.detailsbytable');
 Route::post('add-order', [OrderController::class, 'store'])->name('order.store');
 Route::post('update-order', [OrderController::class, 'update'])->name('order.update');
+Route::post('add-draft-order', [OrderController::class, 'storeDraft'])->name('order.storeDraft');
+Route::post('update-draft-order', [OrderController::class, 'updateDraft'])->name('order.updateDraft');
 Route::post('delete-order', [OrderController::class, 'destroy'])->name('order.delete');
 Route::post('approve-order', [OrderController::class, 'approve'])->name('order.approve');
 Route::get('order-invoice-print/{id}', [OrderController::class, 'orderInvoicePrint'])->name('order.invoice')->middleware('useractivity');

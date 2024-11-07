@@ -206,7 +206,7 @@
                             <td style="text-align:center;">
                                 <a href="" title="Order Invoice" v-bind:href="`/order-invoice-print/${order.id}`" target="_blank"><i class="fa fa-file-text"></i></a>
                                 @if(userAction('u'))
-                                <a href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
+                                <a v-if="order.order_type == 'PayFirst'" href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
                                 @endif
                                 @if(userAction('d'))
                                 <a href="" title="Delete Order" @click.prevent="deleteOrder(order)"><i class="fa fa-trash"></i></a>
@@ -319,19 +319,16 @@
                     location.href = "/order/" + row.id
                 }
             },
-
             getCategory() {
                 axios.get("/get-menu-category").then(res => {
                     this.categories = res.data;
                 })
             },
-
             getUser() {
                 axios.post("/get-user").then(res => {
                     this.users = res.data.users;
                 })
             },
-
             getMenu() {
                 axios.get("/get-menu").then(res => {
                     let r = res.data;
@@ -341,7 +338,6 @@
                     });
                 })
             },
-
             getCustomer() {
                 axios.get("/get-customer").then(res => {
                     let r = res.data;
@@ -351,13 +347,11 @@
                     });
                 })
             },
-
             getTables() {
                 axios.get('/get-table').then(res => {
                     this.tables = res.data;
                 })
             },
-
             onChangeType(event) {
                 this.orders = [];
                 this.orders2 = [];
@@ -381,7 +375,6 @@
                     this.getUser();
                 }
             },
-
             getOrder() {
                 if (this.filter.searchType == 'customer') {
                     this.filter.customerId = this.selectedCustomer != null ? this.selectedCustomer.id : ""

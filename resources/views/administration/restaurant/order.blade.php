@@ -484,7 +484,7 @@
 
                                             <a class="btn btn-danger btn-reset" style="font-size:11px;padding:0px 30px !important" @click.prevent="onClickPrevious($event)"><i class="bi bi-arrow-left"></i> Previous</a>
 
-                                            <input :disabled="onProgress" type="button" @click="saveOrder" class="btn btn-warning btn-padding" value="Draft">
+                                            <input :disabled="onProgress" type="button" @click="draftOrder" class="btn btn-warning btn-padding" value="Draft">
 
                                             <input :disabled="onProgress" v-if="order.id != 0" type="button" @click="saveOrder" class="btn btn-primary btn-padding" :value="btnText">
                                         </div>
@@ -724,6 +724,69 @@
                 } else {
                     this.filterMenus = this.menus;
                 }
+            },
+            async draftOrder() {
+                if (this.customerType == 'existing' && this.selectedCustomer.id == '') {
+                    toastr.error("Select Customer.!");
+                    return;
+                }
+                if (this.cart.length == 0) {
+                    toastr.error("Cart is empty.!");
+                    return;
+                }
+                if (this.order.bankPaid > 0) {
+                    this.order.bank_account_id = this.selectedBank != null ? this.selectedBank.id : "";
+                } else {
+                    this.order.bank_account_id = '';
+                }
+                if (this.order.id == 0 && this.selectedCustomer.id != '') {
+                    this.selectedCustomer.type = 'retail';
+                }
+                if (this.order.id == 0) {
+                    var url = '/add-draft-order';
+                } else {
+                    var url = '/update-draft-order';
+                }
+                let data = {
+                    order: this.order,
+                    carts: this.cart,
+                    tableCart: this.tableCart,
+                    customer: this.selectedCustomer
+                }
+                this.onProgress = true
+                await axios.post(url, data).then(async res => {
+                    let r = res.data;
+                    console.log(r);
+                    toastr.success(r.message);
+                    this.clearForm();
+                    this.onProgress = false
+                    if (r.status) {
+                        let conf = confirm('Order success, Do you want to view invoice?');
+                        if (conf) {
+                            window.open('/order-invoice-print/' + r.id, '_blank');
+                            await new Promise(r => setTimeout(r, 1000));
+                            window.location = '/order';
+                        } else {
+                            window.location = '/order';
+                        }
+                    }
+                }).catch(err => {
+                    this.onProgress = false
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors ==
+                        'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
+                            })
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
+                        }
+                        toastr.error(r.message);
+                    }
+                })
             },
             async saveOrder() {
                 if (this.customerType == 'existing' && this.selectedCustomer.id == '') {
