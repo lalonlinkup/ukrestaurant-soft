@@ -28,7 +28,7 @@
                     <div class="col-md-4 col-xs-12">
                         <div class="form-group" style="display: flex;align-items:center;">
                             <label for="" style="width:100px;">Supplier</label>
-                            <v-select :options="suppliers" style="width: 100%;" v-model="selectedSupplier" label="display_name" @search="onSearchSupplier"></v-select>
+                            <v-select :options="suppliers" style="width: 100%;" v-model="selectedSupplier" label="display_name" placeholder="Select Supplier" @search="onSearchSupplier"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12">

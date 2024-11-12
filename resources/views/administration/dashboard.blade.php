@@ -34,7 +34,7 @@ $module = session('module');
                 </div>
             </div>
             <!-- Booking Module -->
-            <div class="col-md-3 col-xs-6 section4">
+            <!-- <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#e1e1ff;" onmouseover="this.style.background = '#d2d2ff'" onmouseout="this.style.background = '#e1e1ff'">
                     <a href="/module/BookingModule">
                         <div class="logo">
@@ -45,9 +45,9 @@ $module = session('module');
                         </div>
                     </a>
                 </div>
-            </div>
+            </div> -->
             <!-- Service Module -->
-            <div class="col-md-3 col-xs-6 section4">
+            <!-- <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#c6e2ff;" onmouseover="this.style.background = '#91c8ff'" onmouseout="this.style.background = '#c6e2ff'">
                     <a href="/module/ServiceModule">
                         <div class="logo">
@@ -58,10 +58,10 @@ $module = session('module');
                         </div>
                     </a>
                 </div>
-            </div>
+            </div> -->
             <!-- Inventory Module -->
             <div class="col-md-3 col-xs-6 section4">
-                <div class="col-md-12 section122" style="background-color:#dcf5ea;" onmouseover="this.style.background = '#bdecd7'" onmouseout="this.style.background = '#dcf5ea'">
+                <div class="col-md-12 section122" style="background-color:#e1e1ff;" onmouseover="this.style.background = '#d2d2ff'" onmouseout="this.style.background = '#e1e1ff'">
                     <a href="/module/InventoryModule">
                         <div class="logo">
                             <i class="bi bi-cart-plus"></i>
@@ -112,7 +112,7 @@ $module = session('module');
                 </div>
             </div>
             <!-- module/Administration -->
-            {{-- <div class="col-md-3 col-xs-6 section4">
+            <div class="col-md-3 col-xs-6 section4">
                 <div class="col-md-12 section122" style="background-color:#e6e6ff;" onmouseover="this.style.background = '#b9b9ff'" onmouseout="this.style.background = '#e6e6ff'">
                     <a href="/module/Administration">
                         <div class="logo">
@@ -123,7 +123,7 @@ $module = session('module');
                         </div>
                     </a>
                 </div>
-            </div> --}}
+            </div>
 
             <!-- Business Monitor -->
             @if(checkAccess('graph'))
@@ -135,6 +135,22 @@ $module = session('module');
                         </div>
                         <div class="textModule">
                             Business Monitor
+                        </div>
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            <!-- Website Module -->
+            @if(checkAccess('graph'))
+            <div class="col-md-3 col-xs-6 section4">
+                <div class="col-md-12 section122" style="background-color:#ecffd9;" onmouseover="this.style.background = '#cfff9f'" onmouseout="this.style.background = '#ecffd9'">
+                    <a href="/module/WebsiteModule">
+                        <div class="logo">
+                            <i class="bi bi-globe"></i>
+                        </div>
+                        <div class="textModule">
+                            Website Module
                         </div>
                     </a>
                 </div>
@@ -276,7 +292,7 @@ $module = session('module');
                 </div>
             </div>
             @endif
-            @if(checkAccess('reference'))
+            <!-- @if(checkAccess('reference'))
             <div class="col-md-2 col-xs-6 ">
                 <div class="col-md-12 section20">
                     <a href="/reference">
@@ -289,7 +305,7 @@ $module = session('module');
                     </a>
                 </div>
             </div>
-            @endif
+            @endif -->
             @if(checkAccess('user'))
             <div class="col-md-2 col-xs-6 ">
                 <div class="col-md-12 section20">
@@ -366,7 +382,7 @@ $module = session('module');
                             <i class="menu-icon fa fa-star"></i>
                         </div>
                         <div class="textModule">
-                            Specialties Entry
+                            Speciality Entry
                         </div>
                     </a>
                 </div>
@@ -420,7 +436,7 @@ $module = session('module');
 </div>
 
 @elseif($module == 'BookingModule')
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-12 col-xs-12">
         <div class="col-md-1"></div>
         <div class="col-md-10">
@@ -518,7 +534,7 @@ $module = session('module');
             @endif
         </div>
     </div>
-</div>
+</div> -->
 
 @elseif($module == 'PurchaseModule')
 <div class="row">
@@ -717,7 +733,7 @@ $module = session('module');
                         <div class="logo">
                             <i class="menu-icon fa fa-money"></i>
                         </div>
-                        <div class="textModule" style="line-height: 13px; margin-top: 0;">
+                        <div class="textModule" style="line-height: 13px;">
                             Guest Payment
                         </div>
                     </a>
@@ -1173,7 +1189,7 @@ $module = session('module');
                 <div class="col-md-12 section20">
                     <a href="/customer-due">
                         <div class="logo">
-                            <i class="menu-icon fa fa-user-plus"></i>
+                            <i class="menu-icon fa fa-list-ul"></i>
                         </div>
                         <div class="textModule">
                             Guest Due List
@@ -1187,9 +1203,9 @@ $module = session('module');
                 <div class="col-md-12 section20">
                     <a href="/customer-ledger">
                         <div class="logo">
-                            <i class="menu-icon fa fa-user-plus"></i>
+                            <i class="menu-icon fa fa-list-ul"></i>
                         </div>
-                        <div class="textModule" style="line-height: 13px; margin-top: 0;">
+                        <div class="textModule" style="line-height: 13px;">
                             Guest Ledger
                         </div>
                     </a>
@@ -1259,7 +1275,7 @@ $module = session('module');
                         <div class="logo">
                             <i class="menu-icon fa fa-file-text-o"></i>
                         </div>
-                        <div class="textModule" style="line-height: 13px; margin-top: 0;">
+                        <div class="textModule" style="line-height: 13px;">
                             Bank Ledger
                         </div>
                     </a>
@@ -1357,20 +1373,6 @@ $module = session('module');
                         </div>
                         <div class="textModule" style="line-height: 13px;">
                             Pay First
-                        </div>
-                    </a>
-                </div>
-            </div>
-            @endif
-            @if(checkAccess('pendingOrder'))
-            <div class="col-md-2 col-xs-6">
-                <div class="col-md-12 section20">
-                    <a href="/pendingOrder">
-                        <div class="logo">
-                            <i class="menu-icon bi bi-card-checklist"></i>
-                        </div>
-                        <div class="textModule" style="line-height: 13px;">
-                            Pending Order
                         </div>
                     </a>
                 </div>
@@ -1687,7 +1689,7 @@ $module = session('module');
 </div>
 @elseif($module == 'ServiceModule')
 @if(checkAccess('serviceHead'))
-<div class="col-md-2 col-xs-6">
+<!-- <div class="col-md-2 col-xs-6">
     <div class="col-md-12 section20">
         <a href="/service-head">
             <div class="logo">
@@ -1698,10 +1700,10 @@ $module = session('module');
             </div>
         </a>
     </div>
-</div>
+</div> -->
 @endif
 @if(checkAccess('service'))
-<div class="col-md-2 col-xs-6">
+<!-- <div class="col-md-2 col-xs-6">
     <div class="col-md-12 section20">
         <a href="/service">
             <div class="logo">
@@ -1712,10 +1714,10 @@ $module = session('module');
             </div>
         </a>
     </div>
-</div>
+</div> -->
 @endif
 @if(checkAccess('serviceList'))
-<div class="col-md-2 col-xs-6">
+<!-- <div class="col-md-2 col-xs-6">
     <div class="col-md-12 section20">
         <a href="/serviceList">
             <div class="logo">
@@ -1726,7 +1728,7 @@ $module = session('module');
             </div>
         </a>
     </div>
-</div>
+</div> -->
 @endif
 @endif
 

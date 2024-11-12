@@ -24,11 +24,12 @@ class CustomerPaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            'date'          => 'required|date',
-            'type'          => 'required|string',
-            'method'        => 'required|string',
-            'customer_id'   => 'required',
-            'amount'        => 'required',
+            'date'        => 'required|date',
+            'type'        => 'required|string',
+            'method'      => 'required|string',
+            'customer_id' => 'required',
+            'order_id'    => 'required',
+            'amount'      => 'required',
         ];
 
     }

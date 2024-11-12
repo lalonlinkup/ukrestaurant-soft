@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-md-3 col-xs-12" v-if="searchType == 'material'" style="display: none;" :style="{display: searchType == 'material' ? '':'none'}">
                         <div class="form-group">
-                            <v-select v-bind:options="materials" id="material" v-model="selectedMaterial" label="name" @search="onSearchMaterial"></v-select>
+                            <v-select v-bind:options="materials" id="material" v-model="selectedMaterial" label="name" placeholder="Select Material" @search="onSearchMaterial"></v-select>
                         </div>
                     </div>
 
@@ -84,14 +84,14 @@
                         <tr v-for="(item, sl) in stocks">
                             <td>@{{ sl + 1 }}</td>
                             <td style="text-align: left;">@{{ item.name }}</td>
-                            <td>@{{ item.purchased_quantity }}</td>
-                            <td>@{{ item.production_quantity }}</td>
-                            <td>@{{ item.current_quantity }} @{{ item.unit_name }}</td>
+                            <td>@{{ item.purchased_quantity | decimal }}</td>
+                            <td>@{{ item.production_quantity | decimal }}</td>
+                            <td>@{{ item.current_quantity | decimal }} @{{ item.unit_name }}</td>
                             <td>@{{ item.price | decimal }}</td>
                             <td style="text-align: right;">@{{ item.stockValue | decimal }}</td>
                         </tr>
                         <tr>
-                            <th colspan="4" style="text-align:center;">Total Stock Value</th>
+                            <th colspan="4" style="text-align:right;">Total Stock Value</th>
                             <th>@{{ stocks.reduce((prev, curr) => {return prev + parseFloat(curr.current_quantity)}, 0).toFixed(2) }}</th>
                             <th></th>
                             <th style="text-align: right;">@{{ stocks.reduce((prev, curr) => {return prev + parseFloat(curr.stockValue)}, 0).toFixed(2) }}</th>
@@ -171,8 +171,8 @@
             },
             getMaterialStock() {
                 let filter = {
-                   date: this.date,
-                   materialId: this.selectedMaterial != null ? this.selectedMaterial.id : '',
+                    date: this.date,
+                    materialId: this.selectedMaterial != null ? this.selectedMaterial.id : '',
                 }
                 this.onProgress = true
                 this.showReport = false
@@ -228,7 +228,7 @@
             // filter stock
             filterArray(event) {
                 this.stocks = this.stocks2.filter(stock => {
-                    return stock.name.toLowerCase().startsWith(event.target.value.toLowerCase()) 
+                    return stock.name.toLowerCase().startsWith(event.target.value.toLowerCase())
                 })
             },
         },

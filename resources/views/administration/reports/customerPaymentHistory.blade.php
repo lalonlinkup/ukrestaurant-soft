@@ -28,7 +28,7 @@
                     <div class="col-md-4 col-xs-12">
                         <div class="form-group" style="display: flex;align-items:center;">
                             <label for="" style="width:100px;">Customer</label>
-                            <v-select :options="customers" style="width: 100%;" v-model="selectedCustomer" label="display_name" @search="onSearchCustomer"></v-select>
+                            <v-select :options="customers" style="width: 100%;" v-model="selectedCustomer" label="display_name" placeholder="Select Customer" @search="onSearchCustomer"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12">
@@ -169,29 +169,27 @@
                 let filter = {
                     forSearch: 'yes'
                 }
-                axios.post("/get-customer", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.customers = r.map((item, index) => {
-                            item.display_name = `${item.name} - ${item.code}`
-                            return item;
-                        });
-                    })
+                axios.post("/get-customer", filter).then(res => {
+                    let r = res.data;
+                    this.customers = r.map((item, index) => {
+                        item.display_name = `${item.name} - ${item.code}`
+                        return item;
+                    });
+                })
             },
             async onSearchCustomer(val, loading) {
                 if (val.length > 2) {
                     loading(true)
                     await axios.post("/get-customer", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data;
-                            this.customers = r.map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                        name: val
+                    }).then(res => {
+                        let r = res.data;
+                        this.customers = r.map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
                     await this.getCustomer();
@@ -213,30 +211,28 @@
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-customer-payments", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.payments = r
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        this.showReport = null
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-customer-payments", filter).then(res => {
+                    let r = res.data;
+                    this.payments = r
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.onProgress = false
+                    this.showReport = null
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {

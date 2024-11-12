@@ -239,90 +239,87 @@
             async getStatements() {
                 this.showReport = false;
                 await axios.post('/get-balance-sheet', {
-                        date: this.date
-                    })
-                    .then(async res => {
-                        if (res.data.net_profit) {
-                            if (res.data.net_profit >= 0) {
-                                this.net_profit = res.data.net_profit;
-                                this.loss = 0.00;
-                            } else {
-                                this.loss = Math.abs(res.data.net_profit);
-                                this.net_profit = 0.00;
-                            }
-                        } else {
-                            this.net_profit = 0.00;
+                    date: this.date
+                }).then(async res => {
+                    if (res.data.net_profit) {
+                        if (res.data.net_profit >= 0) {
+                            this.net_profit = res.data.net_profit;
                             this.loss = 0.00;
-                        }
-
-                        this.cash_balance = res.data.cash_balance ?? 0;
-                        this.bank_accounts = res.data.bank_accounts;
-                        this.customer_due = res.data.customer_dues ?? 0;
-                        this.bad_debt = res.data.bad_debts ?? 0;
-                        this.supplier_prev_due = res.data.supplier_prev_due ?? 0;
-                        this.customer_prev_due = res.data.customer_prev_due ?? 0;
-                        this.invest_accounts = res.data.invest_accounts;
-                        this.loan_accounts = res.data.loan_accounts;
-                        this.supplier_due = res.data.supplier_dues ?? 0;
-                        this.bank_balance = this.bank_accounts.reduce((prev, curr) => {
-                            return prev + parseFloat(curr.balance);
-                        }, 0).toFixed(2);
-
-                        this.invest_balance = this.invest_accounts.reduce((prev, curr) => {
-                            return prev + parseFloat(curr.balance);
-                        }, 0).toFixed(2);
-
-                        this.loan_balance = this.loan_accounts.reduce((prev, curr) => {
-                            return prev + parseFloat(curr.balance);
-                        }, 0).toFixed(2);
-
-
-                        let totalAsset = parseFloat(this.cash_balance) +
-                            parseFloat(this.bank_balance) +
-                            parseFloat(this.customer_due) +
-                            parseFloat(this.bad_debt) +
-                            parseFloat(this.supplier_prev_due) +
-                            parseFloat(this.loss);
-
-                        let totalLiability = parseFloat(this.invest_balance) +
-                            parseFloat(this.loan_balance) +
-                            parseFloat(this.net_profit) +
-                            parseFloat(this.customer_prev_due) +
-                            parseFloat(this.supplier_due);
-
-                        if (totalAsset > totalLiability) {
-                            this.mis_ad_right = totalAsset - totalLiability;
-                            this.mis_ad_left = 0.00;
-
-                        } else if (totalAsset < totalLiability) {
-                            this.mis_ad_left = totalLiability - totalAsset;
-                            this.mis_ad_right = 0.00;
                         } else {
-                            this.mis_ad_left = 0.00;
-                            this.mis_ad_right = 0.00;
+                            this.loss = Math.abs(res.data.net_profit);
+                            this.net_profit = 0.00;
                         }
+                    } else {
+                        this.net_profit = 0.00;
+                        this.loss = 0.00;
+                    }
 
-                        this.totalAsset = totalAsset + this.mis_ad_left;
-                        this.totalLiability = totalLiability + this.mis_ad_right;
+                    this.cash_balance = res.data.cash_balance ?? 0;
+                    this.bank_accounts = res.data.bank_accounts;
+                    this.customer_due = res.data.customer_dues ?? 0;
+                    this.bad_debt = res.data.bad_debts ?? 0;
+                    this.supplier_prev_due = res.data.supplier_prev_due ?? 0;
+                    this.customer_prev_due = res.data.customer_prev_due ?? 0;
+                    this.invest_accounts = res.data.invest_accounts;
+                    this.loan_accounts = res.data.loan_accounts;
+                    this.supplier_due = res.data.supplier_dues ?? 0;
+                    this.bank_balance = this.bank_accounts.reduce((prev, curr) => {
+                        return prev + parseFloat(curr.balance);
+                    }, 0).toFixed(2);
 
-                        this.showReport = true;
-                    })
-                    .catch(err => {
-                        this.showReport = null;
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                    this.invest_balance = this.invest_accounts.reduce((prev, curr) => {
+                        return prev + parseFloat(curr.balance);
+                    }, 0).toFixed(2);
+
+                    this.loan_balance = this.loan_accounts.reduce((prev, curr) => {
+                        return prev + parseFloat(curr.balance);
+                    }, 0).toFixed(2);
+
+                    let totalAsset = parseFloat(this.cash_balance) +
+                        parseFloat(this.bank_balance) +
+                        parseFloat(this.customer_due) +
+                        parseFloat(this.bad_debt) +
+                        parseFloat(this.supplier_prev_due) +
+                        parseFloat(this.loss);
+
+                    let totalLiability = parseFloat(this.invest_balance) +
+                        parseFloat(this.loan_balance) +
+                        parseFloat(this.net_profit) +
+                        parseFloat(this.customer_prev_due) +
+                        parseFloat(this.supplier_due);
+
+                    if (totalAsset > totalLiability) {
+                        this.mis_ad_right = totalAsset - totalLiability;
+                        this.mis_ad_left = 0.00;
+
+                    } else if (totalAsset < totalLiability) {
+                        this.mis_ad_left = totalLiability - totalAsset;
+                        this.mis_ad_right = 0.00;
+                    } else {
+                        this.mis_ad_left = 0.00;
+                        this.mis_ad_right = 0.00;
+                    }
+
+                    this.totalAsset = totalAsset + this.mis_ad_left;
+                    this.totalLiability = totalLiability + this.mis_ad_right;
+
+                    this.showReport = true;
+                }).catch(err => {
+                    this.showReport = null;
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    });
+                        toastr.error(r.message);
+                    }
+                });
             },
 
             async print() {

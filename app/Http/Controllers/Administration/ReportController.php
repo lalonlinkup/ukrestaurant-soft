@@ -171,10 +171,7 @@ class ReportController extends Controller
             $invest_accounts = InvestmentAccount::investmentTransactionSummary(null, $date);
 
             //customer prev due adjust
-            $customer_prev_due = DB::select("
-            SELECT ifnull(sum(previous_due), 0) as amount
-            from customers
-            ")[0]->amount;
+            $customer_prev_due = DB::select("SELECT IFNULL(sum(previous_due), 0) AS amount FROM customers")[0]->amount;
 
             //customer dues
             $customer_dues = Customer::customerDue(" and c.status = 'a'", $date);
@@ -200,7 +197,6 @@ class ReportController extends Controller
             $supplier_dues = array_reduce($supplier_dues, function ($prev, $curr) {
                 return $prev + $curr->due;
             }, 0);
-
 
             $other_income_expense = DB::select("
                 select 
@@ -266,8 +262,6 @@ class ReportController extends Controller
                 $other_income_expense->loan_interest +
                 $other_income_expense->purchase_vat
             );
-
-
 
             $statements = [
                 'cash_balance'          => $cash_balance,

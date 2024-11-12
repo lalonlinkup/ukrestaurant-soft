@@ -1,6 +1,6 @@
 @extends('master')
-@section('title', 'Specialtie Entry')
-@section('breadcrumb_title', 'Specialtie Entry')
+@section('title', 'Speciality Entry')
+@section('breadcrumb_title', 'Speciality Entry')
 @push('style')
 <style>
     .charCount {
@@ -55,7 +55,7 @@
             <form @submit.prevent="saveSpecialtie">
                 <div class="col-md-9 slider">
                     <fieldset class="scheduler-border bg-of-skyblue" style="height: 155px;">
-                        <legend class="scheduler-border">Specialtie Entry Form</legend>
+                        <legend class="scheduler-border">Speciality Entry Form</legend>
                         <div class="control-group">
                             <div class="col-md-2 sliderImage">
                                 <div class="form-group ImageBackground clearfix">

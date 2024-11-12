@@ -37,21 +37,21 @@ $module = session('module');
         <b class="arrow"></b>
     </li>
 
-    <li class="">
+    <!-- <li class="">
         <a href="{{ url('module/BookingModule') }}">
             <i class="menu-icon bi bi-bookmark-plus"></i>
             <span class="menu-text"> Booking Module </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
 
-    <li class="">
+    <!-- <li class="">
         <a href="{{ url('module/ServiceModule') }}">
             <i class="menu-icon bi bi-person-workspace"></i>
             <span class="menu-text"> Service Module </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
 
     <li class="">
         <a href="{{ url('module/InventoryModule') }}">
@@ -108,6 +108,13 @@ $module = session('module');
         <a href="{{ url('module/WebsiteModule') }}">
             <i class="menu-icon bi bi-globe"></i>
             <span class="menu-text"> Website Module </span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    <li class="">
+        <a href="{{ url('logout') }}">
+            <i class="menu-icon fa fa-power-off"></i>
+            <span class="menu-text"> Log Out </span>
         </a>
         <b class="arrow"></b>
     </li>
@@ -281,14 +288,14 @@ checkAccess('damageList'))
     </li>
     @endif
 
-    @if (checkAccess('reference'))
+    <!-- @if (checkAccess('reference'))
     <li class="{{ Request::is('reference') ? 'active' : '' }}">
         <a href="/reference">
             <i class="menu-icon bi bi-people"></i>
             <span class="menu-text"> Reference Entry </span>
         </a>
     </li>
-    @endif
+    @endif -->
 
     @if (checkAccess('user'))
     <li class="{{ Request::is('user') || Route::is('user.userAccess') ? 'active' : '' }}">
@@ -353,7 +360,7 @@ checkAccess('gallery'))
     <li class="{{ Request::is('specialties.create') ? 'active' : '' }}">
         <a href="{{ route('specialties.create') }}">
             <i class="menu-icon fa fa-star"></i>
-            <span class="menu-text"> Specialties Entry</span>
+            <span class="menu-text"> Speciality Entry</span>
         </a>
         <b class="arrow"></b>
     </li>
@@ -395,7 +402,7 @@ checkAccess('customerPaymentReport') ||
 checkAccess('customerDue') ||
 checkAccess('bookingRecord'))
 <ul class="nav nav-list">
-    <li class="active">
+    <!-- <li class="active">
         <a href="/module/dashboard">
             <i class="menu-icon fa fa-tachometer"></i>
             <span class="menu-text"> Dashboard </span>
@@ -407,16 +414,16 @@ checkAccess('bookingRecord'))
         <a href="/module/BookingModule" class="module_title">
             <span> Booking Module </span>
         </a>
-    </li>
+    </li> -->
 
     @if (checkAccess('booking'))
-    <li class="{{ Route::is('booking.create') ? 'active' : '' }}">
+    <!-- <li class="{{ Route::is('booking.create') ? 'active' : '' }}">
         <a href="/booking">
             <i class="menu-icon bi bi-bookmarks"></i>
             <span class="menu-text"> Booking Entry </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     <!-- @if (checkAccess('checkin'))
@@ -430,63 +437,63 @@ checkAccess('bookingRecord'))
     @endif -->
 
     @if (checkAccess('checkout'))
-    <li class="{{ Request::is('checkout') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('checkout') ? 'active' : '' }}">
         <a href="/checkout">
             <i class="menu-icon bi bi-box-arrow-right"></i>
             <span class="menu-text"> Checkout </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     @if (checkAccess('checkinRecord'))
-    <li class="{{ Request::is('checkin-record') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('checkin-record') ? 'active' : '' }}">
         <a href="/checkin-record">
             <i class="menu-icon fa fa-list"></i>
             <span class="menu-text"> Checkin Record </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     @if (checkAccess('bookingRecord'))
-    <li class="{{ Request::is('booking-record') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('booking-record') ? 'active' : '' }}">
         <a href="/booking-record">
             <i class="menu-icon fa fa-list"></i>
             <span class="menu-text"> Booking Record </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     @if (checkAccess('billingRecord'))
-    <li class="{{ Request::is('billing-record') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('billing-record') ? 'active' : '' }}">
         <a href="/billing-record">
             <i class="menu-icon fa fa-list"></i>
             <span class="menu-text"> Billing Record </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     @if (checkAccess('checkinList'))
-    <li class="{{ Request::is('checkin-list') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('checkin-list') ? 'active' : '' }}">
         <a href="/checkin-list">
             <i class="menu-icon fa fa-list"></i>
             <span class="menu-text"> Checkin List </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     @if (checkAccess('billingInvoice'))
-    <li class="{{ Request::is('billing-invoice') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('billing-invoice') ? 'active' : '' }}">
         <a href="/billing-invoice">
             <i class="menu-icon fa fa-file-text"></i>
             <span class="menu-text"> Billing Invoice </span>
         </a>
         <b class="arrow"></b>
-    </li>
+    </li> -->
     @endif
 
     <!-- @if (
@@ -1387,15 +1394,6 @@ checkAccess('salaryPaymentReport'))
         <b class="arrow"></b>
     </li>
     @endif
-    @if (checkAccess('pendingOrder'))
-    <li class="{{ Request::is('pendingOrder') ? 'active' : '' }}">
-        <a href="/pendingOrder">
-            <i class="menu-icon bi bi-card-checklist"></i>
-            <span class="menu-text">Pending Order</span>
-        </a>
-        <b class="arrow"></b>
-    </li>
-    @endif
     @if (checkAccess('orderList'))
     <li class="{{ Request::is('orderList') ? 'active' : '' }}">
         <a href="/orderList">
@@ -1685,7 +1683,7 @@ checkAccess('salaryPaymentReport'))
 @endif
 @elseif($module == 'ServiceModule')
 @if (checkAccess('serviceHead') || checkAccess('service') || checkAccess('serviceList'))
-<ul class="nav nav-list">
+<!-- <ul class="nav nav-list">
     <li class="active">
         <a href="/module/dashboard">
             <i class="menu-icon fa fa-tachometer"></i>
@@ -1726,6 +1724,6 @@ checkAccess('salaryPaymentReport'))
         <b class="arrow"></b>
     </li>
     @endif
-</ul>
+</ul> -->
 @endif
 @endif

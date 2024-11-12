@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-md-2 col-xs-12">
                         <div class="form-group">
-                            <v-select :options="accounts" v-model="selectedAccount" label="display_name" @input="onChangeAccount"></v-select>
+                            <v-select :options="accounts" v-model="selectedAccount" label="display_name" @input="onChangeAccount" placeholder="Select Account"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12 no-padding">
@@ -177,27 +177,25 @@
             getTransactions() {
                 this.onProgress = true;
                 this.showReport = false;
-                axios.post('/get-bank-ledger', this.filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.transactions = r;
-                        this.onProgress = false;
-                        this.showReport = true;
-                    })
-                    .catch(err => {
-                        this.onProgress = false;
-                        this.showReport = null;
-                        var r = JSON.parse(err.request.response);
-                        if (r.errors) {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post('/get-bank-ledger', this.filter).then(res => {
+                    let r = res.data;
+                    this.transactions = r;
+                    this.onProgress = false;
+                    this.showReport = true;
+                }).catch(err => {
+                    this.onProgress = false;
+                    this.showReport = null;
+                    var r = JSON.parse(err.request.response);
+                    if (r.errors) {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            toastr.error(r.message);
-                        }
-                    })
+                        })
+                    } else {
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {
@@ -206,27 +204,27 @@
                     dateText = `Statement from <strong>${this.filter.dateFrom}</strong>  to <strong>${this.filter.dateTo}</strong>`;
                 }
                 let printContent = `
-                        <div class="container">
-                            <h4 style="text-align:center">Bank Transaction Report</h4>
-                            <div class="row">
-                                <div class="col-xs-6 col-xs-offset-6 text-right">
-                                    ${dateText}
-                                </div>
+                    <div class="container">
+                        <h4 style="text-align:center">Bank Transaction Report</h4>
+                        <div class="row">
+                            <div class="col-xs-6 col-xs-offset-6 text-right">
+                                ${dateText}
                             </div>
                         </div>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    ${document.querySelector('#printContent').innerHTML}
-                                </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                ${document.querySelector('#printContent').innerHTML}
                             </div>
                         </div>
-                    `;
+                    </div>
+                `;
 
                 let printWindow = window.open('', '', `width=${screen.width}, height=${screen.height}`);
                 printWindow.document.write(`
-                        @include('administration/reports/reportHeader');
-                    `);
+                    @include('administration/reports/reportHeader');
+                `);
 
                 printWindow.document.body.innerHTML += printContent;
                 printWindow.focus();

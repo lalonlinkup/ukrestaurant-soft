@@ -30,8 +30,8 @@
                             <label for="" style="width:150px;">Trans. Type</label>
                             <select class="form-select no-padding" style="width: 100%;" v-model="filter.type">
                                 <option value="">All</option>
-                                <option value="received">Received</option>
-                                <option value="paid">Payment</option>
+                                <option value="In Cash">Received</option>
+                                <option value="Out Cash">Payment</option>
                             </select>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-md-2 col-xs-12">
                         <div class="form-group">
-                            <v-select :options="accounts" v-model="selectedAccount" label="display_name" @input="onChangeAccount"></v-select>
+                            <v-select :options="accounts" v-model="selectedAccount" label="display_name" @input="onChangeAccount" placeholder="Select Account"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12">
@@ -67,7 +67,7 @@
     </div>
 
     <div class="row" style="display:none;" v-bind:style="{display: transactions.length > 0 && showReport ? '' : 'none'}">
-        <div class="col-md-12" style="margin-top:15px;margin-bottom:15px;">
+        <div class="col-md-12" style="margin-top:5px;margin-bottom:5px;">
             <a href="" @click.prevent="print"><i class="fa fa-print"></i> Print</a>
         </div>
         <div class="col-md-12">
@@ -159,7 +159,7 @@
         methods: {
             getAccounts() {
                 axios.get('/get-accounts').then(res => {
-                    this.accounts = res.data.data.map(item => {
+                    this.accounts = res.data.map(item => {
                         item.display_name = `${item.code} - ${item.name}`;
                         return item;
                     });
@@ -177,27 +177,25 @@
             getTransactions() {
                 this.onProgress = true;
                 this.showReport = false;
-                axios.post('/get-cash-transactions', this.filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.transactions = r.data;
-                        this.showReport = true;
-                        this.onProgress = false;
-                    })
-                    .catch(err => {
-                        this.onProgress = false;
-                        this.showReport = null;
-                        var r = JSON.parse(err.request.response);
-                        if (r.errors) {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post('/get-cash-transactions', this.filter).then(res => {
+                    let r = res.data;
+                    this.transactions = r;                    
+                    this.showReport = true;
+                    this.onProgress = false;
+                }).catch(err => {
+                    this.onProgress = false;
+                    this.showReport = null;
+                    var r = JSON.parse(err.request.response);
+                    if (r.errors) {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            toastr.error(r.message);
-                        }
-                    })
+                        })
+                    } else {
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {

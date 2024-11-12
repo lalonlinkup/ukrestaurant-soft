@@ -37,9 +37,25 @@ class GraphController extends Controller
             // total table
             $totalTable = DB::select("
                     select count(*) as total_table
-                    from tables rm
-                    where rm.status = 'a'
+                    from tables t
+                    where t.status = 'a'
                 ")[0]->total_table;
+
+            // total booked table
+            $totalBookedTable = DB::select("
+                    select count(*) as total_booked_table
+                    from tables t
+                    where t.status = 'a'
+                    and t.id in (select ot.table_id from orders ot where ot.status = 'p')
+                ")[0]->total_booked_table;
+
+            // total available table
+            $totalAvailableTable = DB::select("
+                    select count(*) as total_available_table
+                    from tables t
+                    where t.status = 'a'
+                    and t.id not in (select ot.table_id from orders ot where ot.status = 'p')
+                ")[0]->total_available_table;
 
             // checkin list
             $checkin_date = date('Y-m-d') . ' 12:00:00';
@@ -75,15 +91,15 @@ class GraphController extends Controller
                 return $item->available == 'true';
             })));
 
-            $checkout = DB::select("select count(*) as checkout from booking_details bkd where bkd.status = 'a' and DATE_FORMAT(bkd.checkout_date, '%Y-%m-%d') = ?", [$today])[0]->checkout;
+            $todayOrder = DB::select("select count(*) as today_order from orders o where o.status != 'd' and DATE_FORMAT(o.date, '%Y-%m-%d') = ?", [$today])[0]->today_order;
+
             $totalEmployee = DB::select("select count(*) as employee from employees bkd where bkd.status != 'd'", [$today])[0]->employee;
 
-
-             // Bank balance
-             $bankTransactions = BankAccount::bankTransactionSummary();
-             $bankBalance = array_sum(array_map(function ($bank) {
-                 return $bank->balance;
-             }, $bankTransactions));
+            // Bank balance
+            $bankTransactions = BankAccount::bankTransactionSummary();
+            $bankBalance = array_sum(array_map(function ($bank) {
+                return $bank->balance;
+            }, $bankTransactions));
 
             // Invest balance
             $investBalance = 0;
@@ -105,16 +121,17 @@ class GraphController extends Controller
             }, $customerDueResult));
 
             //expense
-            $expense = DB::select("select ifnull(sum(ct.out_amount), 0) as expense
-                        from cash_transactions ct
-                        where ct.status = 'a'")[0]->expense;
+            $expense = DB::select("SELECT 
+                ifnull(sum(ct.out_amount), 0) as expense 
+            FROM cash_transactions ct 
+            WHERE ct.status = 'a'")[0]->expense;
 
             // Today's Cash Collection
             $todaysCollection = DB::select("
                     select
                     ifnull((
-                        select sum(ifnull(bkm.advance, 0)) 
-                        from booking_masters bkm
+                        select sum(ifnull(bkm.paid, 0)) 
+                        from orders bkm
                         where bkm.status = 'a'
                         and bkm.date = '" . date('Y-m-d') . "'
                     ), 0) +
@@ -137,8 +154,8 @@ class GraphController extends Controller
             $monthlyCollection = DB::select("
                     select
                     ifnull((
-                        select sum(ifnull(bkm.advance, 0)) 
-                        from booking_masters bkm
+                        select sum(ifnull(bkm.paid, 0)) 
+                        from orders bkm
                         where bkm.status = 'a'
                         and DATE_FORMAT(bkm.date, '%m') = '" . $month . "'
                     ), 0) +
@@ -161,19 +178,21 @@ class GraphController extends Controller
             // Cash Balance
             $cashBalance =  Account::cashTransactionSummary()[0]->cash_balance;
             $responseData = [
-                'total_table'         => $totalTable,
-                'checkIn'            => $checkIn,
-                'vacant'             => $vacant,
-                'checkout'           => $checkout,
-                'invest_balance'     => $investBalance,
-                'loan_balance'       => $loanBalance,
-                'today_collection'   => $todaysCollection,
-                'monthly_collection' => $monthlyCollection,
-                'cash_balance'      => $cashBalance,
-                'bank_balance'   => $bankBalance,
-                'due_amount'     => $customerDue,
-                'total_employee' => $totalEmployee,
-                'expense'        => $expense,
+                'total_table'           => $totalTable,
+                'total_booked_table'    => $totalBookedTable,
+                'total_available_table' => $totalAvailableTable,
+                'checkIn'               => $checkIn,
+                'vacant'                => $vacant,
+                'today_order'           => $todayOrder,
+                'invest_balance'        => $investBalance,
+                'loan_balance'          => $loanBalance,
+                'today_collection'      => $todaysCollection,
+                'monthly_collection'    => $monthlyCollection,
+                'cash_balance'          => $cashBalance,
+                'bank_balance'          => $bankBalance,
+                'due_amount'            => $customerDue,
+                'total_employee'        => $totalEmployee,
+                'expense'               => $expense,
                 // 'this_month_profit' => $net_profit,
             ];
 
@@ -197,8 +216,8 @@ class GraphController extends Controller
                 $date = $year . '-' . $month . '-' . sprintf("%02d", $i);
                 $query = DB::select("select sum(receivedAmount) as totalReceived from (select
                                         bkm.date as date,
-                                        ifnull(sum(bkm.advance), 0) as receivedAmount
-                                        from booking_masters bkm 
+                                        ifnull(sum(bkm.paid), 0) as receivedAmount
+                                        from orders bkm 
                                         where bkm.status = 'a'
                                         and bkm.date = '$date'
                                         UNION
@@ -237,8 +256,8 @@ class GraphController extends Controller
                 $yearMonth = $year . sprintf("%02d", $i);
                 $query = DB::select("select sum(receivedAmount) as totalReceived from (select
                                         bkm.date as date,
-                                        ifnull(sum(bkm.advance), 0) as receivedAmount
-                                        from booking_masters bkm 
+                                        ifnull(sum(bkm.paid), 0) as receivedAmount
+                                        from orders bkm 
                                         where bkm.status = 'a'
                                         and extract(year_month from bkm.date) = '$yearMonth'
                                         UNION
@@ -259,14 +278,6 @@ class GraphController extends Controller
                                         and extract(year_month from ct.date) = '$yearMonth') as tbl
                                         where date is not null
                                         group by extract(year_month from date)");
-                // $query = DB::select("select
-                //             (select ifnull(sum(crp.amount), 0) from customer_payments crp 
-                //             where crp.booking_id = bkm.id and crp.status = 'a') as cusPayment,
-                //             (select ifnull(sum(bkm.advance), 0) + cusPayment) as receivedAmount
-                //             from booking_masters bkm
-                //             where bkm.status = 'a'
-                //             and extract(year_month from bkm.date) = ?
-                //             group by extract(year_month from bkm.date)", [$yearMonth]);
 
                 $amount = 0.00;
                 $monthName = date("M", mktime(0, 0, 0, $i, 10));
@@ -305,7 +316,7 @@ class GraphController extends Controller
                     select 
                     ifnull(c.name, 'Cash Customer') as customer_name,
                     ifnull(sum(bkm.total), 0) as amount
-                    from booking_masters bkm 
+                    from orders bkm 
                     left join customers c on c.id = bkm.customer_id
                     where bkm.status = 'a'
                     $customerClauses
@@ -315,24 +326,23 @@ class GraphController extends Controller
                 ");
 
             // Top Products
-            $topProducts = DB::select("
-                        select 
-                            r.name as table_name,
-                            ifnull(count(bkd.id), 0) as totaltable
-                        from booking_details bkd
-                        left join booking_masters bkm on bkm.id = bkd.booking_id
-                        join tables r on r.id = bkd.table_id
-                        where bkd.status = 'a'
-                        $productClauses
-                        group by bkd.table_id
-                        order by totaltable desc
-                        limit 5
-                    ");
-
+            $topMenus = DB::select("
+                select 
+                    m.name as menu_name,
+                    ifnull(count(bkd.id), 0) as totaltable
+                from order_details bkd
+                left join orders bkm on bkm.id = bkd.order_id
+                join menus m on m.id = bkd.menu_id
+                where bkd.status = 'a'
+                $productClauses
+                group by bkd.menu_id
+                order by totaltable desc
+                limit 5
+            ");
 
             $responseData = [
-                'top_customers'     => $topCustomers,
-                'top_products'      => $topProducts
+                'top_customers' => $topCustomers,
+                'top_menus'  => $topMenus
             ];
             return response()->json($responseData, 200);
         } catch (\Throwable $th) {

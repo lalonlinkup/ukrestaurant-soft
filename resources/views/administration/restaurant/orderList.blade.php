@@ -40,31 +40,31 @@
                     </div>
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'customer'" style="display: none;" :style="{display: filter.searchType == 'customer' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="customers" v-model="selectedCustomer" label="display_name" @search="onSearchcustomer"></v-select>
+                            <v-select :options="customers" v-model="selectedCustomer" label="display_name" @search="onSearchcustomer" placeholder="Select Customer"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'table'" style="display: none;" :style="{display: filter.searchType == 'table' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="tables" v-model="selectedTable" label="name"></v-select>
+                            <v-select :options="tables" v-model="selectedTable" label="name" placeholder="Select Table"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'user'" style="display: none;" :style="{display: filter.searchType == 'user' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="users" v-model="selectedUser" label="name"></v-select>
+                            <v-select :options="users" v-model="selectedUser" label="name" placeholder="Select User"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'category'" style="display: none;" :style="{display: filter.searchType == 'category' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="categories" v-model="selectedCategory" label="name"></v-select>
+                            <v-select :options="categories" v-model="selectedCategory" label="name" placeholder="Select Category"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'quantity'" style="display: none;" :style="{display: filter.searchType == 'quantity' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="menus" v-model="selectedMenu" label="display_name"></v-select>
+                            <v-select :options="menus" v-model="selectedMenu" label="display_name" placeholder="Select Menu"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12 no-padding" v-if="filter.searchType != 'quantity' && filter.searchType != 'category'" style="display: none;" :style="{display: filter.searchType != 'quantity' && filter.searchType != 'category' ? '' : 'none'}">
@@ -198,7 +198,7 @@
                             <td style="text-align:right;">@{{ order.paid | decimal }}</td>
                             <td style="text-align:right;">@{{ order.due | decimal }}</td>
                             <td style="text-align:left;">@{{ order.note }}</td>
-                            <td style="text-align:left;">@{{ order.order_type }}</td>
+                            <td style="text-align:center;">@{{ order.order_type }}</td>
                             <td style="text-align:center;">
                                 <span v-if="order.status == 'p'" style="color: orange">Draft</span>
                                 <span v-else style="color: green">Billed</span>
@@ -484,7 +484,7 @@
                 if (this.selectedCategory != null && this.selectedCategory.id != '' && this.filter.searchType == 'category') {
                     categoryText = `<strong>Category: </strong> ${this.selectedCategory.name}`;
                 }
-                
+
                 let reportContent = `
 					<div class="container">
                         <div class="row">

@@ -33,7 +33,7 @@ class OrderRequest extends FormRequest
             'order.bankPaid'  => 'required',
             'order.due'       => 'required',
             'carts'           => 'required',
-            'customer.type'   => 'required'
+            // 'customer.type'   => 'required'
         ];
 
         if ($this->customer['type'] == 'N' && (empty($this->customer['name']) || empty($this->customer['phone']))) {
@@ -58,7 +58,7 @@ class OrderRequest extends FormRequest
             'order.due.required'             => 'Order due required',
             'order.bank_account_id.required' => 'Select Bank Account',
             'carts.required'                 => 'Cart is empty',
-            'customer.type.required'         => 'Select customer',
+            // 'customer.type.required'         => 'Select customer',
             'customer.name.required'         => 'Guest name is empty',
             'customer.phone.required'        => 'Guest phone is empty',
         ];

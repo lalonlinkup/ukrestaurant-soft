@@ -23,11 +23,11 @@ class Account extends Model
             select
             /* Received */
             (
-                select ifnull(sum(bkm.advance), 0) from booking_masters bkm
-                where bkm.status = 'a'
-                and bkm.advance > 0
-                " . ($date == null ? "" : " and bkm.date < '$date'") . "
-            ) as received_booking,
+                select ifnull(sum(o.paid), 0) from orders o
+                where o.status = 'a'
+                and o.paid > 0
+                " . ($date == null ? "" : " and o.date < '$date'") . "
+            ) as received_order,
             (
                 select ifnull(sum(cp.amount), 0) from customer_payments cp
                 where cp.type = 'CR'
@@ -103,14 +103,13 @@ class Account extends Model
                 " . ($date == null ? "" : " and ep.date < '$date'") . "
             ) as employee_payment,
             /* total */
-            (select received_booking + received_customer  + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received) as total_in,
+            (select received_order + received_customer  + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received) as total_in,
             (select paid_customer + paid_cash + bank_deposit + employee_payment + loan_payment + invest_payment) as total_out,
             (select total_in - total_out) as cash_balance
         ");
 
         return $transactionSummary;
     }
-
 
     public static function cashLedger($request)
     {
@@ -121,15 +120,15 @@ class Account extends Model
             $ledger = DB::select("
                 /* Cash In */
                 select 
-                    sm.id as id,
-                    sm.date as date,
-                    concat('Booking - ', sm.invoice, ' - ', ifnull(c.name, 'Cash Guest'), ' (', ifnull(c.code, ''), ')', ' - Bill: ', sm.total) as description,
-                    sm.advance as in_amount,
+                    o.id as id,
+                    o.date as date,
+                    concat('Orders - ', o.invoice, ' - ', ifnull(c.name, 'Cash Guest'), ' (', ifnull(c.code, ''), ')', ' - Bill: ', o.total) as description,
+                    o.paid as in_amount,
                     0.00 as out_amount
-                from booking_masters sm 
-                left join customers c on c.id = sm.customer_id
-                where sm.status = 'a'
-                and sm.date between '$request->dateFrom' and '$request->dateTo'
+                from orders o 
+                left join customers c on c.id = o.customer_id
+                where o.status = 'a'
+                and o.date between '$request->dateFrom' and '$request->dateTo'
                 
                 UNION
                 

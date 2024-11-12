@@ -32,14 +32,6 @@ class OrderController extends Controller
         return view('administration.restaurant.orderList');
     }
 
-    public function pending()
-    {
-        if (!checkAccess('pendingOrder')) {
-            return view('error.unauthorize');
-        }
-        return view('administration.restaurant.pendingOrder');
-    }
-
     public function create($id = 0)
     {
         if (!checkAccess('order')) {

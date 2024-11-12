@@ -160,16 +160,15 @@
                 if (val.length > 2) {
                     loading(true)
                     await axios.post("/get-customer", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data.data;
-                            this.customers = r.customers.map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                        name: val
+                    }).then(res => {
+                        let r = res.data.data;
+                        this.customers = r.customers.map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
                     await this.getCustomer();
@@ -194,31 +193,29 @@
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-customer-due", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.dues = r.filter(item => item.dueAmount != 0);
-                        this.filterDues = this.dues
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.showReport = null
-                        this.onProgress = false
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-customer-due", filter).then(res => {
+                    let r = res.data;
+                    this.dues = r.filter(item => item.dueAmount != 0);
+                    this.filterDues = this.dues
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.showReport = null
+                    this.onProgress = false
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {

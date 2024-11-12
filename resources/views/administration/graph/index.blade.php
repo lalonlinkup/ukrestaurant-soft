@@ -100,7 +100,7 @@
             <div class="col-md-2  col-xs-6" style="margin-bottom: 5px;">
                 <div class="widgets" style="border-top: 5px solid #1c8dff;">
                     <div class="widget-icon" style="background-color: #1c8dff;text-align:center;">
-                        <i class="bi bi-shop fa-2x"></i>
+                        <i class="bi bi-table fa-2x"></i>
                     </div>
 
                     <div class="widget-content">
@@ -116,32 +116,32 @@
                     </div>
 
                     <div class="widget-content">
-                        <div class="widget-text">Check In</div>
-                        <div class="widget-value">@{{ checkIn }}</div>
+                        <div class="widget-text">Booked</div>
+                        <div class="widget-value">@{{ totalBookedTable }}</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-2  col-xs-6" style="margin-bottom: 5px;">
                 <div class="widgets" style="border-top: 5px solid #008241;">
                     <div class="widget-icon" style="background-color: #008241;text-align:center;">
-                        <i class="bi bi-bank fa-2x"></i>
+                        <i class="bi bi-check fa-2x"></i>
                     </div>
 
                     <div class="widget-content">
-                        <div class="widget-text">Vacant</div>
-                        <div class="widget-value">@{{ vacant }}</div>
+                        <div class="widget-text">Available</div>
+                        <div class="widget-value">@{{ totalAvailableTable }}</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-2  col-xs-6" style="margin-bottom: 5px;">
                 <div class="widgets" style="border-top: 5px solid #ff8000;">
                     <div class="widget-icon" style="background-color: #ff8000;text-align:center;">
-                        <i class="bi bi-box-arrow-right fa-2x"></i>
+                        <i class="bi bi-card-checklist fa-2x"></i>
                     </div>
 
                     <div class="widget-content">
-                        <div class="widget-text">Check Out</div>
-                        <div class="widget-value">@{{ checkout }}</div>
+                        <div class="widget-text">Today Order</div>
+                        <div class="widget-value">@{{ todayOrder }}</div>
                     </div>
                 </div>
             </div>
@@ -244,7 +244,7 @@
             <div class="col-md-2  col-xs-6" style="margin-top: 5px;">
                 <div class="widgets" style="border-top: 5px solid #1c8dff;">
                     <div class="widget-icon" style="background-color: #1c8dff;text-align:center;">
-                        <i class="fa fa-money fa-2x"></i>                        
+                        <i class="fa fa-money fa-2x"></i>
                     </div>
 
                     <div class="widget-content">
@@ -348,8 +348,8 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <h3 class="text-center" style="margin: 0;">Top Table</h3>
-                <top-product-chart type="PieChart" :data="topProducts" :options="topProductsOptions" />
+                <h3 class="text-center" style="margin: 0;">Top Menus</h3>
+                <top-product-chart type="PieChart" :data="topMenus" :options="topMenusOptions" />
             </div>
             <div class="col-md-4 col-md-offset-2">
                 <table class="table custom-table-bordered" style="margin-top: 10px;">
@@ -412,10 +412,10 @@
                         subtitle: "This year's sales data",
                     }
                 },
-                topProducts: [
+                topMenus: [
                     ['Product', 'Quantity']
                 ],
-                topProductsOptions: {
+                topMenusOptions: {
                     chart: {
                         title: 'Top Sold Products',
                         subtitle: "Top sold products"
@@ -432,9 +432,10 @@
                 },
                 topCustomers: [],
                 totalTable: 0,
-                checkIn: 0,
+                totalBookedTable: 0,
+                totalAvailableTable: 0,
                 vacant: 0,
-                checkout: 0,
+                todayOrder: 0,
                 todayCollection: 0,
                 monthlyCollection: 0,
                 totalEmployee: 0,
@@ -468,21 +469,22 @@
             getOverallData() {
                 this.showData = false;
                 axios.get('/get-overall-data').then(res => {
-                    this.totalTable         = res.data.total_table;
-                    this.checkIn           = res.data.checkIn;
-                    this.vacant            = res.data.vacant;
-                    this.checkout          = res.data.checkout;
-                    this.totalEmployee     = res.data.total_employee;
-                    this.todayCollection   = res.data.today_collection;
-                    this.monthlyCollection = res.data.monthly_collection;
-                    this.cashBalance       = res.data.cash_balance;
-                    this.bankBalance       = res.data.bank_balance;
-                    this.dueAmount         = res.data.due_amount;
-                    this.currentDue        = res.data.current_due;
-                    this.investBalance     = res.data.invest_balance;
-                    this.loanBalance       = res.data.loan_balance;
-                    this.expense           = res.data.expense;
-                    this.monthlyProfit     = res.data.monthly_profit;
+                    this.totalTable          = res.data.total_table;
+                    this.totalBookedTable    = res.data.total_booked_table;
+                    this.totalAvailableTable = res.data.total_available_table;
+                    this.vacant              = res.data.vacant;
+                    this.todayOrder          = res.data.today_order;
+                    this.totalEmployee       = res.data.total_employee;
+                    this.todayCollection     = res.data.today_collection;
+                    this.monthlyCollection   = res.data.monthly_collection;
+                    this.cashBalance         = res.data.cash_balance;
+                    this.bankBalance         = res.data.bank_balance;
+                    this.dueAmount           = res.data.due_amount;
+                    this.currentDue          = res.data.current_due;
+                    this.investBalance       = res.data.invest_balance;
+                    this.loanBalance         = res.data.loan_balance;
+                    this.expense             = res.data.expense;
+                    this.monthlyProfit       = res.data.monthly_profit;
 
                     this.showData = true;
                 })
@@ -521,11 +523,11 @@
                 axios.post('/get-top-data', filter).then(res => {
                     this.topCustomers = res.data.top_customers;
 
-                    this.topProducts = [
+                    this.topMenus = [
                         ['Table', 'Total Booked']
                     ]
-                    res.data.top_products.forEach(p => {
-                        this.topProducts.push([p.table_name, parseFloat(p.totaltable)]);
+                    res.data.top_menus.forEach(p => {
+                        this.topMenus.push([p.menu_name, parseFloat(p.totaltable)]);
                     })
 
                     this.topData = true;

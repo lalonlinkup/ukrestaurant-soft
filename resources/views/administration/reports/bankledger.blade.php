@@ -28,7 +28,7 @@
                     <div class="col-md-4 col-xs-12 no-padding-left">
                         <div class="form-group" style="display: flex;align-items:center;">
                             <label for="" style="width:150px;">Bank Name</label>
-                            <v-select :options="banks" style="width: 100%;" v-model="selectedBank" label="display_name"></v-select>
+                            <v-select :options="banks" style="width: 100%;" v-model="selectedBank" label="display_name" placeholder="Select Bank Account"></v-select>
                         </div>
                     </div>
                     <div class="row col-md-4">

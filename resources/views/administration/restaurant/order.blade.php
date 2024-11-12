@@ -931,6 +931,9 @@
                 const cashPaid = this.order.cashPaid ? parseFloat(this.order.cashPaid) : 0;
                 const bankPaid = this.order.bankPaid ? parseFloat(this.order.bankPaid) : 0;
                 this.order.paid = (cashPaid + bankPaid).toFixed(this.fixed);
+
+                console.log(this.order.paid);
+
                 this.calculateTotal();
             },
             menuTotal(menu) {
@@ -1110,6 +1113,9 @@
 
                     if (returnAmount <= 0) {
                         this.order.returnAmount = parseFloat(String(returnAmount).replace('-', '')).toFixed(2);
+                        this.order.due = parseFloat(0).toFixed(2);
+                    } else {
+                        this.order.due = parseFloat(this.order.total) - parseFloat(this.order.paid);
                     }
                 } else {
                     if (this.customerType == 'cash') {
@@ -1149,7 +1155,7 @@
                 toastr.error("Cart is empty");
             },
             getOrder() {
-                this.btnText = 'Update';
+                this.btnText = 'Final Bill';
                 axios.post("/get-order", {
                     id: this.order.id
                 }).then(res => {

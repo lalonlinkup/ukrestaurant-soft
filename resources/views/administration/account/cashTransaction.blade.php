@@ -248,10 +248,9 @@
                     dateTo: this.transaction.date
                 }
 
-                axios.post('/get-cash-transactions', data)
-                    .then(res => {
-                        this.transactions = res.data;
-                    })
+                axios.post('/get-cash-transactions', data).then(res => {
+                    this.transactions = res.data;
+                })
             },
 
             addTransaction() {
@@ -269,28 +268,26 @@
                 }
 
                 this.onProgress = true;
-                axios.post(url, this.transaction)
-                    .then(res => {
-                        toastr.success(res.data.message);
-                        this.getTransactions();
-                        this.clearForm();
-                        this.transaction.code = res.data.code;
-                        this.btnText = "Save";
-                        this.onProgress = false;
-                    })
-                    .catch(err => {
-                        this.onProgress = false;
-                        var r = JSON.parse(err.request.response);
-                        if (r.errors) {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post(url, this.transaction).then(res => {
+                    toastr.success(res.data.message);
+                    this.getTransactions();
+                    this.clearForm();
+                    this.transaction.code = res.data.code;
+                    this.btnText = "Save";
+                    this.onProgress = false;
+                }).catch(err => {
+                    this.onProgress = false;
+                    var r = JSON.parse(err.request.response);
+                    if (r.errors) {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            toastr.error(r.message);
-                        }
-                    })
+                        })
+                    } else {
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             editTransaction(transaction) {
@@ -309,19 +306,17 @@
             deleteTransaction(transactionId) {
                 if (confirm("Are you sure !!")) {
                     axios.post('/delete-cash-transaction', {
-                            id: transactionId
-                        })
-                        .then(res => {
-                            toastr.success(res.data)
-                            this.getTransactions();
-                        })
-                        .catch(err => {
-                            var r = JSON.parse(err.request.response);
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
-                        })
+                        id: transactionId
+                    }).then(res => {
+                        toastr.success(res.data)
+                        this.getTransactions();
+                    }).catch(err => {
+                        var r = JSON.parse(err.request.response);
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
+                        }
+                        toastr.error(r.message);
+                    })
                 }
             },
 
@@ -357,25 +352,23 @@
                     this.url = '';
             },
             addData() {
-                axios.post(this.url, this.modalData)
-                    .then(res => {
-                        toastr.success(res.data.message);
-                        this.getAccounts();
-                        this.resetModal();
-                        $('#commonModal').modal('hide');
-                    })
-                    .catch(err => {
-                        var r = JSON.parse(err.request.response);
-                        if (r.errors) {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post(this.url, this.modalData).then(res => {
+                    toastr.success(res.data.message);
+                    this.getAccounts();
+                    this.resetModal();
+                    $('#commonModal').modal('hide');
+                }).catch(err => {
+                    var r = JSON.parse(err.request.response);
+                    if (r.errors) {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            toastr.error(r.message);
-                        }
-                    })
+                        })
+                    } else {
+                        toastr.error(r.message);
+                    }
+                })
             },
         }
     })

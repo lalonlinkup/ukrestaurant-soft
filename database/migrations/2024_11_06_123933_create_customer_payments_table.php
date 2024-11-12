@@ -18,7 +18,7 @@ class CreateCustomerPaymentsTable extends Migration
             $table->string('invoice', 20)->index();
             $table->date('date')->index();
             $table->unsignedBigInteger('customer_id')->index();
-            $table->unsignedBigInteger('booking_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->char('type', 5)->comment('CP = Payment, CR = Receive')->index();
             $table->string('method', 10);
             $table->unsignedBigInteger('bank_account_id')->nullable();
@@ -36,7 +36,7 @@ class CreateCustomerPaymentsTable extends Migration
             $table->ipAddress('last_update_ip');
 
             $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('booking_id')->references('id')->on('booking_masters');
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('bank_account_id')->references('id')->on('bank_accounts');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');

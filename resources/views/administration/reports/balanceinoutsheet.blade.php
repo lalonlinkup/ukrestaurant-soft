@@ -197,7 +197,7 @@
                     dateFrom: moment().format('YYYY-MM-DD'),
                     dateTo: moment().format('YYYY-MM-DD')
                 },
-                bookings: [],
+                orders: [],
                 purchases: [],
                 receivedFromCustomers: [],
                 paidToCustomers: [],
@@ -226,7 +226,7 @@
         },
         computed: {
             totalSales() {
-                return this.bookings.reduce((prev, curr) => {
+                return this.orders.reduce((prev, curr) => {
                     return prev + parseFloat(curr.paid)
                 }, 0).toFixed(this.fixed);
             },
@@ -348,34 +348,28 @@
             },
 
             async getSales() {
-                await axios.post('/get-booking', this.filter)
-                    .then(res => {
-                        this.bookings = res.data.map(item => {
-                            item.paid = parseFloat(item.advance)
-                            return item;
-                        });
-                    })
+                await axios.post('/get-order', this.filter).then(res => {
+                    this.orders = res.data;
+                })
             },
 
             async getPurchases() {
-                await axios.post('/get-purchase', this.filter)
-                    .then(res => {
-                        this.purchases = res.data;
+                await axios.post('/get-purchase', this.filter).then(res => {
+                    this.purchases = res.data;
+                })
+
+                await axios.post('/get-material-purchase', this.filter).then(res => {
+                    let purchases = res.data.map(purchase => {
+                        return {
+                            invoice: purchase.invoice,
+                            date: purchase.date,
+                            supplier_name: purchase.supplier_name,
+                            paid: purchase.paid
+                        }
                     })
 
-                await axios.post('/get-material-purchase', this.filter)
-                    .then(res => {
-                        let purchases = res.data.map(purchase => {
-                            return {
-                                invoice: purchase.invoice,
-                                date: purchase.date,
-                                supplier_name: purchase.supplier_name,
-                                paid: purchase.paid
-                            }
-                        })
-
-                        this.purchases = [...this.purchases, ...purchases];
-                    })
+                    this.purchases = [...this.purchases, ...purchases];
+                })
             },
 
             async getReceivedFromCustomers() {
@@ -384,10 +378,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'CR'
                 }
-                await axios.post('/get-customer-payments', filter)
-                    .then(res => {
-                        this.receivedFromCustomers = res.data.filter(p => p.method != 'bank');
-                    })
+                await axios.post('/get-customer-payments', filter).then(res => {
+                    this.receivedFromCustomers = res.data.filter(p => p.method != 'bank');
+                })
             },
 
             async getPaidToCustomers() {
@@ -396,10 +389,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'CP'
                 }
-                await axios.post('/get-customer-payments', filter)
-                    .then(res => {
-                        this.paidToCustomers = res.data.filter(p => p.method != 'bank');
-                    })
+                await axios.post('/get-customer-payments', filter).then(res => {
+                    this.paidToCustomers = res.data.filter(p => p.method != 'bank');
+                })
             },
 
             async getPaidToSuppliers() {
@@ -408,10 +400,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'CP'
                 }
-                await axios.post('/get-supplier-payments', filter)
-                    .then(res => {
-                        this.paidToSuppliers = res.data.filter(p => p.method != 'bank');
-                    })
+                await axios.post('/get-supplier-payments', filter).then(res => {
+                    this.paidToSuppliers = res.data.filter(p => p.method != 'bank');
+                })
             },
 
             async getReceivedFromSuppliers() {
@@ -420,10 +411,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'CR'
                 }
-                await axios.post('/get-supplier-payments', filter)
-                    .then(res => {
-                        this.receivedFromSuppliers = res.data.filter(p => p.method != 'bank');
-                    })
+                await axios.post('/get-supplier-payments', filter).then(res => {
+                    this.receivedFromSuppliers = res.data.filter(p => p.method != 'bank');
+                })
             },
 
             async getCashReceived() {
@@ -432,10 +422,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'In Cash'
                 }
-                await axios.post('/get-cash-transactions', filter)
-                    .then(res => {
-                        this.cashReceived = res.data;
-                    })
+                await axios.post('/get-cash-transactions', filter).then(res => {
+                    this.cashReceived = res.data;
+                })
             },
 
             async getCashPaid() {
@@ -444,10 +433,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'Out Cash'
                 }
-                await axios.post('/get-cash-transactions', filter)
-                    .then(res => {
-                        this.cashPaid = res.data;
-                    })
+                await axios.post('/get-cash-transactions', filter).then(res => {
+                    this.cashPaid = res.data;
+                })
             },
 
             async getBankDeposits() {
@@ -456,10 +444,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'deposit'
                 }
-                await axios.post('/get-bank-transactions', filter)
-                    .then(res => {
-                        this.bankDeposits = res.data;
-                    })
+                await axios.post('/get-bank-transactions', filter).then(res => {
+                    this.bankDeposits = res.data;
+                })
             },
 
             async getBankWithdraws() {
@@ -468,10 +455,9 @@
                     dateTo: this.filter.dateTo,
                     type: 'withdraw'
                 }
-                await axios.post('/get-bank-transactions', filter)
-                    .then(res => {
-                        this.bankWithdraws = res.data;
-                    })
+                await axios.post('/get-bank-transactions', filter).then(res => {
+                    this.bankWithdraws = res.data;
+                })
             },
 
             async getLoanReceives() {
@@ -525,10 +511,9 @@
             },
 
             async getEmployeePayments() {
-                await axios.post('/get-payments', this.filter)
-                    .then(res => {
-                        this.employeePayments = res.data;
-                    })
+                await axios.post('/get-payments', this.filter).then(res => {
+                    this.employeePayments = res.data;
+                })
             },
 
             async getAssetsCost() {
@@ -538,12 +523,11 @@
                     type: 'buy'
                 }
 
-                await axios.post('/get-asset', filter)
-                    .then(res => {
-                        this.totalAssetsCost = res.data.reduce((prev, curr) => {
-                            return prev + +parseFloat(curr.amount)
-                        }, 0);
-                    })
+                await axios.post('/get-asset', filter).then(res => {
+                    this.totalAssetsCost = res.data.reduce((prev, curr) => {
+                        return prev + +parseFloat(curr.amount)
+                    }, 0);
+                })
             },
 
             async getAssetsSales() {
@@ -553,12 +537,11 @@
                     type: 'sale'
                 }
 
-                await axios.post('/get-asset', filter)
-                    .then(res => {
-                        this.totalAssetsSales = res.data.reduce((prev, curr) => {
-                            return prev + +parseFloat(curr.amount)
-                        }, 0);
-                    })
+                await axios.post('/get-asset', filter).then(res => {
+                    this.totalAssetsSales = res.data.reduce((prev, curr) => {
+                        return prev + +parseFloat(curr.amount)
+                    }, 0);
+                })
             },
 
             async print() {

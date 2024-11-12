@@ -149,10 +149,10 @@ class CustomerPaymentController extends Controller
     //     return view('administration.account.paymentInvoice', compact('payment', 'slug'));
     // }
 
-    // public function customerDue()
-    // {
-    //     return view('administration.reports.customerdue');
-    // }
+    public function customerDue()
+    {
+        return view('administration.reports.customerdue');
+    }
 
     // public function getcustomerLedger(Request $request)
     // {

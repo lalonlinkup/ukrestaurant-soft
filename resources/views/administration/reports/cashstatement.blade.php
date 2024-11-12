@@ -120,7 +120,7 @@
                 <table class="table table-bordered table-condensed">
                     <thead>
                         <tr style="background: #dee4dc;color:#707070;">
-                            <th colspan="4">Booking</th>
+                            <th colspan="4">Orders</th>
                         </tr>
                         <tr>
                             <th>Invoice</th>
@@ -129,20 +129,20 @@
                             <th>Received</th>
                         </tr>
                     </thead>
-                    <tbody style="display:none;" v-bind:style="{display: bookings.length > 0 ? '' : 'none'}">
-                        <tr v-for="sale in bookings">
-                            <td>@{{ sale.invoice }}</td>
-                            <td>@{{ sale.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="sale.customer ? sale.customer.status == 'd' ? 'Deleted Customer' : '' : ''"  :style="{color: sale.customer ? sale.customer.status == 'd' ? 'red' : '' : ''}">@{{ sale.customerName }}</td>
-                            <td style="text-align:right;">@{{ sale.cashPaid | decimal }}</td>
+                    <tbody style="display:none;" v-bind:style="{display: orders.length > 0 ? '' : 'none'}">
+                        <tr v-for="order in orders">
+                            <td>@{{ order.invoice }}</td>
+                            <td>@{{ order.date | dateFormat('DD-MM-YYYY')}}</td>
+                            <td style="text-align:left;">@{{ order.customer_id == null ? order.customer_name : order.customer.name }}</td>
+                            <td style="text-align:right;">@{{ order.cashPaid | decimal }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr style="font-weight:bold;">
                             <td colspan="3" style="text-align:right;">Total</td>
                             <td style="text-align:right;">
-                                <span v-if="bookings.length == 0">0.00</span>
-                                <span style="display:none;" v-bind:style="{display: bookings.length > 0 ? '' : 'none'}">@{{ totalSales | decimal }}</span>
+                                <span v-if="orders.length == 0">0.00</span>
+                                <span style="display:none;" v-bind:style="{display: orders.length > 0 ? '' : 'none'}">@{{ totalOrders | decimal }}</span>
                             </td>
                         </tr>
                     </tfoot>
@@ -165,7 +165,7 @@
                         <tr v-for="payment in receivedFromCustomers">
                             <td>@{{ payment.invoice }}</td>
                             <td>@{{ payment.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="payment.customer.status == 'd' ? 'Deleted customer' : ''"  :style="{color: payment.customer.status == 'd' ? 'red' : ''}">@{{ payment.customer ? payment.customer.name : 'n/a' }}</td>
+                            <td style="text-align:left;" :title="payment.customer.status == 'd' ? 'Deleted customer' : ''" :style="{color: payment.customer.status == 'd' ? 'red' : ''}">@{{ payment.customer ? payment.customer.name : 'n/a' }}</td>
                             <td style="text-align:right;">@{{ payment.amount | decimal }}</td>
                         </tr>
                     </tbody>
@@ -197,7 +197,7 @@
                         <tr v-for="payment in receivedFromSuppliers">
                             <td>@{{ payment.invoice }}</td>
                             <td>@{{ payment.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="payment.supplier.status == 'd' ? 'Deleted Supplier' : ''"  :style="{color: payment.supplier.status == 'd' ? 'red' : ''}">@{{ payment.supplier ? payment.supplier.name : 'n/a' }}</td>
+                            <td style="text-align:left;" :title="payment.supplier.status == 'd' ? 'Deleted Supplier' : ''" :style="{color: payment.supplier.status == 'd' ? 'red' : ''}">@{{ payment.supplier ? payment.supplier.name : 'n/a' }}</td>
                             <td style="text-align:right;">@{{ payment.amount | decimal }}</td>
                         </tr>
                     </tbody>
@@ -404,7 +404,7 @@
                         <tr v-for="purchase in purchases">
                             <td>@{{ purchase.invoice }}</td>
                             <td>@{{ purchase.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="purchase.supplier ? purchase.supplier.status == 'd' ? 'Deleted supplier' : '' : ''"  :style="{color: purchase.supplier ? purchase.supplier.status == 'd' ? 'red' : '' : ''}">@{{ purchase.supplierName }}</td>
+                            <td style="text-align:left;" :title="purchase.supplier ? purchase.supplier.status == 'd' ? 'Deleted supplier' : '' : ''" :style="{color: purchase.supplier ? purchase.supplier.status == 'd' ? 'red' : '' : ''}">@{{ purchase.supplierName }}</td>
                             <td style="text-align:right;">@{{ purchase.paid | decimal }}</td>
                         </tr>
                     </tbody>
@@ -437,7 +437,7 @@
                         <tr v-for="payment in paidToSuppliers">
                             <td>@{{ payment.invoice }}</td>
                             <td>@{{ payment.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="payment.supplier.status == 'd' ? 'Deleted Supplier' : ''"  :style="{color: payment.supplier.status == 'd' ? 'red' : ''}">@{{ payment.supplier ? payment.supplier.name: 'n/a' }}</td>
+                            <td style="text-align:left;" :title="payment.supplier.status == 'd' ? 'Deleted Supplier' : ''" :style="{color: payment.supplier.status == 'd' ? 'red' : ''}">@{{ payment.supplier ? payment.supplier.name: 'n/a' }}</td>
                             <td style="text-align:right;">@{{ payment.amount | decimal }}</td>
                         </tr>
                     </tbody>
@@ -469,7 +469,7 @@
                         <tr v-for="payment in paidToCustomers">
                             <td>@{{ payment.invoice }}</td>
                             <td>@{{ payment.date | dateFormat('DD-MM-YYYY')}}</td>
-                            <td style="text-align:left;" :title="payment.customer.status == 'd' ? 'Deleted customer' : ''"  :style="{color: payment.customer.status == 'd' ? 'red' : ''}">@{{ payment.customer ? payment.customer.name:'n/a' }}</td>
+                            <td style="text-align:left;" :title="payment.customer.status == 'd' ? 'Deleted customer' : ''" :style="{color: payment.customer.status == 'd' ? 'red' : ''}">@{{ payment.customer ? payment.customer.name:'n/a' }}</td>
                             <td style="text-align:right;">@{{ payment.amount | decimal }}</td>
                         </tr>
                     </tbody>
@@ -673,7 +673,7 @@
                     dateFrom: moment().format('YYYY-MM-DD'),
                     dateTo: moment().format('YYYY-MM-DD')
                 },
-                bookings: [],
+                orders: [],
                 purchases: [],
                 receivedFromCustomers: [],
                 paidToCustomers: [],
@@ -700,9 +700,9 @@
             }
         },
         computed: {
-            totalSales() {
-                return this.bookings.reduce((prev, curr) => {
-                    return prev + parseFloat(curr.advance)
+            totalOrders() {
+                return this.orders.reduce((prev, curr) => {
+                    return prev + parseFloat(curr.paid)
                 }, 0).toFixed(2);
             },
             totalPurchase() {
@@ -784,7 +784,7 @@
                 }, 0).toFixed(2);
             },
             totalCashIn() {
-                return parseFloat(this.totalSales) +
+                return parseFloat(this.totalOrders) +
                     parseFloat(this.totalReceivedFromCustomers) +
                     parseFloat(this.totalReceivedFromSuppliers) +
                     parseFloat(this.totalCashReceived) +
@@ -830,13 +830,9 @@
             },
 
             async getSales() {
-                await axios.post('/get-booking', this.filter)
-                    .then(res => {
-                        this.bookings = res.data.map(item => {
-                            item.customerName = item.customer.name;
-                            return item;
-                        });
-                    })
+                await axios.post('/get-order', this.filter).then(res => {
+                    this.orders = res.data;
+                })
 
                 // await axios.post('/get-materialsale', this.filter)
                 //     .then(res => {
@@ -857,7 +853,7 @@
                 await axios.post('/get-purchase', this.filter)
                     .then(res => {
                         this.purchases = res.data.map(item => {
-                            item.supplierName = item.supplier_type == 'G' ? item.supplier_name : item.supplier ? item.supplier.name:'n/a'
+                            item.supplierName = item.supplier_type == 'G' ? item.supplier_name : item.supplier ? item.supplier.name : 'n/a'
                             return item;
                         });
                     })

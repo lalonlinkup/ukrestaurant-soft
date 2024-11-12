@@ -93,7 +93,7 @@
                                 <div class="form-group">
                                     <label class="col-md-4 col-xs-12 control-label">Amount</label>
                                     <div class="col-md-8 col-xs-12">
-                                        <input type="number" class="form-control" v-model="payment.amount">
+                                        <input type="number" step="any" class="form-control" v-model="payment.amount">
                                     </div>
                                 </div>
                                 @if(userAction('e'))
@@ -138,7 +138,7 @@
                             <td>@{{ row.note }}</td>
                             <td>@{{ row.add_by ? row.add_by.name:'n/a' }}</td>
                             <td>
-                                <a title="Billing Invoice" v-bind:href="`/billing-invoice-print/${row.booking_id}`" target="_blank"><i class="fa fa-file-text"></i></a>
+                                <!-- <a title="Billing Invoice" v-bind:href="`/billing-invoice-print/${row.booking_id}`" target="_blank"><i class="fa fa-file-text"></i></a> -->
                                 <!-- <a title="Guest Payment Invoice" v-bind:href="`/payment-invoice/customer/${row.id}`" target="_blank"><i class="fa fa-file-text"></i></a> -->
                                 @if(userAction('u'))
                                 <i @click="editPayment(row)" class="fa fa-pencil"></i>
@@ -169,7 +169,7 @@
                     id: 0,
                     date: moment().format('YYYY-MM-DD'),
                     customer_id: null,
-                    booking_id: '',
+                    order_id: '',
                     type: 'CR',
                     method: 'cash',
                     bank_account_id: null,
@@ -286,30 +286,28 @@
                 let filter = {
                     forSearch: 'yes'
                 }
-                axios.post("/get-customer", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.customers = r.map((item, index) => {
-                            item.display_name = `${item.name} - ${item.code} - ${item.phone}`
-                            return item;
-                        });
-                    })
+                axios.post("/get-customer", filter).then(res => {
+                    let r = res.data;
+                    this.customers = r.map((item, index) => {
+                        item.display_name = `${item.name} - ${item.code} - ${item.phone}`
+                        return item;
+                    });
+                })
             },
 
             async onSearchCustomer(val, loading) {
                 if (val.length > 2) {
                     loading(true);
                     await axios.post("/get-customer", {
-                            name: val
-                        })
-                        .then(res => {
-                            let r = res.data;
-                            this.customers = r.map((item, index) => {
-                                item.display_name = `${item.name} - ${item.code} - ${item.phone}`
-                                return item;
-                            });
-                            loading(false)
-                        })
+                        name: val
+                    }).then(res => {
+                        let r = res.data;
+                        this.customers = r.map((item, index) => {
+                            item.display_name = `${item.name} - ${item.code} - ${item.phone}`
+                            return item;
+                        });
+                        loading(false)
+                    })
                 } else {
                     loading(false)
                     await this.getCustomers();
@@ -340,8 +338,6 @@
                         return prev + parseFloat(curr.dueAmount)
                     }, 0).toFixed(2);
                 })
-
-
             },
 
             onChangeInvoice() {
@@ -352,14 +348,13 @@
             },
 
             getAccounts() {
-                axios.get('/get-bank-accounts')
-                    .then(res => {
-                        this.accounts = res.data.data;
-                    })
+                axios.get('/get-bank-accounts').then(res => {
+                    this.accounts = res.data.data;
+                })
             },
 
-            discountTotal(event){
-                if(this.selectedInvoice == null){
+            discountTotal(event) {
+                if (this.selectedInvoice == null) {
                     return;
                 }
 
@@ -389,7 +384,7 @@
                 }
 
                 this.payment.customer_id = this.selectedCustomer.id;
-                this.payment.booking_id = this.selectedInvoice ? this.selectedInvoice.id : '';
+                this.payment.order_id = this.selectedInvoice ? this.selectedInvoice.id : '';
 
                 let url = '/add-customer-payment';
                 if (this.payment.id != 0) {
@@ -397,36 +392,34 @@
                 }
 
                 this.onProgress = true
-                axios.post(url, this.payment)
-                    .then(res => {
-                        let r = res.data;
-                        toastr.success(r.message);
-                        this.clearForm();
-                        this.getCustomerPayments();
-                        this.btnText = "Save";
-                        this.onProgress = false;
-                        let invoiceConfirm = confirm('Do you want to view invoice?');
-                        if (invoiceConfirm == true) {
-                            window.open('/payment-invoice/customer/' + r.data.paymentId, '_blank');
-                        }
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors ==
-                            'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post(url, this.payment).then(res => {
+                    let r = res.data;
+                    toastr.success(r.message);
+                    this.clearForm();
+                    this.getCustomerPayments();
+                    this.btnText = "Save";
+                    this.onProgress = false;
+                    let invoiceConfirm = confirm('Do you want to view invoice?');
+                    if (invoiceConfirm == true) {
+                        window.open('/payment-invoice/customer/' + r.data.paymentId, '_blank');
+                    }
+                }).catch(err => {
+                    this.onProgress = false
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors ==
+                        'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             editPayment(payment) {
@@ -456,16 +449,14 @@
             deletePayment(paymentId) {
                 if (confirm("Are you sure !!")) {
                     axios.post('/delete-customer-payment', {
-                            id: paymentId
-                        })
-                        .then(res => {
-                            toastr.success(res.data)
-                            this.getCustomerPayments();
-                        })
-                        .catch(err => {
-                            var r = JSON.parse(err.request.response);
-                            toastr.error(r.message);
-                        })
+                        id: paymentId
+                    }).then(res => {
+                        toastr.success(res.data)
+                        this.getCustomerPayments();
+                    }).catch(err => {
+                        var r = JSON.parse(err.request.response);
+                        toastr.error(r.message);
+                    })
                 }
             },
 
@@ -474,6 +465,7 @@
                         id: 0,
                         date: moment().format('YYYY-MM-DD'),
                         customer_id: null,
+                        order_id: '',
                         type: 'CR',
                         method: 'cash',
                         bank_account_id: null,

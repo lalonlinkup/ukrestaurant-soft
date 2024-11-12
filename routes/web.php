@@ -345,7 +345,6 @@ Route::get('menuList', [MenuController::class, 'menuList'])->name('menu.list')->
 // Order route
 Route::get('order/{id?}', [OrderController::class, 'create'])->name('order.create')->middleware('useractivity');
 Route::get('orderList', [OrderController::class, 'index'])->name('order.list')->middleware('useractivity');
-Route::get('pendingOrder', [OrderController::class, 'pending'])->name('pending.order')->middleware('useractivity');
 Route::match(['get', 'post'], 'get-order', [OrderController::class, 'getOrder'])->name('get.order');
 Route::post('get-order-details', [OrderController::class, 'orderDetails'])->name('order.details');
 Route::post('get-order-by-table', [OrderController::class, 'orderDetailsByTable'])->name('order.detailsbytable');

@@ -62,6 +62,14 @@
                 <div class="row" id="accessRow">
                     <div class="col-md-3">
                         <div class="group">
+                            <input type="checkbox" id="purchases" class="group-head" @click="onClickGroupHeads"> <label for="purchases"><strong>Purchase</strong></label>
+                            <ul class="purchases">
+                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="purchases" value="purchase" id="purchase"><label for="purchase"> Purchase Entry</label></li>
+                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="purchases" value="purchaseRecord" id="purchaseRecord"><label for="purchaseRecord"> Purchase Record</label></li>
+                            </ul>
+                        </div>
+
+                        <!-- <div class="group">
                             <input type="checkbox" id="bookings" class="group-head" @click="onClickGroupHeads"> <label for="bookings"><strong>Booking</strong></label>
                             <ul class="bookings">
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="bookings" value="booking" id="booking"> <label for="booking">Booking Entry</label></li>
@@ -72,7 +80,7 @@
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="bookings" value="checkinList" id="checkinList"> <label for="checkinList">Checkin List</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="bookings" value="billingInvoice" id="billingInvoice"> <label for="billingInvoice">Billing Invoice</label></li>
                             </ul>
-                        </div>
+                        </div> -->
 
                         <div class="group">
                             <input type="checkbox" id="accounts" class="group-head" @click="onClickGroupHeads"> <label for="accounts"><strong>Accounts</strong></label>
@@ -155,28 +163,20 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="group">
-                            <input type="checkbox" id="purchases" class="group-head" @click="onClickGroupHeads"> <label for="purchases"><strong>Purchase</strong></label>
-                            <ul class="purchases">
-                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="purchases" value="purchase" id="purchase"><label for="purchase"> Purchase Entry</label></li>
-                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="purchases" value="purchaseRecord" id="purchaseRecord"><label for="purchaseRecord"> Purchase Record</label></li>
-                            </ul>
-                        </div>
-                        <div class="group">
+                        <!-- <div class="group">
                             <input type="checkbox" id="services" class="group-head" @click="onClickGroupHeads"> <label for="services"><strong>Service</strong></label>
                             <ul class="services">
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="services" value="serviceHead" id="serviceHead"><label for="serviceHead"> Service Head</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="services" value="service" id="service"><label for="service"> Service Entry</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="services" value="serviceList" id="serviceList"><label for="serviceList"> Service List</label></li>
                             </ul>
-                        </div>
+                        </div> -->
                         <div class="group">
                             <input type="checkbox" id="orders" class="group-head" @click="onClickGroupHeads"> <label for="orders"><strong>Order</strong></label>
                             <ul class="orders">
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="order" id="order"><label for="order"> Order Entry</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="payFirst" id="payFirst"><label for="payFirst"> Pay First</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="orderList" id="orderList"><label for="orderList"> Order List</label></li>
-                                <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="pendingOrder" id="pendingOrder"><label for="pendingOrder"> Pending Order</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="orderInvoice" id="orderInvoice"><label for="orderInvoice"> Order Invoice</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="menu" id="menu"><label for="menu"> Menu Entry</label></li>
                                 <li><input type="checkbox" name='access[]' @click="singleCheck" class="orders" value="menuList" id="menuList"><label for="menuList"> Menu List</label></li>

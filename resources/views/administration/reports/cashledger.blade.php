@@ -137,31 +137,29 @@
                 }
                 this.onProgress = true
                 this.showReport = false
-                axios.post("/get-cash-ledger", filter)
-                    .then(res => {
-                        let r = res.data;
-                        this.previousBalance = r.previousBalance
-                        this.ledgers = r.ledgers
-                        this.onProgress = false
-                        this.showReport = true
-                    })
-                    .catch(err => {
-                        this.onProgress = false
-                        this.showReport = null
-                        var r = JSON.parse(err.request.response);
-                        if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
-                            $.each(r.errors, (index, value) => {
-                                $.each(value, (ind, val) => {
-                                    toastr.error(val)
-                                })
+                axios.post("/get-cash-ledger", filter).then(res => {
+                    let r = res.data;
+                    this.previousBalance = r.previousBalance
+                    this.ledgers = r.ledgers
+                    this.onProgress = false
+                    this.showReport = true
+                }).catch(err => {
+                    this.onProgress = false
+                    this.showReport = null
+                    var r = JSON.parse(err.request.response);
+                    if (err.request.status == '422' && r.errors != undefined && typeof r.errors == 'object') {
+                        $.each(r.errors, (index, value) => {
+                            $.each(value, (ind, val) => {
+                                toastr.error(val)
                             })
-                        } else {
-                            if (r.errors != undefined) {
-                                console.log(r.errors);
-                            }
-                            toastr.error(r.message);
+                        })
+                    } else {
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
                         }
-                    })
+                        toastr.error(r.message);
+                    }
+                })
             },
 
             async print() {
