@@ -16,12 +16,13 @@ class CreateTableBookingsTable extends Migration
         Schema::create('table_bookings', function (Blueprint $table) {
             $table->id();
             $table->string('invoice', 20)->unique()->index();
+            $table->date('date');
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->date('date')->nullable();
-            $table->time('time')->nullable();
+            $table->date('booking_date')->nullable();
+            $table->time('booking_time')->nullable();
             $table->string('persons')->nullable();
             $table->text('note')->nullable();
             $table->char('status', 1)->default('p')->comment('p=pending,a=approve,c=cancel,d=done');

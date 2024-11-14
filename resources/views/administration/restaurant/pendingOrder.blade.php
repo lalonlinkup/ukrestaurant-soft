@@ -30,8 +30,7 @@
                             <label for="" style="width:150px;">Search Type</label>
                             <select class="form-select no-padding" @change="onChangeType" style="width: 100%;" v-model="filter.searchType">
                                 <option value="">All</option>
-                                <option value="customer">By Customer</option>
-                                <option value="table">By Table</option>
+                                <option value="customer">By Guest</option>
                                 <option value="category">By Category</option>
                                 <option value="quantity">By Quantity</option>
                                 <option value="user">By User</option>
@@ -40,31 +39,25 @@
                     </div>
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'customer'" style="display: none;" :style="{display: filter.searchType == 'customer' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="customers" v-model="selectedCustomer" label="display_name" @search="onSearchcustomer" placeholder="Select Customer"></v-select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'table'" style="display: none;" :style="{display: filter.searchType == 'table' ? '': 'none'}">
-                        <div class="form-group">
-                            <v-select :options="tables" v-model="selectedTable" label="name" placeholder="Select Table"></v-select>
+                            <v-select :options="customers" v-model="selectedCustomer" label="display_name" @search="onSearchcustomer"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'user'" style="display: none;" :style="{display: filter.searchType == 'user' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="users" v-model="selectedUser" label="name" placeholder="Select User"></v-select>
+                            <v-select :options="users" v-model="selectedUser" label="name"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'category'" style="display: none;" :style="{display: filter.searchType == 'category' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="categories" v-model="selectedCategory" label="name" placeholder="Select Category"></v-select>
+                            <v-select :options="categories" v-model="selectedCategory" label="name"></v-select>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-xs-12" v-if="filter.searchType == 'quantity'" style="display: none;" :style="{display: filter.searchType == 'quantity' ? '': 'none'}">
                         <div class="form-group">
-                            <v-select :options="menus" v-model="selectedMenu" label="display_name" placeholder="Select Menu"></v-select>
+                            <v-select :options="menus" v-model="selectedMenu" label="display_name"></v-select>
                         </div>
                     </div>
                     <div class="col-md-2 col-xs-12 no-padding" v-if="filter.searchType != 'quantity' && filter.searchType != 'category'" style="display: none;" :style="{display: filter.searchType != 'quantity' && filter.searchType != 'category' ? '' : 'none'}">
@@ -138,7 +131,10 @@
                                 <td style="text-align:center;">
                                     <a href="" title="Order Invoice" v-bind:href="`/order-invoice-print/${order.id}`" target="_blank"><i class="fa fa-file-text"></i></a>
                                     @if(userAction('u'))
-                                    <a v-if="order.order_type == 'PayFirst'" href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
+                                    <a v-if="order.order_type != 'Order'" href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
+                                    @endif
+                                    @if(userAction('e'))
+                                    <a href="" title="Approve Order" @click.prevent="approveOrder(order)"><i class="fa fa-check"></i></a>
                                     @endif
                                     @if(userAction('d'))
                                     <a href="" title="Delete Order" @click.prevent="deleteOrder(order)"><i class="fa fa-trash"></i></a>
@@ -206,7 +202,10 @@
                             <td style="text-align:center;">
                                 <a href="" title="Order Invoice" v-bind:href="`/order-invoice-print/${order.id}`" target="_blank"><i class="fa fa-file-text"></i></a>
                                 @if(userAction('u'))
-                                <a v-if="order.order_type == 'PayFirst'" href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
+                                <a v-if="order.order_type != 'Order'" href="" title="Edit Order" @click.prevent="orderEdit(order)"><i class="fa fa-edit"></i></a>
+                                @endif
+                                @if(userAction('e'))
+                                <a href="" title="Approve Order" @click.prevent="approveOrder(order)"><i class="fa fa-check"></i></a>
                                 @endif
                                 @if(userAction('d'))
                                 <a href="" title="Delete Order" @click.prevent="deleteOrder(order)"><i class="fa fa-trash"></i></a>
@@ -279,7 +278,7 @@
                 filter: {
                     searchType: "",
                     recordType: "without",
-                    status: 'a',
+                    status: 'p',
                     dateFrom: moment().format("YYYY-MM-DD"),
                     dateTo: moment().format("YYYY-MM-DD"),
                 },
@@ -288,8 +287,6 @@
 
                 customers: [],
                 selectedCustomer: null,
-                tables: [],
-                selectedTable: null,
                 categories: [],
                 selectedCategory: null,
                 menus: [],
@@ -313,10 +310,10 @@
 
         methods: {
             async orderEdit(row) {
-                if (row.order_type == 'PayFirst') {
-                    location.href = "/payFirst/" + row.id
-                } else {
+                if (row.order_type == 'Order') {
                     location.href = "/order/" + row.id
+                } else {
+                    location.href = "/payFirst/" + row.id
                 }
             },
             getCategory() {
@@ -347,11 +344,6 @@
                     });
                 })
             },
-            getTables() {
-                axios.get('/get-table').then(res => {
-                    this.tables = res.data;
-                })
-            },
             onChangeType(event) {
                 this.orders = [];
                 this.orders2 = [];
@@ -365,8 +357,6 @@
                 this.filter.userId = "";
                 if (event.target.value == 'customer') {
                     this.getCustomer();
-                } else if (event.target.value == 'table') {
-                    this.getTables();
                 } else if (event.target.value == 'quantity') {
                     this.getMenu();
                 } else if (event.target.value == 'category') {
@@ -378,9 +368,6 @@
             getOrder() {
                 if (this.filter.searchType == 'customer') {
                     this.filter.customerId = this.selectedCustomer != null ? this.selectedCustomer.id : ""
-                }
-                if (this.filter.searchType == 'table') {
-                    this.filter.tableId = this.selectedTable != null ? this.selectedTable.id : ""
                 }
                 if (this.filter.searchType == 'quantity' || this.filter.searchType == 'category') {
                     var url = '/get-order-details';
@@ -419,12 +406,11 @@
                     }
                 })
             },
-
             async deleteOrder(row) {
                 let formdata = {
                     id: row.id
                 }
-                if (confirm("Are you sure !!")) {
+                if (confirm("Are you sure!")) {
                     axios.post("/delete-order", formdata).then(res => {
                         toastr.success(res.data.message)
                         this.getOrder();
@@ -437,7 +423,23 @@
                     })
                 }
             },
-
+            async approveOrder(row) {
+                let formdata = {
+                    id: row.id
+                }
+                if (confirm("Are you sure!")) {
+                    axios.post("/approve-order", formdata).then(res => {
+                        toastr.success(res.data.message)
+                        this.getOrder();
+                    }).catch(err => {
+                        var r = JSON.parse(err.request.response);
+                        if (r.errors != undefined) {
+                            console.log(r.errors);
+                        }
+                        toastr.error(r.message);
+                    })
+                }
+            },
             //search method here
             async onSearchcustomer(val, loading) {
                 if (val.length > 2) {
@@ -457,7 +459,6 @@
                     await this.getCustomer();
                 }
             },
-
             // print method hre
             async print() {
                 let dateText = '';
@@ -484,12 +485,11 @@
                 if (this.selectedCategory != null && this.selectedCategory.id != '' && this.filter.searchType == 'category') {
                     categoryText = `<strong>Category: </strong> ${this.selectedCategory.name}`;
                 }
-
                 let reportContent = `
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">orders Record</h4>
+                                <h4 style="text-align:center">Order Record</h4>
                             </div>
                         </div>
                         <div class="row">
@@ -528,11 +528,11 @@
                 mywindow.print();
                 mywindow.close();
             },
-
             // filter orderrecord
             filterArray(event) {
                 this.orders = this.orders2.filter(order => {
-                    return order.invoice.toLowerCase().startsWith(event.target.value.toLowerCase()) || order.date.toLowerCase().startsWith(event.target.value.toLowerCase());
+                    return order.invoice.toLowerCase().startsWith(event.target.value.toLowerCase()) ||
+                        order.date.toLowerCase().startsWith(event.target.value.toLowerCase());
                 })
             },
         },

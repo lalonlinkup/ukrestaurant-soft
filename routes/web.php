@@ -44,10 +44,20 @@ use App\Http\Controllers\Administration\MaterialPurchaseController;
 use App\Http\Controllers\Administration\SupplierPaymentController;
 use App\Http\Controllers\Administration\IssueReturnController;
 use App\Http\Controllers\SpecialtiesController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::fallback(function () {
     return view('error.404');
 })->middleware('auth');
+
+Route::get('clear', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:cache');
+    return back();
+});
 
 // user login route
 Route::get('/', [LoginController::class, 'showUserLoginForm'])->name('user.login.show');
@@ -345,6 +355,7 @@ Route::get('menuList', [MenuController::class, 'menuList'])->name('menu.list')->
 // Order route
 Route::get('order/{id?}', [OrderController::class, 'create'])->name('order.create')->middleware('useractivity');
 Route::get('orderList', [OrderController::class, 'index'])->name('order.list')->middleware('useractivity');
+Route::get('pendingOrder', [OrderController::class, 'pending'])->name('pending.order')->middleware('useractivity');
 Route::match(['get', 'post'], 'get-order', [OrderController::class, 'getOrder'])->name('get.order');
 Route::post('get-order-details', [OrderController::class, 'orderDetails'])->name('order.details');
 Route::post('get-order-by-table', [OrderController::class, 'orderDetailsByTable'])->name('order.detailsbytable');
@@ -355,6 +366,12 @@ Route::post('update-draft-order', [OrderController::class, 'updateDraft'])->name
 Route::post('delete-order', [OrderController::class, 'destroy'])->name('order.delete');
 Route::post('approve-order', [OrderController::class, 'approve'])->name('order.approve');
 Route::get('order-invoice-print/{id}', [OrderController::class, 'orderInvoicePrint'])->name('order.invoice')->middleware('useractivity');
+
+Route::get('tableBooking', [OrderController::class, 'tableBooking'])->name('tableBooking.order')->middleware('useractivity');
+Route::post('get-table-bookings', [OrderController::class, 'tableBookingList'])->name('order.tableBookingList');
+Route::post('approve-table-booking', [OrderController::class, 'approveBooking'])->name('order.approveBooking');
+Route::post('cancel-table-booking', [OrderController::class, 'cancelBooking'])->name('order.cancelBooking');
+Route::post('delete-table-booking', [OrderController::class, 'destroyBooking'])->name('order.deleteBooking');
 
 //Pay First Order Route
 Route::get('payFirst/{id?}', [OrderController::class, 'payFirst'])->name('order.payFirst')->middleware('useractivity');

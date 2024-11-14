@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Production;
 use App\Models\ProductionDetail;
 use App\Models\Recipe;
+use App\Models\TableBooking;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -30,6 +31,22 @@ class OrderController extends Controller
             return view('error.unauthorize');
         }
         return view('administration.restaurant.orderList');
+    }
+
+    public function pending()
+    {
+        if (!checkAccess('pendingOrder')) {
+            return view('error.unauthorize');
+        }
+        return view('administration.restaurant.pendingOrder');
+    }
+
+    public function tableBooking()
+    {
+        if (!checkAccess('tableBooking')) {
+            return view('error.unauthorize');
+        }
+        return view('administration.restaurant.tableBookingList');
     }
 
     public function create($id = 0)
@@ -599,6 +616,22 @@ class OrderController extends Controller
         }
     }
 
+    public function tableBookingList(Request $request)
+    {
+        try {
+            $whereCluase = "";
+            if (!empty($request->dateFrom) && !empty($request->dateTo)) {
+                $whereCluase .= " AND tb.date BETWEEN '$request->dateFrom' AND '$request->dateTo'";
+            }
+            
+            $bookings = DB::select("SELECT tb.* FROM table_bookings tb WHERE tb.status != 'd' $whereCluase");
+
+            return response()->json($bookings);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+        }
+    }
+
     public function orderDetailsByTable(Request $request)
     {
         try {
@@ -649,6 +682,25 @@ class OrderController extends Controller
         }
     }
 
+    public function destroyBooking(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = TableBooking::find($request->id);
+            $data->status = 'd';
+            $data->last_update_ip = request()->ip();
+            $data->deleted_by = Auth::user()->id;
+            $data->update();
+
+            $data->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Table booking deleted successfully.'], 200);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+            DB::rollBack();
+        }
+    }
+
     public function approve(Request $request)
     {
         try {
@@ -673,6 +725,42 @@ class OrderController extends Controller
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order approve successfully.'], 200);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+            DB::rollBack();
+        }
+    }
+
+    public function approveBooking(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = TableBooking::find($request->id);
+            $data->status = 'a';
+            $data->updated_by = Auth::user()->id;
+            $data->last_update_ip = request()->ip();
+            $data->update();
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Table booking approved successfully.'], 200);
+        } catch (\Throwable $th) {
+            return send_error("Something went wrong", $th->getMessage());
+            DB::rollBack();
+        }
+    }
+
+    public function cancelBooking(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = TableBooking::find($request->id);
+            $data->status = 'c';
+            $data->updated_by = Auth::user()->id;
+            $data->last_update_ip = request()->ip();
+            $data->update();
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Table booking cancelled successfully.'], 200);
         } catch (\Throwable $th) {
             return send_error("Something went wrong", $th->getMessage());
             DB::rollBack();

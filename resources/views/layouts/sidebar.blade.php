@@ -1402,8 +1402,25 @@ checkAccess('salaryPaymentReport'))
         </a>
         <b class="arrow"></b>
     </li>
+    @endif    
+    @if (checkAccess('pendingOrder'))
+    <li class="{{ Request::is('pendingOrder') ? 'active' : '' }}">
+        <a href="/pendingOrder">
+            <i class="menu-icon bi bi-card-checklist"></i>
+            <span class="menu-text">Pending Order</span>
+        </a>
+        <b class="arrow"></b>
+    </li>
     @endif
-
+    @if (checkAccess('tableBooking'))
+    <li class="{{ Request::is('tableBooking') ? 'active' : '' }}">
+        <a href="/tableBooking">
+            <i class="menu-icon bi bi-list-ul"></i>
+            <span class="menu-text">Table Booking List</span>
+        </a>
+        <b class="arrow"></b>
+    </li>
+    @endif
     @if (checkAccess('menu') || checkAccess('menuList') || checkAccess('menuCategory') )
     <li class="{{ Request::is('menu') || Request::is('menuList') || Request::is('menu-category') ? 'open' : '' }}">
         <a href="/" class="dropdown-toggle">

@@ -673,7 +673,6 @@
                     }
                 })
             },
-
             clearForm() {
                 this.order = {
                     id: "{{ $id }}",
@@ -706,7 +705,6 @@
                     type: "G",
                 }
             },
-
             getOrder() {
                 this.btnText = 'Update';
                 axios.post("/get-order", {

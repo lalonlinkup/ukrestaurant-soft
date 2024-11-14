@@ -47,13 +47,13 @@
                             <div class="form-group clearfix">
                                 <label class="control-label col-md-3">Title</label>
                                 <div class="col-md-9">
-                                    <textarea name="title" class="form-control" id="title" cols="2" rows="2" v-model="slider.title"></textarea>
+                                    <textarea name="title" class="form-control" required id="title" cols="2" rows="2" v-model="slider.title"></textarea>
                                 </div>
                             </div>
                             {{-- <div class="form-group clearfix">
                                 <label class="control-label col-md-3">Sub Title</label>
                                 <div class="col-md-9">
-                                    <textarea name="sub_title" class="form-control" id="sub_title" cols="2" rows="2" v-model="slider.sub_title"></textarea>
+                                    <textarea name="sub_title" class="form-control" required id="sub_title" cols="2" rows="2" v-model="slider.sub_title"></textarea>
                                 </div>
                             </div> --}}
                         </div>
@@ -61,20 +61,20 @@
                             <div class="form-group clearfix">
                                 <label class="control-label col-md-3">Button Text</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="btn_text" autocomplete="off" v-model="slider.btn_text">
+                                    <input type="text" class="form-control" required name="btn_text" autocomplete="off" v-model="slider.btn_text">
                                 </div>
                             </div>
                             <div class="form-group clearfix">
                                 <label class="control-label col-md-3">Button Url</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="btn_url" autocomplete="off" v-model="slider.btn_url">
+                                    <input type="text" class="form-control" required name="btn_url" autocomplete="off" v-model="slider.btn_url">
                                 </div>
                             </div>
                             <div class="form-group clearfix">
                                 <label class="col-md-4"></label>
                                 <div class="col-md-8 text-right">
                                     @if(userAction('e'))
-                                    <input type="button" class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
+                                    <input type="button" required class="btn btn-danger btn-reset" value="Reset" @click="clearForm">
                                     <button :disabled="onProgress" type="submit" class="btn btn-primary btn-padding" v-html="btnText"></button>
                                     @endif
                                 </div>

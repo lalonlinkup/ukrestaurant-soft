@@ -1391,6 +1391,34 @@ $module = session('module');
                     </a>
                 </div>
             </div>
+            @endif            
+            @if(checkAccess('pendingOrder'))
+            <div class="col-md-2 col-xs-6">
+                <div class="col-md-12 section20">
+                    <a href="/pendingOrder">
+                        <div class="logo">
+                            <i class="menu-icon bi bi-card-checklist"></i>
+                        </div>
+                        <div class="textModule" style="line-height: 13px;">
+                            Pending Order
+                        </div>
+                    </a>
+                </div>
+            </div>
+            @endif      
+            @if(checkAccess('tableBooking'))
+            <div class="col-md-2 col-xs-6">
+                <div class="col-md-12 section20">
+                    <a href="/tableBooking">
+                        <div class="logo">
+                            <i class="menu-icon bi bi-list-ul"></i>
+                        </div>
+                        <div class="textModule" style="line-height: 13px;">
+                            Table Booking List
+                        </div>
+                    </a>
+                </div>
+            </div>
             @endif
             @if(checkAccess('menu'))
             <div class="col-md-2 col-xs-6">

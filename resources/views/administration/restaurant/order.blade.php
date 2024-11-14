@@ -3,7 +3,6 @@
 @section('breadcrumb_title', 'Table Booking Entry')
 @push('style')
 <link rel="stylesheet" href="{{asset('backend')}}/css/booking.css" />
-<link rel="stylesheet" href="{{asset('backend')}}/css/fullcalendar.css" />
 <style scoped>
     .v-select .dropdown-menu {
         width: 450px !important;
@@ -108,6 +107,41 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .table-scroll {
+        position: relative;
+        width: 100%;
+        z-index: 1;
+        max-height: 270px;
+        margin: auto;
+        overflow-x: auto;
+        overflow-y: scroll;
+    }
+
+    .table-scroll table {
+        width: 100%;
+    }
+
+    .table-scroll th,
+    .table-scroll td {
+        vertical-align: top;
+    }
+
+    .table-scroll thead th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: #146C94;
+        color: white;
+    }
+
+    .table-scroll tfoot td {
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 0;
+        background-color: #146C94;
+        color: white;
     }
 </style>
 @endpush
@@ -345,7 +379,7 @@
                     <div class="col-md-5">
                         <fieldset class="scheduler-border bg-of-skyblue" style="height: 300px;">
                             <legend class="scheduler-border">Cart Information</legend>
-                            <div class="control-group">
+                            <div class="control-group table-scroll">
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr class="">
@@ -357,7 +391,7 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody style="display:none;" v-bind:style="{display: cart.length > 0 ? '' : 'none'}">
+                                    <tbody style="height: 175px !important">
                                         <tr v-for="(product, sl) in cart">
                                             <td width="5%">@{{ sl + 1 }}</td>
                                             <td width="35%">@{{ product.name }}</td>
@@ -373,12 +407,8 @@
                                             <td width="5%"><a href="" v-on:click.prevent="removeFromCart(sl)"><i
                                                         class="fa fa-trash"></i></a></td>
                                         </tr>
-
-                                        <tr style="font-weight: bold;">
-                                            <td colspan="4">Note</td>
-                                            <td colspan="2">Total</td>
-                                        </tr>
-
+                                    </tbody>
+                                    <tfoot>
                                         <tr>
                                             <td colspan="4">
                                                 <textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="order.note"></textarea>
@@ -386,7 +416,7 @@
                                             <td colspan="2" style="padding-top: 15px;font-size:18px;">@{{ order.total }}
                                             </td>
                                         </tr>
-                                    </tbody>
+                                    </tfoot>
                                 </table>
                             </div>
                         </fieldset>
@@ -518,7 +548,6 @@
 @endsection
 
 @push('script')
-<script src="{{asset('backend')}}/js/fullcalendar.min.js"></script>
 <script>
     new Vue({
         el: '#orderBookingForm',
@@ -761,14 +790,9 @@
                     this.clearForm();
                     this.onProgress = false
                     if (r.status) {
-                        let conf = confirm('Order success, Do you want to view invoice?');
-                        if (conf) {
-                            window.open('/order-invoice-print/' + r.id, '_blank');
-                            await new Promise(r => setTimeout(r, 1000));
-                            window.location = '/order';
-                        } else {
-                            window.location = '/order';
-                        }
+                        alert('Order success. Do you want to craete new order?');
+                        await new Promise(r => setTimeout(r, 500));
+                        window.location = '/order';
                     }
                 }).catch(err => {
                     this.onProgress = false
@@ -995,44 +1019,6 @@
                         this.tableCart.splice(findIndex, 1);
                     }
                 }
-
-                // if (event.target.checked) {
-                //     let table = await axios.post('/get-table', {
-                //         tableId: event.target.value
-                //     }).then(res => {
-                //         return res.data[0];
-                //     })
-
-                //     let cart = {
-                //         table_id: table.id,
-                //         name: table.name,
-                //         typeName: table.tabletype_name,
-                //         inchargeId: table.incharge_id,
-                //         inchargeName: table.incharge_name,
-                //     }
-                //     this.tableCart.push(cart);
-
-                //     // Get Table Wise Order
-                //     let order = await axios.post('/get-order-by-table', {
-                //         tableId: event.target.value
-                //     }).then(res => {
-                //         return res.data[0];
-                //     })
-
-                //     if (order != undefined) {
-                //         this.order.id = order.order_id;
-                //     } else {
-                //         this.order.id = 0;
-                //     }
-                // } else {
-                //     console.log(findIndex);
-
-                //     this.tableCart.splice(findIndex, 1);
-                // }
-
-                // if (this.order.id != 0) {
-                //     this.getOrder();
-                // }
             },
             async onClickPrevious(event) {
                 this.tableCart = [];
@@ -1130,23 +1116,11 @@
             },
             async showTableInfo(id) {
 
-                // let orderId = await axios.post('/get-order-by-table', {
-                //     tableId: id
-                // }).then(res => {
-                //     return res.data[0].order_id;
-                // })
-
-                // console.log(orderId);
-
                 let tableInfo = await axios.post('/get-table', {
                     tableId: id
                 }).then(res => {
                     return res.data[0];
                 })
-
-                // setTimeout(() => {
-                //     this.tableCalendar(id);
-                // }, 500)
 
                 this.tableInfo = tableInfo;
                 $("#myModal").modal("show");
@@ -1211,28 +1185,8 @@
 
                     this.calculateTotal();
                 })
-            },
-            tableCalendar(tableId) {
-                $.ajax({
-                    url: "/get-tablecalendar",
-                    method: 'post',
-                    data: {
-                        tableId: tableId
-                    },
-                    success: res => {
-                        $('#calendar').fullCalendar('destroy');
-                        $('#calendar').fullCalendar({
-                            height: 150,
-                            contentHeight: 150,
-                            left: 'title',
-                            center: '',
-                            right: 'prev,next',
-                            events: res
-                        });
-                    }
-                })
             }
-        },
+        }
     })
 </script>
 @endpush
